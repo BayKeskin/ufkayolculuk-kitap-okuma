@@ -1,0 +1,8 @@
+.idea/
+.vscode/
+Thumbs.db
+Desktop.ini
+*.log
+
+# Large media files exceeding GitHub 100MB limit
+assets/audio/tevhid-muhafizlari.mp3

@@ -1,0 +1,1168 @@
+/* ==========================================================================
+   UFKA YOLCULUK - ÜYE İSTATİSTİKLERİ & DASHBOARD SAYFASI
+   Özel CSS Stilleri (dashboard.css)
+   ========================================================================== */
+
+body.dashboard-body {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body.dashboard-body main {
+  flex: 1;
+}
+
+/* --------------------------------------------------------------------------
+   1. Dashboard Hero Profil Karşılama Kartı
+   -------------------------------------------------------------------------- */
+.dashboard-hero-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+  border: 1px solid rgba(2, 132, 199, 0.15);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px -5px rgba(2, 132, 199, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-hero-card::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(2, 132, 199, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.dashboard-hero-card::after {
+  content: '';
+  position: absolute;
+  bottom: -50px;
+  left: 20%;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Profil Sol Bölüm */
+.dash-user-profile-wrap {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.dash-avatar-large {
+  width: 76px;
+  height: 76px;
+  min-width: 76px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  font-size: 1.8rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
+  border: 3px solid #ffffff;
+  position: relative;
+}
+
+.dash-avatar-online-dot {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 18px;
+  height: 18px;
+  background: #10b981;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+}
+
+.dash-user-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dash-user-greeting {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dash-user-name {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.dash-user-tags-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.dash-tag-pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.dash-tag-pill.blue {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+}
+
+.dash-tag-pill.gold {
+  background: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+}
+
+/* Profil Sağ 4'lü Skor Barı */
+.dash-quick-scores-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 16px;
+  padding: 16px 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+}
+
+.dash-score-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+
+.dash-score-cell:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -8px;
+  top: 15%;
+  bottom: 15%;
+  width: 1px;
+  background: rgba(226, 232, 240, 0.9);
+}
+
+.dash-score-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dash-score-value {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.dash-score-value .score-unit {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.dash-score-sub {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #10b981;
+}
+
+/* --------------------------------------------------------------------------
+   2. Ortak Dashboard Kart Yapısı
+   -------------------------------------------------------------------------- */
+.dashboard-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  box-shadow: 0 4px 20px -4px rgba(15, 23, 42, 0.05);
+  padding: 24px;
+  margin-bottom: 24px;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+  box-shadow: 0 8px 25px -4px rgba(15, 23, 42, 0.08);
+}
+
+.dash-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.dash-card-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dash-card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.dash-card-icon.blue {
+  background: rgba(2, 132, 199, 0.1);
+  color: #0284c7;
+}
+
+.dash-card-icon.purple {
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+}
+
+.dash-card-icon.gold {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+}
+
+.dash-card-icon.green {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.dash-card-heading {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.dash-card-sub {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   3. Devam Eden Kitaplar & İlerleme Kartları
+   -------------------------------------------------------------------------- */
+.dash-books-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.dash-book-progress-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  gap: 16px;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.dash-book-progress-card:hover {
+  background: #ffffff;
+  border-color: #0284c7;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.1);
+}
+
+.dash-book-cover-wrap {
+  width: 72px;
+  min-width: 72px;
+  height: 102px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  background: #ffffff;
+}
+
+.dash-book-cover-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dash-book-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dash-book-title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 2px;
+  line-height: 1.3;
+}
+
+.dash-book-level {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.dash-book-progress-track {
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.dash-book-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #0284c7 0%, #6366f1 100%);
+  transition: width 0.4s ease;
+}
+
+.dash-book-progress-fill.green {
+  background: #10b981;
+}
+
+.dash-book-progress-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #475569;
+  margin-bottom: 10px;
+}
+
+.dash-book-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-dash-read {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-dash-read:hover {
+  background: #0369a1;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-dash-listen {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(99, 102, 241, 0.1);
+  color: #6366f1;
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-dash-listen:hover {
+  background: #6366f1;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   4. İstatistik Filtreleri ve 4'lü Metrik Kutuları
+   -------------------------------------------------------------------------- */
+.dash-filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 10px;
+}
+
+.dash-tab-btn {
+  border: none;
+  background: transparent;
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dash-tab-btn.active {
+  background: #ffffff;
+  color: #0284c7;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.dash-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.dash-metric-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.2s ease;
+}
+
+.dash-metric-card:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.04);
+}
+
+.dash-metric-icon-box {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+}
+
+.dash-metric-icon-box.blue {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+}
+
+.dash-metric-icon-box.purple {
+  background: rgba(99, 102, 241, 0.12);
+  color: #6366f1;
+}
+
+.dash-metric-icon-box.gold {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+}
+
+.dash-metric-icon-box.green {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+}
+
+.dash-metric-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-metric-title {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.dash-metric-num-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dash-metric-num {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.dash-metric-growth {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   5. İnteraktif Haftalık Aktivite Grafiği
+   -------------------------------------------------------------------------- */
+.dash-chart-wrapper {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 20px 16px 12px 16px;
+  position: relative;
+}
+
+.dash-chart-legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.dash-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dash-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dash-legend-dot.blue {
+  background: #0284c7;
+}
+
+.dash-legend-dot.purple {
+  background: #6366f1;
+}
+
+.dash-svg-chart {
+  width: 100%;
+  height: 180px;
+  overflow: visible;
+}
+
+.dash-chart-grid {
+  stroke: #f1f5f9;
+  stroke-dasharray: 4 4;
+}
+
+.dash-chart-axis-text {
+  font-size: 10px;
+  fill: #94a3b8;
+  font-family: inherit;
+}
+
+.dash-chart-line-blue {
+  fill: none;
+  stroke: #0284c7;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: d 0.4s ease;
+}
+
+.dash-chart-line-purple {
+  fill: none;
+  stroke: #6366f1;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 6 3;
+  transition: d 0.4s ease;
+}
+
+.dash-chart-dot {
+  fill: #ffffff;
+  stroke: #0284c7;
+  stroke-width: 2.5;
+  r: 4.5;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dash-chart-dot:hover {
+  r: 7;
+  stroke-width: 3.5;
+  fill: #0284c7;
+}
+
+.dash-chart-dot.purple {
+  stroke: #6366f1;
+}
+
+.dash-chart-dot.purple:hover {
+  fill: #6366f1;
+}
+
+/* --------------------------------------------------------------------------
+   6. Sınav & Quiz Performansı
+   -------------------------------------------------------------------------- */
+.dash-exam-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.dash-exam-item-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dash-exam-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.dash-exam-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.dash-exam-score-badge {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0284c7;
+  background: rgba(2, 132, 199, 0.1);
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.dash-exam-stats-list {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+.dash-exam-stats-list .stat-correct {
+  color: #10b981;
+  font-weight: 700;
+}
+
+.dash-exam-stats-list .stat-wrong {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   7. Zaman Çizelgesi (Recent Activity Timeline)
+   -------------------------------------------------------------------------- */
+.dash-timeline-list {
+  position: relative;
+  padding-left: 24px;
+}
+
+.dash-timeline-list::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: #e2e8f0;
+}
+
+.dash-timeline-item {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.dash-timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.dash-timeline-dot {
+  position: absolute;
+  left: -24px;
+  top: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #0284c7;
+}
+
+.dash-timeline-dot.gold {
+  border-color: #f59e0b;
+}
+
+.dash-timeline-dot.green {
+  border-color: #10b981;
+}
+
+.dash-timeline-content {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dash-timeline-title {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.dash-timeline-sub {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.dash-timeline-points {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.1);
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   8. Sağ Sütun: Günlük Hedef, Rozetler & Liderlik Tablosu
+   -------------------------------------------------------------------------- */
+/* Günlük Hedef Kartı */
+.dash-daily-goal-card {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.dash-goal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.dash-goal-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.dash-goal-nums {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.dash-goal-nums span {
+  font-size: 0.95rem;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.dash-goal-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.dash-goal-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: #f59e0b;
+  transition: width 0.4s ease;
+}
+
+.dash-goal-info {
+  font-size: 0.78rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+/* Rozetler Galerisi */
+.dash-badges-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.dash-badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dash-badge-item:hover {
+  background: #ffffff;
+  border-color: #0284c7;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(2, 132, 199, 0.15);
+}
+
+.dash-badge-icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  position: relative;
+}
+
+.dash-badge-icon-box.gold {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #d97706;
+  border: 2px solid #f59e0b;
+}
+
+.dash-badge-icon-box.blue {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  color: #0284c7;
+  border: 2px solid #0284c7;
+}
+
+.dash-badge-icon-box.purple {
+  background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+  color: #6366f1;
+  border: 2px solid #6366f1;
+}
+
+.dash-badge-icon-box.locked {
+  background: #f1f5f9;
+  color: #94a3b8;
+  border: 2px dashed #cbd5e1;
+  filter: grayscale(1);
+  opacity: 0.6;
+}
+
+.dash-badge-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #334155;
+  line-height: 1.2;
+}
+
+/* Liderlik Tablosu Snippet */
+.dash-leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dash-leader-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.dash-leader-row.self {
+  background: rgba(2, 132, 199, 0.08);
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+.dash-leader-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dash-rank-badge {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.dash-rank-badge.gold {
+  background: #f59e0b;
+  color: #ffffff;
+}
+
+.dash-rank-badge.silver {
+  background: #94a3b8;
+  color: #ffffff;
+}
+
+.dash-rank-badge.bronze {
+  background: #b45309;
+  color: #ffffff;
+}
+
+.dash-rank-badge.normal {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.dash-leader-points {
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.dash-leader-row.self .dash-leader-points {
+  color: #0284c7;
+}
+
+/* --------------------------------------------------------------------------
+   9. Responsive Düzenler
+   -------------------------------------------------------------------------- */
+@media (max-width: 1200px) {
+  .dash-quick-scores-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dash-score-cell:nth-child(2)::after {
+    display: none;
+  }
+
+  .dash-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dash-exam-cards-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 992px) {
+  .dashboard-hero-card {
+    padding: 20px;
+  }
+
+  .dash-books-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-badges-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Badge Modal Custom Styling */
+#modalBadgeDetail .modal-content {
+  background: #ffffff !important;
+  border-radius: 24px;
+  box-shadow: 0 25px 60px -10px rgba(15, 23, 42, 0.3) !important;
+  border: 1px solid #e2e8f0;
+}
+
+#modalBadgeDetail .badge-modal-icon-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0;
+}
+
+#modalBadgeDetail .badge-modal-icon-stage .dash-badge-icon-box {
+  width: 76px !important;
+  height: 76px !important;
+  font-size: 2.2rem !important;
+  border-radius: 50%;
+  box-shadow: 0 10px 25px rgba(245, 158, 11, 0.25);
+}
+
+#modalBadgeDetail .badge-modal-meta-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+  .dashboard-hero-card {
+    padding: 18px 16px;
+  }
+
+  .dash-user-profile-wrap {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .dash-user-titles {
+    align-items: center;
+  }
+
+  .dash-user-tags-row {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* Mobilde skorlar iç içe girmesin: bağımsız, modern kutucuklar (kartlar) */
+  .dash-quick-scores-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    margin-top: 18px;
+  }
+
+  .dash-score-cell {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 14px 14px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 92px;
+  }
+
+  .dash-score-cell::after {
+    display: none !important;
+  }
+
+  .dash-score-label {
+    font-size: 0.76rem;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  .dash-score-value {
+    font-size: 1.3rem;
+    font-weight: 800;
+  }
+
+  .dash-score-sub {
+    margin-top: 4px;
+    font-size: 0.72rem;
+  }
+
+  .dash-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .dash-card-header .btn-outline-hero {
+    align-self: flex-start;
+  }
+
+  .dash-metrics-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .dash-metric-card {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .dash-metric-icon-box {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    font-size: 1rem;
+  }
+
+  .dash-metric-num {
+    font-size: 1.15rem;
+  }
+
+  .dash-badges-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dash-quick-scores-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .dash-score-cell {
+    padding: 12px 10px;
+    border-radius: 14px;
+  }
+
+  .dash-score-value {
+    font-size: 1.2rem;
+  }
+
+  .dash-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dash-badges-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

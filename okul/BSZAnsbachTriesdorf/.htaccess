@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    DirectoryIndex  /View/page/page.php
+    RewriteBase /
+
+
+   RewriteRule ^page/(.*)$             /View/page/page.php?page_id=$1 [L,NC]
+   RewriteRule ^blog$             /View/blog/blog.php [L,NC]
+   RewriteRule ^blog/(.*)$             /View/blog/blog.php?cat=$1 [L,NC]
+   RewriteRule ^blog-detail/(.*)$             /View/blog-detail/blog-detail.php?url=$1 [L,NC]
+   RewriteRule ^termine$             /View/termine/termine.php [L,NC]
+</IfModule>                                                                                                                                              
+
+
+
+
+
+
+
+
+
+
