@@ -1,0 +1,32 @@
+name: Demo Siteye Otomatik Dağıtım (FTP Deploy)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  web-deploy:
+    name: FTP ile Canlıya Dağıt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Depoyu Klonla
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: FTP Senkronizasyonu
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT || 21 }}
+          protocol: ftp
+          server-dir: /
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.agents/**
+            .idea/**
+            *.md
