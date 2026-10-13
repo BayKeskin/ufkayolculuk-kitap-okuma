@@ -16,6 +16,15 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: PHP ve Composer Kurulumu
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, json, curl
+
+      - name: Composer Bağımlılıklarını Yükle
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
       - name: FTP Senkronizasyonu
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -26,13 +35,17 @@ jobs:
           protocol: ftp
           server-dir: /
           log-level: verbose
-          timeout: 60000
+          timeout: 120000
           exclude: |
             **/.git*
             **/.git*/**
             **/.agents/**
             .idea/**
             *.md
-            vendor/**
-            writable/**
             .env
+            writable/cache/**
+            writable/logs/**
+            writable/session/**
+            writable/debugbar/**
+            tests/**
+            phpunit.dist.xml
