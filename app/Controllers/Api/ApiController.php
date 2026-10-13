@@ -128,4 +128,71 @@ class ApiController extends BaseController
             ]
         ]);
     }
+
+    /**
+     * Oturum Açmış Kullanıcı Bilgisi (Cross-Subdomain Session Kontrolü)
+     */
+    public function me()
+    {
+        $session = session();
+        if (!$session->has('ufka_user')) {
+            return $this->failUnauthorized('Aktif oturum bulunamadı. Lütfen ufkayolculuk.com üzerinden giriş yapınız.');
+        }
+
+        $user = $session->get('ufka_user');
+
+        return $this->respond([
+            'status' => 'success',
+            'logged_in' => true,
+            'user' => [
+                'id'             => $user['id'] ?? null,
+                'name'           => $user['name'] ?? 'Yarışmacı',
+                'category_title' => $user['category_title'] ?? 'Ortaokul',
+                'grade'          => $user['grade'] ?? '7. Sınıf',
+                'city'           => $user['city'] ?? 'İstanbul',
+                'general_score'  => $user['general_score'] ?? 85.5,
+                'turkey_rank'    => $user['turkey_rank'] ?? 142,
+                'city_rank'      => $user['city_rank'] ?? 18
+            ]
+        ]);
+    }
+
+    /**
+     * Yerel / WAMP Geliştirme Ortamı İçin Oturum Simülasyonu
+     */
+    public function simulateLogin()
+    {
+        $demoUser = [
+            'id'             => 1001,
+            'name'           => 'Ahmet Talha Keskin',
+            'category_title' => 'Ortaokul Kategorisi (6-8. Sınıf)',
+            'grade'          => '7. Sınıf',
+            'city'           => 'İstanbul / Üsküdar',
+            'general_score'  => 92.5,
+            'turkey_rank'    => 12,
+            'city_rank'      => 3
+        ];
+
+        session()->set('ufka_user', $demoUser);
+
+        return $this->respond([
+            'status' => 'success',
+            'message' => 'Simüle edilmiş oturum (ufka_user) başarıyla oluşturuldu.',
+            'user' => $demoUser
+        ]);
+    }
+
+    /**
+     * Oturumu Sonlandır (Logout)
+     */
+    public function logout()
+    {
+        session()->remove('ufka_user');
+
+        return $this->respond([
+            'status' => 'success',
+            'message' => 'Oturum başarıyla sonlandırıldı.'
+        ]);
+    }
 }
+

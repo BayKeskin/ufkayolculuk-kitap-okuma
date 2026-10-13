@@ -34,7 +34,7 @@
   <header class="portal-navbar">
     <div class="container-portal">
       <div class="d-flex align-items-center justify-content-between">
-
+        
         <!-- Sol: Logo -->
         <a href="home.html" class="brand-logo-wrap" title="Ufka Yolculuk Anasayfa">
           <img src="assets/images/logo.png" alt="Ufka Yolculuk Logo" class="brand-logo-img">
@@ -56,9 +56,27 @@
               </a>
             </li>
             <li class="nav-menu-item">
+              <a href="kitaplar.html?year=archive" class="nav-link-custom">
+                <i class="fa-solid fa-layer-group"></i>
+                <span>Geçmiş Yıllar</span>
+              </a>
+            </li>
+            <li class="nav-menu-item">
               <a href="kitap-oku.html?book=tevhid-muhafizlari&page=5" class="nav-link-custom">
                 <i class="fa-solid fa-headphones"></i>
                 <span>Sesli Kitap Oku</span>
+              </a>
+            </li>
+            <li class="nav-menu-item">
+              <a href="deneme-sinavlari.html" class="nav-link-custom">
+                <i class="fa-solid fa-laptop-code text-primary"></i>
+                <span>Deneme Sınavları</span>
+              </a>
+            </li>
+            <li class="nav-menu-item">
+              <a href="siralamalar.html" class="nav-link-custom">
+                <i class="fa-solid fa-trophy text-warning"></i>
+                <span>Sıralamalar</span>
               </a>
             </li>
             <li class="nav-menu-item">
@@ -78,18 +96,18 @@
 
         <!-- Sağ: Arama, Bildirim ve Kullanıcı Dropdown Menüleri -->
         <div class="nav-actions">
-          <button type="button" class="icon-action-btn" id="navSearchTrigger" title="Arama Yap (Ctrl+K)" aria-expanded="false">
+          <button type="button" class="icon-action-btn" id="navSearchTrigger" title="Arama Yap">
             <i class="fa-solid fa-magnifying-glass"></i>
           </button>
 
-          <!-- Bildirimler Açılır Menüsü -->
+          <!-- 1. Bildirimler Açılır Menüsü (Dropdown) -->
           <div class="nav-dropdown-wrapper" id="notifDropdownWrap">
-            <button type="button" class="icon-action-btn" id="notificationBtn" title="Bildirimler"
-              aria-expanded="false">
+            <button type="button" class="icon-action-btn" id="notificationBtn" title="Bildirimler" aria-expanded="false">
               <i class="fa-solid fa-bell"></i>
               <span class="notification-badge" id="notifCountBadge">3</span>
             </button>
-
+            
+            <!-- Bildirim Açılır Kartı -->
             <div class="portal-popover-menu notif-popover-menu" id="notifDropdownMenu">
               <div class="popover-header">
                 <div class="d-flex align-items-center gap-2">
@@ -98,39 +116,42 @@
                 </div>
                 <button type="button" class="btn-popover-text" id="markAllNotifsRead">Tümünü Okundu Say</button>
               </div>
-
+              
               <div class="popover-body-scroll">
+                <!-- Bildirim 1 -->
                 <div class="notif-item-row unread">
                   <div class="notif-item-icon bg-primary-subtle text-primary">
                     <i class="fa-solid fa-headphones"></i>
                   </div>
                   <div class="notif-item-content">
                     <div class="notif-item-title">Yeni Sesli Kitap Eklendi</div>
-                    <div class="notif-item-text">"Tevhid Muhafızları" 163MB tam sesli okuması hazırlandı.</div>
+                    <div class="notif-item-text">"Nasıl İnanmalı?" sesli dinleme bölümü aktif edildi.</div>
                     <div class="notif-item-time"><i class="fa-regular fa-clock me-1"></i>10 dakika önce</div>
                   </div>
                   <div class="notif-unread-dot"></div>
                 </div>
 
+                <!-- Bildirim 2 -->
                 <div class="notif-item-row unread">
                   <div class="notif-item-icon bg-warning-subtle text-warning">
                     <i class="fa-solid fa-trophy"></i>
                   </div>
                   <div class="notif-item-content">
                     <div class="notif-item-title">Tebrikler! Rozet Kazandınız</div>
-                    <div class="notif-item-text">7 Günlük Okuma Serisi tamamlandı (+100 Puan).</div>
+                    <div class="notif-item-text">Günlük okuma hedefini tamamlayarak 50 bonus puan kazandınız.</div>
                     <div class="notif-item-time"><i class="fa-regular fa-clock me-1"></i>2 saat önce</div>
                   </div>
                   <div class="notif-unread-dot"></div>
                 </div>
 
+                <!-- Bildirim 3 -->
                 <div class="notif-item-row unread">
                   <div class="notif-item-icon bg-success-subtle text-success">
                     <i class="fa-solid fa-calendar-check"></i>
                   </div>
                   <div class="notif-item-content">
                     <div class="notif-item-title">Deneme Sınavı Hatırlatması</div>
-                    <div class="notif-item-text">Online deneme sınavına 2 gün kaldı!</div>
+                    <div class="notif-item-text">Online deneme sınavına 2 gün kaldı. Hazırlıklarını gözden geçir!</div>
                     <div class="notif-item-time"><i class="fa-regular fa-clock me-1"></i>1 gün önce</div>
                   </div>
                   <div class="notif-unread-dot"></div>
@@ -146,10 +167,9 @@
             </div>
           </div>
 
-          <!-- Kullanıcı Profil Menüsü -->
+          <!-- 2. Kullanıcı Profil Açılır Menüsü (Dropdown) -->
           <div class="nav-dropdown-wrapper" id="userProfileDropdownWrap">
-            <button type="button" class="user-nav-dropdown cursor-pointer" id="userNavDropdownBtn"
-              title="Kullanıcı Menüsü" aria-expanded="false">
+            <button type="button" class="user-nav-dropdown cursor-pointer" id="userNavDropdownBtn" title="Kullanıcı Menüsü" aria-expanded="false">
               <div class="user-initial-avatar" title="Ahmet Yılmaz">AY</div>
               <div class="user-nav-text d-none d-sm-block">
                 <span class="user-nav-greeting">Merhaba,</span>
@@ -158,16 +178,14 @@
               <i class="fa-solid fa-chevron-down user-nav-chevron ms-1 d-none d-sm-inline-block"></i>
             </button>
 
+            <!-- Profil Açılır Kartı -->
             <div class="portal-popover-menu profile-popover-menu" id="userProfileDropdownMenu">
               <div class="profile-popover-header">
-                <div class="user-avatar-large user-initial-avatar"
-                  style="width: 44px; height: 44px; min-width: 44px; font-size: 1rem; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">
-                  AY</div>
+                <div class="user-avatar-large user-initial-avatar" style="width: 44px; height: 44px; min-width: 44px; font-size: 1rem; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">AY</div>
                 <div class="profile-popover-user-info">
                   <div class="profile-popover-name">Ahmet Yılmaz</div>
                   <div class="profile-popover-email">ahmet.yilmaz@ufkayolculuk.com</div>
-                  <span class="badge bg-primary-subtle text-primary rounded-pill mt-1"
-                    style="font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.55rem;">Katılımcı (2025)</span>
+                  <span class="badge bg-primary-subtle text-primary rounded-pill mt-1" style="font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.55rem;">Katılımcı (2025)</span>
                 </div>
               </div>
 
@@ -178,19 +196,22 @@
                   <i class="fa-solid fa-chart-pie menu-icon text-primary"></i>
                   <span>İstatistiklerim & Dashboard</span>
                 </a>
-                <a href="#rozetler" class="profile-menu-item">
+                <a href="dashboard.html#rozetler" class="profile-menu-item">
                   <i class="fa-solid fa-trophy menu-icon text-warning"></i>
                   <span>Puanlarım & Rozetlerim</span>
-                  <span class="badge bg-warning-subtle text-dark ms-auto"
-                    style="font-size: 0.68rem; font-weight: 700;">2.450 P</span>
+                  <span class="badge bg-warning-subtle text-dark ms-auto" style="font-size: 0.68rem; font-weight: 700;">2.450 P</span>
                 </a>
-                <a href="index.html#kitaplar" class="profile-menu-item">
+                <a href="kitaplar.html" class="profile-menu-item">
                   <i class="fa-solid fa-bookmark menu-icon text-primary"></i>
-                  <span>Kayıtlı Kitaplar</span>
+                  <span>Yarışma Kitapları</span>
                 </a>
-                <a href="#" class="profile-menu-item">
-                  <i class="fa-solid fa-gear menu-icon"></i>
-                  <span>Hesap Ayarları</span>
+                <a href="siralamalar.html" class="profile-menu-item">
+                  <i class="fa-solid fa-trophy menu-icon text-warning"></i>
+                  <span>Başarı Sıralamaları</span>
+                </a>
+                <a href="index.html" class="profile-menu-item">
+                  <i class="fa-solid fa-layer-group menu-icon text-info"></i>
+                  <span>Tüm Sayfalar (Sunum)</span>
                 </a>
               </div>
 
@@ -203,6 +224,10 @@
             </div>
           </div>
 
+          <!-- Mobil Menü Butonu -->
+          <button type="button" class="icon-action-btn d-lg-none" id="mobileMenuToggle" title="Menü">
+            <i class="fa-solid fa-bars"></i>
+          </button>
         </div>
 
       </div>
@@ -1111,6 +1136,44 @@
     </div>
   </div>
 
+
+  <!-- Mobil Menü Çekmecesi -->
+  <div class="custom-modal-backdrop" id="mobileNavDrawer">
+    <div class="custom-modal-card" style="margin-top: 0; align-self: flex-start; border-radius: 0 0 20px 20px;">
+      <div class="modal-header-custom">
+        <img src="assets/images/logo.png" alt="Ufka Yolculuk" style="height: 32px;">
+        <button type="button" class="modal-close-btn" id="closeMobileNav">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <ul class="nav flex-column gap-2 mt-3">
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="home.html"><i class="fa-solid fa-house me-2"></i> Anasayfa</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="kitaplar.html"><i class="fa-solid fa-book-open me-2"></i> Yarışma Kitapları</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="kitaplar.html?year=archive"><i class="fa-solid fa-layer-group me-2"></i> Geçmiş Yıllar</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="kitap-oku.html?book=tevhid-muhafizlari&page=5"><i class="fa-solid fa-headphones me-2"></i> Sesli Kitap Oku</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="deneme-sinavlari.html"><i class="fa-solid fa-laptop-code me-2 text-primary"></i> Deneme Sınavları</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="siralamalar.html"><i class="fa-solid fa-trophy me-2 text-warning"></i> Sıralamalar</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-primary fw-bold" href="dashboard.html"><i class="fa-solid fa-chart-pie me-2"></i> Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="index.html"><i class="fa-solid fa-layer-group me-2"></i> Tüm Sayfalar (Sunum)</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 
   <!-- Bootstrap JS (Yerel) -->
   <script src="assets/js/bootstrap.bundle.min.js"></script>

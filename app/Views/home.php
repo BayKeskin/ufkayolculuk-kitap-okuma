@@ -68,6 +68,12 @@
               </a>
             </li>
             <li class="nav-menu-item">
+              <a href="siralamalar.html" class="nav-link-custom">
+                <i class="fa-solid fa-trophy text-warning"></i>
+                <span>Sıralamalar</span>
+              </a>
+            </li>
+            <li class="nav-menu-item">
               <a href="dashboard.html" class="nav-link-custom">
                 <i class="fa-solid fa-chart-pie"></i>
                 <span>Dashboard</span>
@@ -192,6 +198,10 @@
                 <a href="kitaplar.html" class="profile-menu-item">
                   <i class="fa-solid fa-bookmark menu-icon text-primary"></i>
                   <span>Yarışma Kitapları</span>
+                </a>
+                <a href="siralamalar.html" class="profile-menu-item">
+                  <i class="fa-solid fa-trophy menu-icon text-warning"></i>
+                  <span>Başarı Sıralamaları</span>
                 </a>
                 <a href="index.html" class="profile-menu-item">
                   <i class="fa-solid fa-layer-group menu-icon text-info"></i>
@@ -1174,6 +1184,12 @@
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="kitap-oku.html?book=tevhid-muhafizlari&page=5"><i class="fa-solid fa-headphones me-2"></i> Sesli Kitap Oku</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="deneme-sinavlari.html"><i class="fa-solid fa-laptop-code me-2 text-primary"></i> Deneme Sınavları</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="siralamalar.html"><i class="fa-solid fa-trophy me-2 text-warning"></i> Sıralamalar</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="dashboard.html"><i class="fa-solid fa-chart-pie me-2"></i> Dashboard</a>
