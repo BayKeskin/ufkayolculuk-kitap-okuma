@@ -18,6 +18,21 @@ if (empty($logFiles)) {
     }
 }
 
+echo "=== ENSURING WRITABLE SUBDIRS ===\n";
+$writableBase = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'writable';
+if (is_dir($writableBase)) {
+    foreach (['cache', 'logs', 'session', 'debugbar', 'uploads'] as $sub) {
+        $subDir = $writableBase . DIRECTORY_SEPARATOR . $sub;
+        if (!is_dir($subDir)) {
+            $created = @mkdir($subDir, 0777, true);
+            echo "Created $sub: " . ($created ? 'YES' : 'NO') . "\n";
+        } else {
+            echo "Exists $sub: YES\n";
+        }
+        @chmod($subDir, 0777);
+    }
+}
+
 echo "=== TRYING TO BOOT CI4 DIRECTLY ===\n";
 try {
     define('ENVIRONMENT', 'development');

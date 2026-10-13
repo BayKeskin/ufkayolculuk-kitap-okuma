@@ -45,6 +45,18 @@ if (getcwd() . DIRECTORY_SEPARATOR !== FCPATH) {
     chdir(FCPATH);
 }
 
+// Sunucuda eksik olabilecek writable alt klasörlerini (cache, logs, session vb.) otomatik oluştur
+$writableBase = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'writable';
+if (is_dir($writableBase)) {
+    foreach (['cache', 'logs', 'session', 'debugbar', 'uploads'] as $sub) {
+        $subDir = $writableBase . DIRECTORY_SEPARATOR . $sub;
+        if (!is_dir($subDir)) {
+            @mkdir($subDir, 0777, true);
+        }
+        @chmod($subDir, 0777);
+    }
+}
+
 /*
  *---------------------------------------------------------------
  * BOOTSTRAP THE APPLICATION

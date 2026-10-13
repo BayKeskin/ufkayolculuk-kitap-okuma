@@ -34,9 +34,13 @@ jobs:
             .idea/**
             *.md
             .env
-            writable/cache/**
-            writable/logs/**
-            writable/session/**
-            writable/debugbar/**
+            writable/cache/*
+            !writable/cache/index.html
+            writable/logs/*
+            !writable/logs/index.html
+            writable/session/*
+            !writable/session/index.html
+            writable/debugbar/*
+            !writable/debugbar/index.html
             tests/**
             phpunit.dist.xml
