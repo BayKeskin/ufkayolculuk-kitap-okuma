@@ -1,33 +1,34 @@
 <?php
 header('Content-Type: text/plain; charset=utf-8');
-echo "=== CI4 BOOT TEST ===\n";
+ini_set('display_errors', '1');
+error_reporting(E_ALL);
 
-define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
-chdir(FCPATH);
+echo "=== DIAGNOSTIC & LOG CHECK ===\n";
 
-require FCPATH . '../app/Config/Paths.php';
-$paths = new \Config\Paths();
-require $paths->systemDirectory . '/Boot.php';
+$logFiles = glob(dirname(__DIR__) . '/writable/logs/*.log');
+if (empty($logFiles)) {
+    echo "No log files found in writable/logs/!\n";
+} else {
+    foreach ($logFiles as $logFile) {
+        echo "=== LOG: " . basename($logFile) . " ===\n";
+        $content = file_get_contents($logFile);
+        $lines = explode("\n", trim($content));
+        $lastLines = array_slice($lines, -40);
+        echo implode("\n", $lastLines) . "\n\n";
+    }
+}
 
+echo "=== TRYING TO BOOT CI4 DIRECTLY ===\n";
 try {
-    echo "Booting web...\n";
-    // We catch exceptions manually
-    $app = \CodeIgniter\Config\Services::codeigniter();
-    $app->initialize();
-    echo "CI4 Initialized successfully!\n";
-
-    echo "Testing session service...\n";
-    $session = service('session');
-    echo "Session service instantiated!\n";
-
-    echo "Testing request handling...\n";
-    $response = $app->run();
-    echo "App run status code: " . $response->getStatusCode() . "\n";
-    echo "App body snippet: " . substr(strip_tags($response->getBody()), 0, 200) . "\n";
+    define('ENVIRONMENT', 'development');
+    require_once dirname(__DIR__) . '/app/Config/Paths.php';
+    $paths = new Config\Paths();
+    require_once $paths->systemDirectory . '/Boot.php';
+    echo "Boot class loaded. Running Boot::bootWeb in try-catch...\n";
+    CodeIgniter\Boot::bootWeb($paths);
 } catch (\Throwable $e) {
-    echo "\n!!! CAUGHT EXCEPTION !!!\n";
-    echo "Class: " . get_class($e) . "\n";
+    echo "CAUGHT EXCEPTION: " . get_class($e) . "\n";
     echo "Message: " . $e->getMessage() . "\n";
     echo "File: " . $e->getFile() . " (Line " . $e->getLine() . ")\n";
-    echo "\nStack Trace:\n" . $e->getTraceAsString() . "\n";
+    echo "Trace:\n" . $e->getTraceAsString() . "\n";
 }
