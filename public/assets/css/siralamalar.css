@@ -1,0 +1,489 @@
+/**
+ * Ufka Yolculuk - Liderlik & Başarı Sıralaması Özel Stilleri (siralamalar.css)
+ */
+
+:root {
+  --sira-primary: #0284c7;
+  --sira-primary-dark: #0369a1;
+  --sira-primary-light: #e0f2fe;
+  --sira-gold: #f59e0b;
+  --sira-gold-light: #fef3c7;
+  --sira-silver: #94a3b8;
+  --sira-silver-light: #f1f5f9;
+  --sira-bronze: #d97706;
+  --sira-bronze-light: #ffedd5;
+  --sira-success: #10b981;
+  --sira-card-bg: #ffffff;
+  --sira-border: #e2e8f0;
+  --sira-text-main: #0f172a;
+  --sira-text-muted: #64748b;
+  --sira-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --sira-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --sira-shadow-lg: 0 16px 36px rgba(2, 132, 199, 0.1);
+}
+
+body.leaderboard-page-body {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #f8fafc;
+  color: var(--sira-text-main);
+  min-height: 100vh;
+}
+
+/* ==========================================================================
+   1. Hero Banner
+   ========================================================================== */
+.leaderboard-hero-card {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0284c7 100%);
+  border-radius: 24px;
+  padding: 2.5rem;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.2);
+  margin-bottom: 2rem;
+}
+
+.leaderboard-hero-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(2, 132, 199, 0) 70%);
+  pointer-events: none;
+}
+
+.leaderboard-hero-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.leaderboard-hero-title {
+  font-size: 2.1rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.75rem;
+}
+
+.leaderboard-hero-desc {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  max-width: 620px;
+  line-height: 1.6;
+}
+
+.leaderboard-stat-badge-box {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+/* ==========================================================================
+   2. Podyum / Kürsü Tasarımı (Top 3 Podium)
+   ========================================================================== */
+.podium-container {
+  margin-bottom: 2.5rem;
+}
+
+.podium-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  align-items: flex-end;
+}
+
+.podium-card {
+  background: var(--sira-card-bg);
+  border: 1px solid var(--sira-border);
+  border-radius: 20px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--sira-shadow-sm);
+}
+
+.podium-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--sira-shadow-lg);
+}
+
+.podium-card.rank-1 {
+  background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%);
+  border: 2px solid var(--sira-gold);
+  box-shadow: 0 12px 32px rgba(245, 158, 11, 0.18);
+  transform: scale(1.04);
+  z-index: 2;
+}
+
+.podium-card.rank-1:hover {
+  transform: scale(1.04) translateY(-6px);
+}
+
+.podium-card.rank-2 {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-top: 4px solid var(--sira-silver);
+}
+
+.podium-card.rank-3 {
+  background: linear-gradient(180deg, #ffffff 0%, #fff7ed 100%);
+  border-top: 4px solid var(--sira-bronze);
+}
+
+.podium-crown-icon {
+  font-size: 1.8rem;
+  color: var(--sira-gold);
+  margin-bottom: 0.5rem;
+  animation: crownBounce 2.5s infinite ease-in-out;
+}
+
+@keyframes crownBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.podium-avatar-wrap {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1rem;
+}
+
+.podium-card.rank-1 .podium-avatar-wrap {
+  width: 96px;
+  height: 96px;
+}
+
+.podium-initials-badge {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: #ffffff;
+  border: 3px solid #ffffff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  letter-spacing: 0.03em;
+}
+
+.podium-card.rank-1 .podium-initials-badge {
+  font-size: 2.15rem;
+  border-color: #f59e0b;
+}
+
+.podium-initials-badge.gold {
+  background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%);
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.35);
+}
+
+.podium-initials-badge.silver {
+  background: linear-gradient(135deg, #94a3b8 0%, #475569 100%);
+  box-shadow: 0 8px 20px rgba(100, 116, 139, 0.25);
+}
+
+.podium-initials-badge.bronze {
+  background: linear-gradient(135deg, #fb923c 0%, #c2410c 100%);
+  box-shadow: 0 8px 20px rgba(194, 65, 12, 0.25);
+}
+
+.podium-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ffffff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.podium-rank-badge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+}
+
+.podium-rank-badge.gold { background: var(--sira-gold); }
+.podium-rank-badge.silver { background: var(--sira-silver); }
+.podium-rank-badge.bronze { background: var(--sira-bronze); }
+
+.podium-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--sira-text-main);
+  margin-bottom: 0.2rem;
+}
+
+.podium-school {
+  font-size: 0.76rem;
+  color: var(--sira-text-muted);
+  margin-bottom: 0.85rem;
+  min-height: 2.2em;
+}
+
+.podium-score-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.podium-score-pill.gold { background: var(--sira-gold-light); color: #b45309; }
+.podium-score-pill.silver { background: var(--sira-silver-light); color: #475569; }
+.podium-score-pill.bronze { background: var(--sira-bronze-light); color: #c2410c; }
+
+/* ==========================================================================
+   3. Kullanıcının Sabit Vurgulu Kendi Sıralaması Şeridi (User Rank Sticky Bar)
+   ========================================================================== */
+.user-rank-highlight-card {
+  background: linear-gradient(90deg, #0284c7 0%, #2563eb 100%);
+  border-radius: 18px;
+  padding: 1.15rem 1.5rem;
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(2, 132, 199, 0.25);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.user-rank-info-group {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.user-rank-num-badge {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  padding: 0.5rem 1.1rem;
+  border-radius: 12px;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.user-rank-stat-mini {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.user-rank-stat-col {
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  padding-left: 1rem;
+}
+
+/* ==========================================================================
+   4. Filtreler & Arama Kontrolleri
+   ========================================================================== */
+.leaderboard-filter-card {
+  background: var(--sira-card-bg);
+  border: 1px solid var(--sira-border);
+  border-radius: 18px;
+  padding: 1.25rem;
+  box-shadow: var(--sira-shadow-sm);
+  margin-bottom: 1.5rem;
+}
+
+.sira-search-box {
+  position: relative;
+  width: 100%;
+}
+
+.sira-search-box i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--sira-text-muted);
+}
+
+.sira-search-input {
+  width: 100%;
+  padding: 0.55rem 1rem 0.55rem 2.4rem;
+  border-radius: 9999px;
+  border: 1px solid var(--sira-border);
+  font-size: 0.85rem;
+  font-weight: 600;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.sira-search-input:focus {
+  border-color: var(--sira-primary);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+/* ==========================================================================
+   5. Sıralama Tablosu (Leaderboard Table)
+   ========================================================================== */
+.leaderboard-table-card {
+  background: var(--sira-card-bg);
+  border: 1px solid var(--sira-border);
+  border-radius: 20px;
+  box-shadow: var(--sira-shadow-sm);
+  overflow: hidden;
+}
+
+.leaderboard-table {
+  width: 100%;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.leaderboard-table thead th {
+  background: #f8fafc;
+  color: var(--sira-text-muted);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--sira-border);
+}
+
+.leaderboard-table tbody td {
+  padding: 1rem 1.25rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.88rem;
+  transition: background-color 0.15s ease;
+}
+
+.leaderboard-table tbody tr:hover td {
+  background-color: #f8fafc;
+}
+
+.leaderboard-table tbody tr.user-row td {
+  background-color: #f0f9ff;
+  font-weight: 700;
+}
+
+.rank-index-num {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--sira-text-muted);
+}
+
+.rank-index-num.gold { color: #d97706; }
+.rank-index-num.silver { color: #64748b; }
+.rank-index-num.bronze { color: #c2410c; }
+
+.participant-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.participant-avatar-initials {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.88rem;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.sinav-user-avatar-initials {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+  border: 2px solid #e0f2fe;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
+}
+
+.avatar-color-blue { background: linear-gradient(135deg, #0284c7, #0369a1); }
+.avatar-color-purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+.avatar-color-amber { background: linear-gradient(135deg, #f59e0b, #d97706); }
+.avatar-color-emerald { background: linear-gradient(135deg, #10b981, #047857); }
+.avatar-color-rose { background: linear-gradient(135deg, #f43f5e, #be123c); }
+.avatar-color-indigo { background: linear-gradient(135deg, #6366f1, #4338ca); }
+.avatar-color-teal { background: linear-gradient(135deg, #14b8a6, #0f766e); }
+.avatar-color-gold { background: linear-gradient(135deg, #fbbf24, #d97706); }
+.avatar-color-silver { background: linear-gradient(135deg, #94a3b8, #475569); }
+.avatar-color-bronze { background: linear-gradient(135deg, #fb923c, #c2410c); }
+
+.participant-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e2e8f0;
+}
+
+.participant-name {
+  font-weight: 700;
+  color: var(--sira-text-main);
+  line-height: 1.2;
+}
+
+.participant-school {
+  font-size: 0.74rem;
+  color: var(--sira-text-muted);
+}
+
+/* ==========================================================================
+   6. Responsive Düzenlemeler
+   ========================================================================== */
+@media (max-width: 991.98px) {
+  .podium-grid {
+    grid-template-columns: 1fr;
+  }
+  .podium-card.rank-1 {
+    order: -1;
+    transform: none;
+  }
+  .user-rank-highlight-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .user-rank-stat-mini {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

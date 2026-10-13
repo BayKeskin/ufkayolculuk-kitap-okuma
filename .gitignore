@@ -1,8 +1,35 @@
+# IDE & OS Junk
 .idea/
 .vscode/
 Thumbs.db
 Desktop.ini
 *.log
+*.tmp
 
 # Large media files exceeding GitHub 100MB limit
 assets/audio/tevhid-muhafizlari.mp3
+public/assets/audio/tevhid-muhafizlari.mp3
+
+# CodeIgniter 4 Environment
+.env
+
+# CodeIgniter 4 Temporary & Cache Files
+/writable/cache/*
+!/writable/cache/index.html
+
+/writable/logs/*
+!/writable/logs/index.html
+
+/writable/session/*
+!/writable/session/index.html
+
+/writable/uploads/*
+!/writable/uploads/index.html
+
+/writable/debugbar/*
+!/writable/debugbar/index.html
+
+php_errors.log
+
+# Composer Dependencies
+vendor/

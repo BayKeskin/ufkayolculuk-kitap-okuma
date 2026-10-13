@@ -1,0 +1,1376 @@
+/* ==========================================================================
+   UFKA YOLCULUK - KİTAP OKUYUCU VE SESLİ DİNLEME SAYFASI
+   Özel CSS Stilleri (reader.css)
+   ========================================================================== */
+
+:root {
+  /* Renk Paleti */
+  --reader-primary: #0284c7;
+  --reader-primary-hover: #0369a1;
+  --reader-primary-rgb: 2, 132, 199;
+  --reader-secondary: #6366f1;
+  --reader-accent: #f59e0b;
+  --reader-accent-green: #10b981;
+  --reader-accent-purple: #8b5cf6;
+
+  /* Aydınlık Tema Varsayılanları */
+  --reader-bg: #eef4f9;
+  --reader-bg-pattern: radial-gradient(circle at 50% 30%, #f7fbff 0%, #e2ecf5 100%);
+  --reader-header-bg: rgba(255, 255, 255, 0.88);
+  --reader-header-border: rgba(226, 232, 240, 0.8);
+  --reader-card-bg: #ffffff;
+  --reader-card-border: #e2e8f0;
+  --reader-text: #1e293b;
+  --reader-text-muted: #64748b;
+  --reader-text-subtle: #94a3b8;
+  --reader-dock-bg: rgba(15, 23, 42, 0.92);
+  --reader-dock-border: rgba(255, 255, 255, 0.12);
+  --reader-dock-text: #f8fafc;
+  --reader-dock-muted: #94a3b8;
+  --reader-paper-bg: #ffffff;
+  --reader-spine-shadow: linear-gradient(to right, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.04) 4%, transparent 12%);
+  --reader-spine-left-shadow: linear-gradient(to left, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.04) 4%, transparent 12%);
+  --reader-page-shadow: 0 16px 40px -10px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.06);
+
+  /* Vurgulama Rengi */
+  --highlight-bg: rgba(2, 132, 199, 0.18);
+  --highlight-color: #0369a1;
+  --highlight-border: #0284c7;
+
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-page: 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* --------------------------------------------------------------------------
+   Temalar (Aydınlık, Sepya, Gece)
+   -------------------------------------------------------------------------- */
+[data-theme="sepia"] {
+  --reader-bg: #f4ecd8;
+  --reader-bg-pattern: radial-gradient(circle at 50% 30%, #faf3e0 0%, #ebe0c5 100%);
+  --reader-header-bg: rgba(247, 240, 224, 0.92);
+  --reader-header-border: rgba(214, 201, 175, 0.8);
+  --reader-card-bg: #fbf5e6;
+  --reader-card-border: #ded2b8;
+  --reader-text: #433422;
+  --reader-text-muted: #7c6b54;
+  --reader-text-subtle: #a89a85;
+  --reader-paper-bg: #fbf5e6;
+  --reader-dock-bg: rgba(43, 33, 23, 0.94);
+  --reader-dock-border: rgba(255, 235, 205, 0.15);
+  --highlight-bg: rgba(217, 119, 6, 0.22);
+  --highlight-color: #92400e;
+  --highlight-border: #d97706;
+}
+
+[data-theme="dark"] {
+  --reader-bg: #090d16;
+  --reader-bg-pattern: radial-gradient(circle at 50% 30%, #111827 0%, #060911 100%);
+  --reader-header-bg: rgba(17, 24, 39, 0.88);
+  --reader-header-border: rgba(31, 41, 55, 0.8);
+  --reader-card-bg: #111827;
+  --reader-card-border: #1f2937;
+  --reader-text: #e2e8f0;
+  --reader-text-muted: #94a3b8;
+  --reader-text-subtle: #64748b;
+  --reader-paper-bg: #131c2e;
+  --reader-spine-shadow: linear-gradient(to right, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.15) 5%, transparent 15%);
+  --reader-spine-left-shadow: linear-gradient(to left, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.15) 5%, transparent 15%);
+  --reader-dock-bg: rgba(10, 15, 28, 0.94);
+  --reader-dock-border: rgba(255, 255, 255, 0.1);
+  --reader-page-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --highlight-bg: rgba(56, 189, 248, 0.22);
+  --highlight-color: #38bdf8;
+  --highlight-border: #0284c7;
+}
+
+/* --------------------------------------------------------------------------
+   Genel Sayfa Yapısı
+   -------------------------------------------------------------------------- */
+body.reader-body {
+  margin: 0;
+  padding: 0;
+  background: var(--reader-bg);
+  background-image: var(--reader-bg-pattern);
+  background-attachment: fixed;
+  color: var(--reader-text);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* İlerleme Çubuğu (Top Bar) */
+.reader-progress-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.08);
+  z-index: 1050;
+}
+.reader-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--reader-primary) 0%, var(--reader-secondary) 50%, var(--reader-accent) 100%);
+  transition: width 0.3s ease;
+}
+
+/* --------------------------------------------------------------------------
+   Üst Navigasyon Menüsü (Header)
+   -------------------------------------------------------------------------- */
+.reader-top-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: var(--reader-header-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--reader-header-border);
+  padding: 8px 16px;
+  transition: transform var(--transition-normal), background var(--transition-normal);
+}
+
+.reader-header-inner {
+  max-width: 1540px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.reader-header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+}
+
+.reader-btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(var(--reader-primary-rgb), 0.08);
+  color: var(--reader-primary);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+.reader-btn-back:hover {
+  background: var(--reader-primary);
+  color: #ffffff;
+  transform: translateX(-2px);
+}
+
+.reader-brand-logo {
+  height: 34px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Kitap Seçici Dropdown & Başlık */
+.reader-book-selector-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reader-book-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #f59e0b;
+  color: #ffffff;
+}
+
+.reader-book-dropdown-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--reader-text);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.reader-book-dropdown-btn:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: var(--reader-card-border);
+}
+
+.reader-book-menu {
+  min-width: 280px;
+  border-radius: 14px;
+  border: 1px solid var(--reader-card-border);
+  box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.2);
+  background: var(--reader-card-bg);
+  padding: 8px;
+}
+.reader-book-menu .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 500;
+  color: var(--reader-text);
+}
+.reader-book-menu .dropdown-item:hover {
+  background: rgba(var(--reader-primary-rgb), 0.08);
+  color: var(--reader-primary);
+}
+.reader-book-menu .dropdown-item.active {
+  background: var(--reader-primary);
+  color: #ffffff;
+}
+.reader-book-menu .book-thumb-mini {
+  width: 26px;
+  height: 36px;
+  object-fit: cover;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* Orta / Sağ Buton Grupları */
+.reader-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.reader-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--reader-text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.reader-action-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--reader-text);
+  border-color: var(--reader-card-border);
+}
+.reader-action-btn.active {
+  background: rgba(var(--reader-primary-rgb), 0.1);
+  color: var(--reader-primary);
+  border-color: rgba(var(--reader-primary-rgb), 0.25);
+}
+
+.reader-icon-btn-only {
+  width: 36px;
+  padding: 0;
+}
+
+/* Tema Seçici Dropdown */
+.theme-option-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 12px;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  color: var(--reader-text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+.theme-option-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+.theme-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+.theme-dot.light { background: #ffffff; }
+.theme-dot.sepia { background: #f4ecd8; }
+.theme-dot.dark { background: #111827; }
+
+/* --------------------------------------------------------------------------
+   Kitap Sahnesi (Dual-Page Stage & Spread)
+   -------------------------------------------------------------------------- */
+.reader-main-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px 140px 20px;
+  min-height: calc(100vh - 180px);
+  position: relative;
+}
+
+/* Kitap Konteyneri */
+.book-spread-container {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 2000px;
+  position: relative;
+  margin: 0 auto;
+}
+
+/* Kitap Çift Sayfası (The Dual Spread) */
+.book-spread {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  max-width: 1280px;
+  min-height: 720px;
+  background: var(--reader-paper-bg);
+  border-radius: 12px;
+  box-shadow: var(--reader-page-shadow);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--reader-card-border);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+/* Kitap Orta Omurga Dikiş & Katlanma Çizgisi */
+.book-spread::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.12);
+  z-index: 20;
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
+/* Sayfa Yuvası (Page Frame) */
+.page-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 720px;
+  background: var(--reader-paper-bg);
+  overflow: hidden;
+  transition: opacity 0.3s ease, transform 0.35s ease;
+}
+
+.page-frame.left-page {
+  border-right: none;
+  box-shadow: inset -15px 0 25px -15px rgba(0, 0, 0, 0.15);
+}
+
+.page-frame.right-page {
+  border-left: none;
+  box-shadow: inset 15px 0 25px -15px rgba(0, 0, 0, 0.15);
+}
+
+/* Sayfa Üst Başlığı (Chapter info & header) */
+.page-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px 6px 24px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--reader-text-subtle);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  user-select: none;
+}
+.page-header-bar .book-name {
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+/* Sayfa İçerik Alanı */
+.page-content-body {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px;
+  overflow-y: auto;
+}
+
+/* Görsel Mod: Kitap Taraması */
+.page-scan-img {
+  max-width: 100%;
+  max-height: 640px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  user-select: none;
+  -webkit-user-drag: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* Metin Modu İçeriği */
+.page-text-container {
+  width: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+  padding: 10px 8px;
+  font-size: 1.05rem;
+  line-height: 1.95;
+  color: var(--reader-text);
+  text-align: justify;
+  font-family: 'Plus Jakarta Sans', Georgia, serif;
+}
+
+.page-text-container.font-serif {
+  font-family: 'Merriweather', Georgia, serif;
+}
+
+.page-text-container .subtitlePart {
+  display: inline;
+  padding: 2px 3px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  color: inherit;
+  text-decoration: none;
+}
+.page-text-container .subtitlePart:hover {
+  background: rgba(var(--reader-primary-rgb), 0.12);
+}
+.page-text-container .subtitlePart.active-sentence {
+  background: var(--highlight-bg);
+  color: var(--highlight-color);
+  font-weight: 600;
+  box-shadow: 0 0 0 2px var(--highlight-border);
+  border-radius: 4px;
+}
+
+/* Sayfa Alt Numarası */
+.page-footer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 24px 14px 24px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--reader-text-muted);
+  user-select: none;
+}
+.page-footer-bar .page-number-pill {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* Sayfa Çevirme Animasyon Sınıfları */
+.slide-shift-left {
+  animation: shiftLeft var(--transition-page) forwards;
+}
+.slide-incoming-right {
+  animation: incomingRight var(--transition-page) forwards;
+}
+.slide-shift-right {
+  animation: shiftRight var(--transition-page) forwards;
+}
+.slide-incoming-left {
+  animation: incomingLeft var(--transition-page) forwards;
+}
+
+@keyframes shiftLeft {
+  0% { transform: translateX(50%); opacity: 0.8; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes incomingRight {
+  0% { transform: translateX(20px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes shiftRight {
+  0% { transform: translateX(-50%); opacity: 0.8; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes incomingLeft {
+  0% { transform: translateX(-20px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+/* Yan Hızlı Geçiş Butonları (Floating Edge Arrows) */
+.edge-turn-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--reader-card-bg);
+  border: 1px solid var(--reader-card-border);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  color: var(--reader-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  z-index: 50;
+  transition: all var(--transition-fast);
+}
+.edge-turn-btn:hover:not(:disabled) {
+  background: var(--reader-primary);
+  color: #ffffff;
+  border-color: var(--reader-primary);
+  transform: translateY(-50%) scale(1.08);
+}
+.edge-turn-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  transform: translateY(-50%);
+}
+.edge-turn-btn.prev-edge {
+  left: -26px;
+}
+.edge-turn-btn.next-edge {
+  right: -26px;
+}
+
+/* --------------------------------------------------------------------------
+   Sabit Alt Kontrol Paneli & Ses Oynatıcı (Dock)
+   -------------------------------------------------------------------------- */
+.reader-bottom-dock {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(94%, 920px);
+  background: var(--reader-dock-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--reader-dock-border);
+  border-radius: 20px;
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  padding: 10px 18px 12px 18px;
+  z-index: 1020;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--reader-dock-text);
+  transition: transform var(--transition-normal), opacity var(--transition-normal);
+}
+
+/* 1. Üst Satır: Sayfa Navigasyonu & Slider */
+.dock-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dock-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+.dock-nav-btn:hover:not(:disabled) {
+  background: var(--reader-primary);
+  transform: translateY(-1px);
+}
+.dock-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.dock-nav-btn .kbd-hint {
+  font-size: 0.68rem;
+  padding: 1px 4px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  opacity: 0.7;
+}
+
+/* Sayfa Slider'ı ve Gösterge */
+.dock-slider-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 180px;
+}
+
+.dock-slider-track {
+  flex: 1;
+  position: relative;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.dock-slider-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--reader-primary), var(--reader-accent));
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.dock-slider-thumb {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  cursor: grab;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.dock-slider-thumb:active {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.25);
+  box-shadow: 0 0 0 6px rgba(var(--reader-primary-rgb), 0.4);
+}
+
+.dock-page-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+}
+.dock-page-display .cur-badge {
+  color: var(--reader-accent);
+}
+
+.dock-quick-jump {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.dock-quick-jump input {
+  width: 52px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: #ffffff;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  outline: none;
+}
+.dock-quick-jump input:focus {
+  border-color: var(--reader-primary);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* 2. Alt Satır: Ses Oynatıcı Kontrolleri */
+.dock-audio-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+/* Sol Ses Bilgisi */
+.dock-audio-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 140px;
+}
+.dock-audio-cover {
+  width: 32px;
+  height: 42px;
+  border-radius: 4px;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+.dock-audio-meta {
+  display: flex;
+  flex-direction: column;
+}
+.dock-audio-meta .audio-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffffff;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dock-audio-meta .audio-status {
+  font-size: 0.72rem;
+  color: var(--reader-dock-muted);
+}
+
+/* Orta Ana Çalma Kontrolleri */
+.dock-audio-center {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  max-width: 480px;
+}
+
+.dock-ctrl-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.dock-ctrl-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.08);
+}
+
+/* Büyük Oynat Butonu */
+.dock-play-master-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--reader-primary), var(--reader-secondary));
+  border: none;
+  color: #ffffff;
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(var(--reader-primary-rgb), 0.45);
+  transition: all var(--transition-fast);
+}
+.dock-play-master-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(var(--reader-primary-rgb), 0.6);
+}
+.dock-play-master-btn.playing {
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.45);
+}
+
+/* Ses Dalga & İlerleme Çubuğu */
+.dock-waveform-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dock-audio-progress-bar {
+  position: relative;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.dock-audio-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--reader-accent);
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.dock-time-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--reader-dock-muted);
+}
+
+/* Sağ Ek Seçenekler (Hız, Sesle Otomatik Çevir, Ses Düzeyi) */
+.dock-audio-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dock-speed-btn {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.dock-speed-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.dock-auto-toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--reader-dock-muted);
+  cursor: pointer;
+  user-select: none;
+}
+.dock-auto-toggle-wrap input[type="checkbox"] {
+  accent-color: var(--reader-accent-green);
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   Çekmeceler ve Modallar (İçindekiler & Sayfa Galerisi)
+   -------------------------------------------------------------------------- */
+.reader-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: min(90vw, 380px);
+  background: var(--reader-card-bg);
+  border-right: 1px solid var(--reader-card-border);
+  box-shadow: 10px 0 35px rgba(0, 0, 0, 0.25);
+  z-index: 1100;
+  transform: translateX(-100%);
+  transition: transform var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+}
+.reader-drawer.open {
+  transform: translateX(0);
+}
+
+.reader-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1090;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+.reader-drawer-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--reader-card-border);
+}
+.drawer-header h5 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--reader-text);
+}
+.drawer-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  color: var(--reader-text-muted);
+  cursor: pointer;
+}
+
+.drawer-content-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+.chapter-item-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 10px;
+  color: var(--reader-text);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  transition: all var(--transition-fast);
+}
+.chapter-item-link:hover {
+  background: rgba(var(--reader-primary-rgb), 0.08);
+  color: var(--reader-primary);
+  transform: translateX(4px);
+}
+.chapter-item-link.active {
+  background: var(--reader-primary);
+  color: #ffffff;
+}
+.chapter-item-link .chap-page {
+  font-size: 0.76rem;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.06);
+}
+.chapter-item-link.active .chap-page {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Sayfa Küçük Resim Galerisi (Thumbnail Grid Modal) */
+.thumbnail-grid-modal {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 14px;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 10px;
+}
+.thumb-card-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: var(--reader-card-bg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.thumb-card-item:hover {
+  border-color: var(--reader-primary);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(var(--reader-primary-rgb), 0.25);
+}
+.thumb-card-item.active {
+  border-color: var(--reader-accent);
+  background: rgba(245, 158, 11, 0.06);
+}
+.thumb-card-item img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: #f1f5f9;
+}
+.thumb-card-item span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--reader-text);
+}
+
+/* --------------------------------------------------------------------------
+   Tam Ekran & Zoom Modu
+   -------------------------------------------------------------------------- */
+body.fullscreen-active .reader-top-header {
+  transform: translateY(-100%);
+}
+body.fullscreen-active .reader-bottom-dock {
+  opacity: 0.2;
+}
+body.fullscreen-active .reader-bottom-dock:hover {
+  opacity: 1;
+}
+
+body.zoom-mode .page-scan-img {
+  max-height: 88vh;
+  transform: scale(1.15);
+  cursor: zoom-out;
+}
+
+/* --------------------------------------------------------------------------
+   Duyarlı Tasarım (Comprehensive Mobile & Responsive Breakpoints)
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1200px) {
+  .book-spread {
+    max-width: 1100px;
+    min-height: 640px;
+  }
+  .page-frame {
+    min-height: 640px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .book-spread {
+    grid-template-columns: 1fr;
+    max-width: 620px;
+    min-height: 560px;
+  }
+  .page-frame.right-page {
+    display: none !important;
+  }
+  .book-spread::before {
+    display: none !important;
+  }
+  .page-frame.left-page {
+    border-radius: 12px;
+    box-shadow: none;
+    min-height: 560px;
+  }
+}
+
+@media (max-width: 992px) {
+  .reader-main-stage {
+    padding: 16px 12px 160px 12px;
+  }
+  .reader-bottom-dock {
+    width: min(96%, 860px);
+    bottom: 12px;
+  }
+  .dock-audio-left {
+    min-width: 110px;
+  }
+  .dock-audio-left .dock-audio-cover {
+    width: 28px;
+    height: 38px;
+  }
+  .dock-audio-meta .audio-title {
+    max-width: 110px;
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .reader-top-header {
+    padding: 6px 10px;
+  }
+  .reader-header-inner {
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+  .reader-brand-logo {
+    height: 26px;
+  }
+  .reader-btn-back {
+    padding: 5px 10px;
+    font-size: 0.78rem;
+  }
+  .reader-book-selector-wrap {
+    gap: 6px;
+    min-width: 0;
+  }
+  .reader-book-dropdown-btn {
+    font-size: 0.88rem;
+    padding: 3px 6px;
+    max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .reader-book-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+  }
+  .reader-header-actions {
+    gap: 4px;
+  }
+  .reader-action-btn {
+    height: 32px;
+    padding: 0 8px;
+    font-size: 0.78rem;
+  }
+  .reader-icon-btn-only {
+    width: 32px;
+    padding: 0;
+  }
+
+  /* Sahne ve Kitap */
+  .reader-main-stage {
+    padding: 10px 8px 165px 8px;
+    min-height: calc(100vh - 140px);
+  }
+  .book-spread-container {
+    perspective: none;
+  }
+  .book-spread {
+    min-height: unset;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  }
+  .page-frame {
+    min-height: unset;
+  }
+  .page-header-bar {
+    padding: 8px 14px 4px 14px;
+    font-size: 0.72rem;
+  }
+  .page-content-body {
+    padding: 8px 10px;
+    min-height: 360px;
+  }
+  .page-scan-img {
+    max-height: calc(100vh - 280px);
+    width: 100%;
+    object-fit: contain;
+  }
+  .page-text-container {
+    font-size: 0.94rem;
+    line-height: 1.75;
+    padding: 6px 4px;
+  }
+  .page-footer-bar {
+    padding: 4px 12px 8px 12px;
+    font-size: 0.78rem;
+  }
+  .edge-turn-btn {
+    display: none !important;
+  }
+
+  /* Alt Kontrol Paneli (Dock) - Responsive & Taşmayı Önleyici */
+  .reader-bottom-dock {
+    width: calc(100% - 16px);
+    max-width: calc(100% - 16px);
+    bottom: max(8px, env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 10px 10px 10px;
+    gap: 6px;
+    border-radius: 16px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* 1. Satır: Navigasyon & Slider */
+  .dock-nav-row {
+    gap: 6px;
+    padding-bottom: 5px;
+    flex-wrap: nowrap;
+    width: 100%;
+    min-width: 0;
+  }
+  .dock-nav-btn {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    gap: 5px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .dock-nav-btn .kbd-hint {
+    display: none !important;
+  }
+  .dock-slider-wrap {
+    min-width: 0;
+    flex: 1;
+    gap: 8px;
+  }
+  .dock-slider-track {
+    height: 5px;
+  }
+  .dock-slider-thumb {
+    width: 15px;
+    height: 15px;
+  }
+  .dock-page-display {
+    font-size: 0.8rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    gap: 4px;
+  }
+  .dock-quick-jump {
+    display: none !important;
+  }
+
+  /* 2. Satır: Ses Oynatıcı Kontrolleri */
+  .dock-audio-row {
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+  .dock-audio-left {
+    display: none !important;
+  }
+  .dock-audio-center {
+    flex: 1;
+    min-width: 0;
+    max-width: unset;
+    gap: 8px;
+  }
+  .dock-ctrl-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+  }
+  .dock-play-master-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .dock-waveform-container {
+    flex: 1;
+    min-width: 60px;
+  }
+  .dock-audio-progress-bar {
+    height: 5px;
+  }
+  .dock-time-row {
+    font-size: 0.68rem;
+  }
+  .dock-audio-right {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .dock-speed-btn {
+    padding: 3px 6px;
+    font-size: 0.72rem;
+    border-radius: 5px;
+  }
+  .dock-auto-toggle-wrap {
+    font-size: 0.7rem;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 576px) {
+  .reader-top-header {
+    padding: 5px 8px;
+  }
+  .reader-book-badge {
+    display: none !important;
+  }
+  .reader-book-dropdown-btn {
+    max-width: 130px;
+    font-size: 0.82rem;
+    padding: 2px 4px;
+  }
+  .reader-btn-back span {
+    display: none;
+  }
+  .reader-btn-back {
+    padding: 6px 8px;
+  }
+  .reader-bottom-dock {
+    width: calc(100% - 12px);
+    max-width: calc(100% - 12px);
+    bottom: max(6px, env(safe-area-inset-bottom));
+    padding: 7px 8px 8px 8px;
+    gap: 5px;
+    border-radius: 14px;
+  }
+  .dock-nav-row {
+    gap: 5px;
+    padding-bottom: 4px;
+  }
+  .dock-nav-btn {
+    padding: 5px 8px;
+    font-size: 0.74rem;
+    gap: 4px;
+  }
+  .dock-page-display {
+    font-size: 0.75rem;
+  }
+  .dock-page-display .cur-badge {
+    font-weight: 800;
+  }
+  .dock-audio-center {
+    gap: 6px;
+  }
+  .dock-ctrl-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.72rem;
+  }
+  .dock-play-master-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.92rem;
+  }
+  .dock-speed-btn {
+    padding: 2px 5px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .dock-nav-btn span {
+    display: none;
+  }
+  .dock-nav-btn {
+    width: 32px;
+    height: 30px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 6px;
+  }
+  .dock-slider-wrap {
+    gap: 4px;
+  }
+  .dock-page-display {
+    font-size: 0.72rem;
+  }
+  .dock-auto-toggle-wrap span {
+    display: none;
+  }
+  .dock-auto-toggle-wrap {
+    gap: 0;
+    title: "Oto Çevir";
+  }
+  .dock-audio-center {
+    gap: 4px;
+  }
+  .dock-ctrl-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 0.68rem;
+  }
+  .dock-play-master-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 0.85rem;
+  }
+}
+
