@@ -23,6 +23,13 @@ if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
     exit(1);
 }
 
+// Demo ve geliştirme ortamında olası 500 hatalarını görebilmek için hata gösterimi
+if (isset($_GET['debug']) || (isset($_SERVER['HTTP_HOST']) && str_contains($_SERVER['HTTP_HOST'], 'tkmdev.com'))) {
+    ini_set('display_errors', '1');
+    ini_set('display_startup_errors', '1');
+    error_reporting(E_ALL);
+}
+
 /*
  *---------------------------------------------------------------
  * SET THE CURRENT DIRECTORY

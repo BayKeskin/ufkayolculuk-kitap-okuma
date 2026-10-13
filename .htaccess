@@ -1,11 +1,14 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Eğer public klasöründe gerçek dosya veya dizin varsa ona git (assets, images vs.)
-    RewriteCond %{DOCUMENT_ROOT}/ufkayolculuk-kitap-okuma/public/$1 -f [OR]
-    RewriteCond %{DOCUMENT_ROOT}/ufkayolculuk-kitap-okuma/public/$1 -d
-    RewriteRule ^(.*)$ public/$1 [L]
+    # 1. İstek zaten public/ içerisindeyse döngüyü önle
+    RewriteCond %{REQUEST_URI} (^|/)public/ [NC]
+    RewriteRule ^ - [L]
 
-    # Dinamik rotaları doğrudan public/index.php'ye ilet
-    RewriteRule ^(.*)$ public/index.php [L,QSA]
+    # 2. Ana dizinde doğrudan mevcut olan statik dosyaları (html vb.) doğrudan sun
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
+    # 3. Diğer tüm istekleri (dinamik rotalar, public altındaki asset'ler) public/'e yönlendir
+    RewriteRule ^(.*)$ public/$1 [L,QSA]
 </IfModule>

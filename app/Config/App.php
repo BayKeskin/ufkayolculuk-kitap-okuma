@@ -16,7 +16,7 @@ class App extends BaseConfig
      *
      * E.g., http://example.com/
      */
-    public string $baseURL = 'http://localhost:8080/';
+    public string $baseURL = 'http://localufkkitap.com/';
 
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
@@ -29,7 +29,38 @@ class App extends BaseConfig
      *
      * @var list<string>
      */
-    public array $allowedHostnames = [];
+    public array $allowedHostnames = [
+        'localufkkitap.com',
+        'team.tkmdev.com',
+        'localhost',
+        '127.0.0.1',
+    ];
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Otomatik ortam tespiti: Canli Demo (team.tkmdev.com) ve Yerel (localufkkitap.com)
+        if (isset($_SERVER['HTTP_HOST'])) {
+            $host = strtolower($_SERVER['HTTP_HOST']);
+
+            if ($host === 'team.tkmdev.com' || str_contains($host, 'tkmdev.com')) {
+                $this->baseURL = 'https://team.tkmdev.com/ufkayolculuk-kitap-okuma/';
+            } elseif ($host === 'localufkkitap.com') {
+                $this->baseURL = 'http://localufkkitap.com/';
+            } else {
+                $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+                    || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)
+                    || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+                $protocol = $isHttps ? 'https://' : 'http://';
+
+                $scriptDir = dirname($_SERVER['SCRIPT_NAME'] ?? '');
+                $scriptDir = preg_replace('#/public$#', '', str_replace('\\', '/', $scriptDir));
+                $path = trim($scriptDir, '/');
+                $this->baseURL = $protocol . $host . ($path ? '/' . $path : '') . '/';
+            }
+        }
+    }
 
     /**
      * --------------------------------------------------------------------------
