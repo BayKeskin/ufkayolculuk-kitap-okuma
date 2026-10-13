@@ -408,39 +408,96 @@
 
             <nav class="content-sidebar-nav">
               <a href="sayfa.html" class="sidebar-nav-link active">
-                <span>Hakkımızda</span>
-                <i class="fa-solid fa-chevron-right fs-9"></i>
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fa-solid fa-circle-info text-primary"></i>
+                  <span>Hakkımızda</span>
+                </div>
+                <span class="badge bg-primary text-white rounded-pill fs-9">Genel</span>
               </a>
-              <a href="#" class="sidebar-nav-link">
-                <span>Yarışma Şartnamesi (2025)</span>
-                <i class="fa-solid fa-chevron-right fs-9"></i>
+              <a href="sayfa.html?slug=konusu" class="sidebar-nav-link">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fa-solid fa-bookmark text-primary"></i>
+                  <span>Yarışma Konusu</span>
+                </div>
+                <span class="badge bg-light text-muted rounded-pill fs-9">2025</span>
               </a>
-              <a href="#" class="sidebar-nav-link">
-                <span>Kullanıcı Sözleşmesi</span>
-                <i class="fa-solid fa-chevron-right fs-9"></i>
+              <a href="sayfa.html?slug=yonerge" class="sidebar-nav-link">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fa-solid fa-clipboard-list text-primary"></i>
+                  <span>Sınav Yönergesi</span>
+                </div>
+                <span class="badge bg-light text-muted rounded-pill fs-9">Kılavuz</span>
               </a>
-              <a href="#" class="sidebar-nav-link">
-                <span>Gizlilik ve Güvenlik Politikası</span>
-                <i class="fa-solid fa-chevron-right fs-9"></i>
+              <a href="sayfa.html?slug=sartname" class="sidebar-nav-link">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fa-solid fa-file-contract text-primary"></i>
+                  <span>Yarışma Şartnamesi</span>
+                </div>
+                <span class="badge bg-light text-muted rounded-pill fs-9">Resmi</span>
               </a>
-              <a href="#" class="sidebar-nav-link">
-                <span>KVKK Aydınlatma Metni</span>
-                <i class="fa-solid fa-chevron-right fs-9"></i>
+              <a href="sayfa.html?slug=sss" class="sidebar-nav-link">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fa-solid fa-circle-question text-primary"></i>
+                  <span>Sıkça Sorulan Sorular</span>
+                </div>
+                <span class="badge bg-light text-muted rounded-pill fs-9">SSS</span>
               </a>
-              <a href="#" class="sidebar-nav-link">
-                <span>Çerez (Cookie) Politikası</span>
-                <i class="fa-solid fa-chevron-right fs-9"></i>
+              <a href="sayfa.html?slug=uy-kvkk-aydinlatma-metni" class="sidebar-nav-link">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fa-solid fa-shield-halved text-primary"></i>
+                  <span>KVKK Aydınlatma Metni</span>
+                </div>
+                <span class="badge bg-light text-muted rounded-pill fs-9">Yasal</span>
               </a>
-              <a href="#" class="sidebar-nav-link">
-                <span>Sıkça Sorulan Sorular (SSS)</span>
-                <i class="fa-solid fa-chevron-right fs-9"></i>
+              <a href="sayfa.html?slug=uy-mahremiyet-politikasi" class="sidebar-nav-link">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fa-solid fa-lock text-primary"></i>
+                  <span>Mahremiyet ve Gizlilik</span>
+                </div>
+                <span class="badge bg-light text-muted rounded-pill fs-9">Güvenlik</span>
               </a>
-              <a href="#" class="sidebar-nav-link">
-                <span>İletişim & Destek</span>
-                <i class="fa-solid fa-chevron-right fs-9"></i>
+              <a href="sayfa.html?slug=uy-veli-izin-belgesi" class="sidebar-nav-link">
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fa-solid fa-file-signature text-primary"></i>
+                  <span>Veli İzin Belgesi</span>
+                </div>
+                <span class="badge bg-light text-muted rounded-pill fs-9">İndir</span>
               </a>
             </nav>
           </aside>
+
+          <!-- Son Duyurular Widgetı -->
+          <div class="p-4 bg-white rounded-4 border shadow-sm mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h4 class="fs-7 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+                <i class="fa-solid fa-bullhorn text-warning"></i> Son Duyurular
+              </h4>
+              <span class="badge bg-warning-subtle text-dark fs-9">Güncel</span>
+            </div>
+            <div class="d-flex flex-column gap-2">
+              <a href="sayfa.html?slug=13-ufka-yolculuk-yarisma-konusu-belli-oldu" class="p-2 rounded-3 text-decoration-none border-bottom border-light hover-bg-light transition-all d-block">
+                <div class="fs-8 fw-bold text-dark text-truncate mb-1">13. Ufka Yolculuk Yarışma Konusu Belli Oldu</div>
+                <div class="d-flex align-items-center justify-content-between fs-9 text-muted">
+                  <span><i class="fa-regular fa-clock me-1"></i>Yeni</span>
+                  <i class="fa-solid fa-chevron-right fs-10 text-primary"></i>
+                </div>
+              </a>
+              <a href="sayfa.html?slug=kitaplari-online-olarak-oku" class="p-2 rounded-3 text-decoration-none border-bottom border-light hover-bg-light transition-all d-block">
+                <div class="fs-8 fw-bold text-dark text-truncate mb-1">Kitapları online olarak oku!</div>
+                <div class="d-flex align-items-center justify-content-between fs-9 text-muted">
+                  <span><i class="fa-regular fa-clock me-1"></i>Duyuru</span>
+                  <i class="fa-solid fa-chevron-right fs-10 text-primary"></i>
+                </div>
+              </a>
+              <a href="sayfa.html?slug=ufka-yolculuk-sesli-kitap" class="p-2 rounded-3 text-decoration-none border-bottom border-light hover-bg-light transition-all d-block">
+                <div class="fs-8 fw-bold text-dark text-truncate mb-1">Ufka Yolculuk Her Yerde: Sesli Kitap Yayında!</div>
+                <div class="d-flex align-items-center justify-content-between fs-9 text-muted">
+                  <span><i class="fa-regular fa-clock me-1"></i>Özellik</span>
+                  <i class="fa-solid fa-chevron-right fs-10 text-primary"></i>
+                </div>
+              </a>
+            </div>
+          </div>
 
           <!-- Yardım / Danışma Kartı -->
           <div class="p-4 bg-white rounded-4 border shadow-sm">

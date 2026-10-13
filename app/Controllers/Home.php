@@ -60,11 +60,53 @@ class Home extends BaseController
         return view('siralamalar');
     }
 
-    /**
-     * Kurumsal Bilgi & Şartname Sayfası
-     */
-    public function sayfa(): string
+    protected \App\Services\UfkaApiService $apiService;
+
+    public function __construct()
     {
-        return view('sayfa');
+        $this->apiService = new \App\Services\UfkaApiService();
+    }
+
+    /**
+     * Kurumsal Bilgi & Şartname Sayfası (Ufka Yolculuk API Entegrasyonlu)
+     */
+    public function sayfa(?string $slug = null): string
+    {
+        $targetSlug = $slug ?? $this->request->getGet('slug') ?? 'hakkimizda';
+        $targetSlug = trim($targetSlug);
+
+        $corporatePages = $this->apiService->getCorporatePages();
+        $recentAnnouncements = $this->apiService->getAnnouncements(4);
+
+        $isFaqPage = in_array(strtolower($targetSlug), ['sss', 'sikca-sorulan-sorular', 'faq']);
+        $faqs = $isFaqPage ? $this->apiService->getFaqs() : [];
+
+        $page = $this->apiService->getWebContent($targetSlug);
+
+        // SSS sayfası için özel fallback
+        if (!$page && $isFaqPage) {
+            $page = [
+                'id' => 0,
+                'title' => 'Sıkça Sorulan Sorular (SSS)',
+                'slug' => 'sss',
+                'type' => 'sss',
+                'description' => 'Yarışma kuralları, başvuru şartları, ödüller ve sınav süreci ile ilgili en çok merak edilen sorular.',
+                'formatted_body' => '',
+                'read_time_minutes' => 6,
+                'category_title' => 'Rehber & Destek',
+                'publish_time' => date('d.m.Y'),
+            ];
+        }
+
+        $data = [
+            'page'                => $page,
+            'activeSlug'          => $targetSlug,
+            'corporatePages'      => $corporatePages,
+            'recentAnnouncements' => $recentAnnouncements,
+            'isFaqPage'           => $isFaqPage,
+            'faqs'                => $faqs,
+        ];
+
+        return view('sayfa', $data);
     }
 }

@@ -194,5 +194,57 @@ class ApiController extends BaseController
             'message' => 'Oturum başarıyla sonlandırıldı.'
         ]);
     }
+
+    /**
+     * Tüm Web İçerikleri / Sayfalar API Listesi
+     */
+    public function pages()
+    {
+        $service = new \App\Services\UfkaApiService();
+        $contents = $service->getWebContents();
+
+        return $this->respond([
+            'status' => 'success',
+            'total' => count($contents),
+            'data' => $contents
+        ]);
+    }
+
+    /**
+     * Sayfa Detayı API Uç Noktası
+     */
+    public function pageDetail($slug = null)
+    {
+        if (empty($slug)) {
+            return $this->failNotFound('Sayfa slug belirtilmedi.');
+        }
+
+        $service = new \App\Services\UfkaApiService();
+        $page = $service->getWebContent($slug);
+
+        if (!$page) {
+            return $this->failNotFound("'$slug' içeriği bulunamadı.");
+        }
+
+        return $this->respond([
+            'status' => 'success',
+            'data' => $page
+        ]);
+    }
+
+    /**
+     * Sıkça Sorulan Sorular (SSS) API Uç Noktası
+     */
+    public function faqs()
+    {
+        $service = new \App\Services\UfkaApiService();
+        $faqs = $service->getFaqs();
+
+        return $this->respond([
+            'status' => 'success',
+            'total' => count($faqs),
+            'data' => $faqs
+        ]);
+    }
 }
 
