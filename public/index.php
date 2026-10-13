@@ -24,10 +24,11 @@ if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
 }
 
 // Demo ve geliştirme ortamında olası 500 hatalarını görebilmek için hata gösterimi
-if (isset($_GET['debug']) || (isset($_SERVER['HTTP_HOST']) && str_contains($_SERVER['HTTP_HOST'], 'tkmdev.com'))) {
+if (isset($_GET['debug']) || (isset($_SERVER['HTTP_HOST']) && str_contains($_SERVER['HTTP_HOST'], 'tkmdev.com') && isset($_GET['debug']))) {
     ini_set('display_errors', '1');
     ini_set('display_startup_errors', '1');
     error_reporting(E_ALL);
+    defined('CI_ENVIRONMENT') || define('CI_ENVIRONMENT', 'development');
 }
 
 /*

@@ -1,30 +1,33 @@
 <?php
 header('Content-Type: text/plain; charset=utf-8');
-echo "=== SERVER DIAGNOSTIC ===\n";
-echo "PHP Version: " . PHP_VERSION . "\n";
-echo "HTTP_HOST: " . ($_SERVER['HTTP_HOST'] ?? 'N/A') . "\n";
-echo "REQUEST_URI: " . ($_SERVER['REQUEST_URI'] ?? 'N/A') . "\n";
-echo "SCRIPT_NAME: " . ($_SERVER['SCRIPT_NAME'] ?? 'N/A') . "\n";
-echo "DOCUMENT_ROOT: " . ($_SERVER['DOCUMENT_ROOT'] ?? 'N/A') . "\n\n";
+echo "=== CI4 BOOT TEST ===\n";
 
-$vendorAutoload = dirname(__DIR__) . '/vendor/autoload.php';
-echo "Vendor Autoload Path: " . $vendorAutoload . "\n";
-echo "Vendor Autoload Exists: " . (file_exists($vendorAutoload) ? 'YES' : 'NO') . "\n\n";
+define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
+chdir(FCPATH);
 
-$writable = dirname(__DIR__) . '/writable';
-echo "Writable Dir: " . $writable . "\n";
-echo "Writable Exists: " . (is_dir($writable) ? 'YES' : 'NO') . "\n";
-echo "Writable Is Writable: " . (is_writable($writable) ? 'YES' : 'NO') . "\n\n";
+require FCPATH . '../app/Config/Paths.php';
+$paths = new \Config\Paths();
+require $paths->systemDirectory . '/Boot.php';
 
-$appPaths = dirname(__DIR__) . '/app/Config/Paths.php';
-echo "Paths.php Exists: " . (file_exists($appPaths) ? 'YES' : 'NO') . "\n";
+try {
+    echo "Booting web...\n";
+    // We catch exceptions manually
+    $app = \CodeIgniter\Config\Services::codeigniter();
+    $app->initialize();
+    echo "CI4 Initialized successfully!\n";
 
-if (file_exists($vendorAutoload)) {
-    echo "Attempting composer autoload require...\n";
-    try {
-        require_once $vendorAutoload;
-        echo "Composer autoload required successfully!\n";
-    } catch (\Throwable $e) {
-        echo "Composer require ERROR: " . $e->getMessage() . "\n";
-    }
+    echo "Testing session service...\n";
+    $session = service('session');
+    echo "Session service instantiated!\n";
+
+    echo "Testing request handling...\n";
+    $response = $app->run();
+    echo "App run status code: " . $response->getStatusCode() . "\n";
+    echo "App body snippet: " . substr(strip_tags($response->getBody()), 0, 200) . "\n";
+} catch (\Throwable $e) {
+    echo "\n!!! CAUGHT EXCEPTION !!!\n";
+    echo "Class: " . get_class($e) . "\n";
+    echo "Message: " . $e->getMessage() . "\n";
+    echo "File: " . $e->getFile() . " (Line " . $e->getLine() . ")\n";
+    echo "\nStack Trace:\n" . $e->getTraceAsString() . "\n";
 }
