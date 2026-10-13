@@ -16,15 +16,6 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: PHP ve Composer Kurulumu
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring, intl, json, curl
-
-      - name: Composer Bağımlılıklarını Yükle
-        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
-
       - name: FTP Senkronizasyonu
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
