@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch: # Manuel tetikleme butonu ekler
 
 jobs:
   web-deploy:
@@ -24,9 +25,14 @@ jobs:
           port: ${{ secrets.FTP_PORT || 21 }}
           protocol: ftp
           server-dir: /
+          log-level: verbose
+          timeout: 60000
           exclude: |
             **/.git*
             **/.git*/**
             **/.agents/**
             .idea/**
             *.md
+            vendor/**
+            writable/**
+            .env
