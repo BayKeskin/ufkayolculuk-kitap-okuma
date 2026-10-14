@@ -277,7 +277,7 @@
                       $sCat = $sBook['category_slug'] ?? 'ortaokul';
                       $sStartPage = (int)($sBook['start_page'] ?? 1);
                       $sTotalPages = (int)($sBook['total_pages'] ?? 180);
-                      $sReaderUrl = 'kitap-oku.html?book=' . urlencode($sBook['id']) . '&page=' . $sStartPage;
+                      $sReaderUrl = base_url('kitap-oku?book=' . urlencode($sBook['id']) . '&page=' . $sStartPage);
                       $sAudioUrl = !empty($sBook['sound_file']) ? $sBook['sound_file'] : 'assets/audio/tevhid-muhafizlari.mp3';
                       $sAuthor = !empty($sBook['author']) ? $sBook['author'] : 'Ufka Yolculuk Yayınları';
                       $sLevelBadge = match($sCat) {
@@ -303,7 +303,7 @@
                       <div class="book-thumb-container">
                         <span class="badge-cat-tag cat-<?= $sCat ?>"><?= esc($sLevelBadge) ?></span>
                         <?php if (!empty($sBook['sound_file'])): 
-                          $sAudioReaderUrl = 'kitap-oku.html?book=' . urlencode($sBook['id']) . '&page=' . $sStartPage . '&audio=1';
+                          $sAudioReaderUrl = base_url('kitap-oku?book=' . urlencode($sBook['id']) . '&page=' . $sStartPage . '&audio=1');
                         ?>
                           <a href="<?= $sAudioReaderUrl ?>" class="badge-audio-tag text-decoration-none" title="Sesli Dinleme Mevcut (Tıkla ve Dinle)">
                             <i class="fa-solid fa-volume-high"></i> Sesli
@@ -345,12 +345,12 @@
 
                       <!-- Butonlar -->
                       <div class="book-action-btns">
-                        <a href="<?= $sReaderUrl ?>" class="btn-book-action btn-book-continue" title="Kitabı Oku (kitap-oku.html?book=<?= esc($sBook['id']) ?>&page=<?= $sStartPage ?>)">
+                        <a href="<?= $sReaderUrl ?>" class="btn-book-action btn-book-continue" title="Kitabı Oku">
                           <i class="fa-solid fa-book-open"></i>
                           <span>Kitabı Oku</span>
                         </a>
                         <?php if (!empty($sBook['sound_file'])): 
-                          $sAudioReaderUrl = 'kitap-oku.html?book=' . urlencode($sBook['id']) . '&page=' . $sStartPage . '&audio=1';
+                          $sAudioReaderUrl = base_url('kitap-oku?book=' . urlencode($sBook['id']) . '&page=' . $sStartPage . '&audio=1');
                         ?>
                         <a href="<?= $sAudioReaderUrl ?>" class="btn-book-action btn-book-audio btn-listen-trigger"
                                 data-book-id="<?= esc($sBook['id']) ?>"
@@ -360,7 +360,7 @@
                                 data-audio-src="<?= esc($sAudioUrl) ?>"
                                 data-start-time="0"
                                 data-start-page="<?= $sStartPage ?>"
-                                title="Sesli Dinle (kitap-oku.html?book=<?= esc($sBook['id']) ?>&page=<?= $sStartPage ?>&audio=1)">
+                                title="Sesli Dinle">
                           <i class="fa-solid fa-headphones"></i>
                           <span>Dinle</span>
                         </a>
@@ -404,7 +404,7 @@
                       <i class="fa-solid fa-circle-play text-success"></i>
                       <span id="audioLivePageText">Şu an okunan: <strong class="text-dark">Sayfa 5</strong></span>
                     </div>
-                    <a href="kitap-oku.html?book=tevhid-muhafizlari&page=5" id="btnOpenInReader" class="btn-open-in-reader" title="Kitap Okuma Sayfasında Aç">
+                    <a href="<?= base_url('kitap-oku?book=tevhid-muhafizlari&page=5') ?>" id="btnOpenInReader" class="btn-open-in-reader" title="Kitap Okuma Sayfasında Aç">
                       <i class="fa-solid fa-book-open"></i>
                       <span>Kitapta Senkronize Aç</span>
                     </a>

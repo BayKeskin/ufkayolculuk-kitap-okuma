@@ -32,8 +32,8 @@ if (!empty($activeBook['pages']) && is_array($activeBook['pages'])) {
     }
 }
 
-$leftScanUrl = $leftPageData['image'] ?? "https://ufkayolculuk.com/uploads/2025-09/pdf_page_{$bId}_{$leftPageNum}.jpg";
-$rightScanUrl = $rightPageData ? ($rightPageData['image'] ?? "https://ufkayolculuk.com/uploads/2025-09/pdf_page_{$bId}_{$rightPageNum}.jpg") : '';
+$leftScanUrl = $leftPageData['image'] ?? base_url("assets/images/books/book-kuslarin-cagrisi.svg");
+$rightScanUrl = $rightPageData ? ($rightPageData['image'] ?? base_url("assets/images/books/book-kuslarin-cagrisi.svg")) : '';
 $leftBody = $leftPageData['body_html'] ?? $leftPageData['body'] ?? '';
 $rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['body'] ?? '') : '';
 ?>
@@ -102,7 +102,7 @@ $rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['bo
                   $bkStartPage = (int)($bk['start_page'] ?? 1);
                 ?>
                 <li>
-                  <a class="dropdown-item <?= $isActive ? 'active' : '' ?>" href="kitap-oku.html?book_id=<?= $bkId ?>&start_page=<?= $bkStartPage ?>" data-switch-book="<?= $bkId ?>">
+                  <a class="dropdown-item <?= $isActive ? 'active' : '' ?>" href="<?= base_url('kitap-oku?book_id=' . $bkId . '&start_page=' . $bkStartPage) ?>" data-switch-book="<?= $bkId ?>">
                     <img src="<?= esc($bkCover) ?>" class="book-thumb-mini" alt="<?= esc($bk['name']) ?>" onerror="this.src='assets/images/books/book-kuslarin-cagrisi.svg'">
                     <div>
                       <div class="fw-bold"><?= esc($bk['name']) ?></div>
@@ -113,7 +113,7 @@ $rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['bo
               <?php endforeach; ?>
             <?php else: ?>
               <li>
-                <a class="dropdown-item active" href="kitap-oku.html?book_id=11&start_page=5" data-switch-book="11">
+                <a class="dropdown-item active" href="<?= base_url('kitap-oku?book_id=11&start_page=5') ?>" data-switch-book="11">
                   <img src="assets/images/books/book-tevhid-muhafizlari.svg" class="book-thumb-mini" alt="Tevhid Muhafızları">
                   <div>
                     <div class="fw-bold">Tevhid Muhafızları</div>

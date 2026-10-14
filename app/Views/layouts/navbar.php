@@ -37,7 +37,7 @@ $currentPath = trim($uri->getPath(), '/');
               </a>
             </li>
             <li class="nav-menu-item">
-              <a href="<?= base_url('kitap-oku.html?book=tevhid-muhafizlari&page=5') ?>" class="nav-link-custom <?= str_starts_with($currentPath, 'kitap-oku') ? 'active' : '' ?>">
+              <a href="<?= base_url('kitap-oku?book=tevhid-muhafizlari&page=5') ?>" class="nav-link-custom <?= (str_starts_with($currentPath, 'kitap-oku') || str_starts_with($currentPath, 'kitapoku')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-headphones"></i>
                 <span>Sesli Kitap Oku</span>
               </a>
@@ -159,7 +159,7 @@ $currentPath = trim($uri->getPath(), '/');
                 <div class="user-avatar-large user-initial-avatar" style="width: 44px; height: 44px; min-width: 44px; font-size: 1rem; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">AY</div>
                 <div class="profile-popover-user-info">
                   <div class="profile-popover-name">Ahmet Yılmaz</div>
-                  <div class="profile-popover-email">ahmet.yilmaz@ufkayolculuk.com</div>
+                  <div class="profile-popover-email">ahmet.yilmaz@okuma.tkmdev.com</div>
                   <span class="badge bg-primary-subtle text-primary rounded-pill mt-1" style="font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.55rem;">Katılımcı (2025)</span>
                 </div>
               </div>

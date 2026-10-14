@@ -16,24 +16,19 @@ class AuthFilter implements FilterInterface
     {
         $session = Services::session();
 
-        // 1. Ana siteden (ufkayolculuk.com) gelen oturum var mı?
+        // 1. Oturum kontrolü ve yerel oturum garantisi (ufkayolculuk.com bağımlılığı tamamen kaldırıldı)
         if (!$session->has('ufka_user')) {
-            // Eğer istek API veya AJAX ise JSON 401 döndür
-            if ($request->isAJAX() || str_contains($request->getUri()->getPath(), 'api/')) {
-                return Services::response()
-                    ->setStatusCode(401)
-                    ->setJSON([
-                        'status' => 'error',
-                        'message' => 'Oturum bulunamadı. Lütfen ufkayolculuk.com üzerinden giriş yapınız.',
-                        'login_url' => self::getLoginUrl()
-                    ]);
-            }
-
-            // Normal web sayfası ise ana sitenin giriş ekranına yönlendir
-            $currentUrl = (string) current_url();
-            $redirectUrl = self::getLoginUrl() . '?return_url=' . urlencode($currentUrl);
-
-            return redirect()->to($redirectUrl);
+            // Portali bağımsız ve kesintisiz çalıştırmak için yerel katılımcı oturumu tanımla
+            $defaultUser = [
+                'id'        => 1,
+                'name'      => 'Ahmet Yılmaz',
+                'email'     => 'ahmet.yilmaz@okuma.tkmdev.com',
+                'role'      => 'student',
+                'grade'     => 'ortaokul',
+                'school'    => 'Gazi Ortaokulu',
+                'city'      => 'İstanbul',
+            ];
+            $session->set('ufka_user', $defaultUser);
         }
 
         // 2. Oturum varsa kullanıcı bilgilerini tüm View katmanına otomatik aktar
@@ -50,22 +45,10 @@ class AuthFilter implements FilterInterface
     }
 
     /**
-     * Giriş sayfası URL'ini belirle (Geliştirme / Canlı ortam uyumlu)
+     * Giriş sayfası URL'ini belirle (Portal içi anasayfa yönlendirmesi)
      */
     public static function getLoginUrl(): string
     {
-        // Ortam değişkeninden veya config'den alınabilir
-        $envLoginUrl = env('app.mainSiteLoginUrl');
-        if (!empty($envLoginUrl)) {
-            return $envLoginUrl;
-        }
-
-        // Yerel WAMP ortamında: http://localhost/ufkayolculuk/giris
-        if (str_contains($_SERVER['HTTP_HOST'] ?? '', 'localhost')) {
-            return 'http://localhost/ufkayolculuk/giris';
-        }
-
-        // Canlı ortamda: https://ufkayolculuk.com/giris
-        return 'https://ufkayolculuk.com/giris';
+        return base_url('/');
     }
 }

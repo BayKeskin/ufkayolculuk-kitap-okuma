@@ -181,7 +181,7 @@ function initAudioPlayer() {
       livePageText.innerHTML = `Şu an okunan: <strong class="text-dark">Sayfa ${page}</strong>`;
     }
     if (btnOpenInReader) {
-      btnOpenInReader.href = `kitap-oku.html?book=${currentBookId}&page=${page}`;
+      btnOpenInReader.href = `kitap-oku?book=${currentBookId}&page=${page}`;
     }
   }
 
@@ -464,10 +464,10 @@ function initBooksSlider() {
    3. Search and Filter Functionality
    ========================================================================== */
 let HOME_SEARCH_BOOKS = [
-  { id: 'kuslarin-cagrisi', title: 'Kuşların Çağrısı', category: 'ilkokul', categoryLabel: 'İlkokul Düzeyi', year: '2025', url: 'kitap-oku.html?book=kuslarin-cagrisi&page=1', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'tevhid-muhafizlari', title: 'Tevhid Muhafızları', category: 'ortaokul', categoryLabel: 'Ortaokul Düzeyi', year: '2025', url: 'kitap-oku.html?book=tevhid-muhafizlari&page=5', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'gordugume-gormedigime', title: 'Gördüğüme Görmediğime', category: 'lise', categoryLabel: 'Lise Düzeyi', year: '2025', url: 'kitap-oku.html?book=gordugume-gormedigime&page=1', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'nasil-inanmali', title: 'Nasıl İnanmalı?', category: 'yetiskin', categoryLabel: 'Yetişkin Düzeyi', year: '2025', url: 'kitap-oku.html?book=nasil-inanmali&page=1', author: 'Ufka Yolculuk Yayınları' },
+  { id: 'kuslarin-cagrisi', title: 'Kuşların Çağrısı', category: 'ilkokul', categoryLabel: 'İlkokul Düzeyi', year: '2025', url: 'kitap-oku?book=kuslarin-cagrisi&page=1', author: 'Ufka Yolculuk Yayınları' },
+  { id: 'tevhid-muhafizlari', title: 'Tevhid Muhafızları', category: 'ortaokul', categoryLabel: 'Ortaokul Düzeyi', year: '2025', url: 'kitap-oku?book=tevhid-muhafizlari&page=5', author: 'Ufka Yolculuk Yayınları' },
+  { id: 'gordugume-gormedigime', title: 'Gördüğüme Görmediğime', category: 'lise', categoryLabel: 'Lise Düzeyi', year: '2025', url: 'kitap-oku?book=gordugume-gormedigime&page=1', author: 'Ufka Yolculuk Yayınları' },
+  { id: 'nasil-inanmali', title: 'Nasıl İnanmalı?', category: 'yetiskin', categoryLabel: 'Yetişkin Düzeyi', year: '2025', url: 'kitap-oku?book=nasil-inanmali&page=1', author: 'Ufka Yolculuk Yayınları' },
   { id: 'maske-dustu-2024', title: 'Maske Düştü', category: 'ilkokul', categoryLabel: 'İlkokul (2024)', year: '2024', url: 'kitaplar.html?search=Maske+D%C3%BC%C5%9Ft%C3%BC', author: 'Ufka Yolculuk Yayınları' },
   { id: 'zamanin-tozu-2024', title: 'Zamanın Tozu', category: 'ortaokul', categoryLabel: 'Ortaokul (2024)', year: '2024', url: 'kitaplar.html?search=Zaman%C4%B1n+Tozu', author: 'Ufka Yolculuk Yayınları' },
   { id: 'vakit-geldi-2024', title: 'Vakit Geldi', category: 'lise', categoryLabel: 'Lise (2024)', year: '2024', url: 'kitaplar.html?search=Vakit+Geldi', author: 'Ufka Yolculuk Yayınları' },
@@ -494,7 +494,7 @@ if (window.DYNAMIC_BOOKS && Array.isArray(window.DYNAMIC_BOOKS) && window.DYNAMI
       category: catSlug,
       categoryLabel: b.level || b.category_name || 'Tüm Düzeyler',
       year: '2025',
-      url: `kitap-oku.html?book=${encodeURIComponent(b.id)}&page=${startPage}`,
+      url: `kitap-oku?book=${encodeURIComponent(b.id)}&page=${startPage}`,
       author: b.author || 'Ufka Yolculuk Yayınları'
     };
   });

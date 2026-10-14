@@ -148,7 +148,7 @@
               $bCat = $b['category_slug'] ?? 'ortaokul';
               $bStartPage = (int)($b['start_page'] ?? 1);
               $bTotalPages = (int)($b['total_pages'] ?? 180);
-              $bReaderUrl = 'kitap-oku.html?book=' . urlencode($b['id']) . '&page=' . $bStartPage;
+              $bReaderUrl = base_url('kitap-oku?book=' . urlencode($b['id']) . '&page=' . $bStartPage);
               $bAudioReaderUrl = $bReaderUrl . '&audio=1';
               $bAuthor = !empty($b['author']) ? $b['author'] : 'Ufka Yolculuk Yayınları';
               $bLevelBadge = $b['level'] ?? 'Tüm Düzeyler';
@@ -178,11 +178,11 @@
               </div>
 
               <div class="book-card-buttons">
-                <a href="<?= $bReaderUrl ?>" class="btn-book-read-primary" title="Kitabı Oku (<?= $bReaderUrl ?>)">
+                <a href="<?= $bReaderUrl ?>" class="btn-book-read-primary" title="Kitabı Oku">
                   <i class="fa-solid fa-book-open"></i> <span>Kitabı Oku</span>
                 </a>
                 <?php if ($bHasAudio): ?>
-                  <a href="<?= $bAudioReaderUrl ?>" class="btn-book-audio-circle" title="Sesli Dinle (<?= $bAudioReaderUrl ?>)">
+                  <a href="<?= $bAudioReaderUrl ?>" class="btn-book-audio-circle" title="Sesli Dinle">
                     <i class="fa-solid fa-headphones"></i>
                   </a>
                 <?php endif; ?>

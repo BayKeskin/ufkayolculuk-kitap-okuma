@@ -18,7 +18,7 @@
           <a class="nav-link text-dark" href="<?= base_url('kitaplar.html?year=archive') ?>"><i class="fa-solid fa-layer-group me-2"></i> Geçmiş Yıllar</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-dark" href="<?= base_url('kitap-oku.html?book=tevhid-muhafizlari&page=5') ?>"><i class="fa-solid fa-headphones me-2"></i> Sesli Kitap Oku</a>
+          <a class="nav-link text-dark" href="<?= base_url('kitap-oku?book=tevhid-muhafizlari&page=5') ?>"><i class="fa-solid fa-headphones me-2"></i> Sesli Kitap Oku</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-dark" href="<?= base_url('deneme-sinavlari.html') ?>"><i class="fa-solid fa-laptop-code me-2 text-primary"></i> Deneme Sınavları</a>

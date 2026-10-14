@@ -20,7 +20,7 @@
       typeLabel: 'Yarışma Kitabı',
       author: 'Ufka Yolculuk Yayınları',
       desc: '13. Ufka Yolculuk İlkokul kategorisi resmi yarışma kitabı.',
-      url: 'kitap-oku.html?book=kuslarin-cagrisi&page=1',
+      url: 'kitap-oku?book=kuslarin-cagrisi&page=1',
       icon: 'fa-solid fa-book-open',
       actionText: 'Kitabı Oku'
     },
@@ -34,7 +34,7 @@
       typeLabel: 'Yarışma Kitabı & Sesli',
       author: 'Ufka Yolculuk Yayınları',
       desc: '13. Ufka Yolculuk Ortaokul kategorisi resmi yarışma kitabı.',
-      url: 'kitap-oku.html?book=tevhid-muhafizlari&page=5',
+      url: 'kitap-oku?book=tevhid-muhafizlari&page=5',
       icon: 'fa-solid fa-headphones',
       actionText: 'Oku & Dinle'
     },
@@ -48,7 +48,7 @@
       typeLabel: 'Yarışma Kitabı',
       author: 'Ufka Yolculuk Yayınları',
       desc: '13. Ufka Yolculuk Lise kategorisi resmi yarışma kitabı.',
-      url: 'kitap-oku.html?book=gordugume-gormedigime&page=1',
+      url: 'kitap-oku?book=gordugume-gormedigime&page=1',
       icon: 'fa-solid fa-book-open',
       actionText: 'Kitabı Oku'
     },
@@ -62,7 +62,7 @@
       typeLabel: 'Yarışma Kitabı',
       author: 'Ufka Yolculuk Yayınları',
       desc: '13. Ufka Yolculuk Yetişkin kategorisi resmi yarışma kitabı.',
-      url: 'kitap-oku.html?book=nasil-inanmali&page=1',
+      url: 'kitap-oku?book=nasil-inanmali&page=1',
       icon: 'fa-solid fa-book-open',
       actionText: 'Kitabı Oku'
     },

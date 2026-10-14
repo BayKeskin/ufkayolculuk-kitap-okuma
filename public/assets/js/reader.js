@@ -657,7 +657,7 @@ class BookReaderEngine {
 
   async changeBook(bookKey, startPage = null) {
     if (!this.books[bookKey]) {
-      window.location.href = `kitap-oku.html?book_id=${bookKey}${startPage ? '&start_page=' + startPage : ''}`;
+      window.location.href = `kitap-oku?book_id=${bookKey}${startPage ? '&start_page=' + startPage : ''}`;
       return;
     }
     this.currentBookKey = bookKey;

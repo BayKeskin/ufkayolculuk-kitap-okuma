@@ -20,7 +20,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '2 saat 45 dk',
     summary: 'Ormanın derinliklerinde yaşayan kuşların dostluk, birlik, cesaret ve tevhid inancını anlatan sıcacık bir macera.',
-    readerUrl: 'kitap-oku.html?book=kuslarin-cagrisi&page=1'
+    readerUrl: 'kitap-oku?book=kuslarin-cagrisi&page=1'
   },
   {
     id: 'tevhid-muhafizlari',
@@ -36,7 +36,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '3 saat 53 dk',
     summary: 'Boş damacana ile başlayan ve gençlerin inanç, tevekkül ve ahlak değerlerini keşfettiği sürükleyici bir gençlik romanı.',
-    readerUrl: 'kitap-oku.html?book=tevhid-muhafizlari&page=5'
+    readerUrl: 'kitap-oku?book=tevhid-muhafizlari&page=5'
   },
   {
     id: 'gordugume-gormedigime',
@@ -52,7 +52,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '3 saat 30 dk',
     summary: 'Aklın sınırları, görünenin ötesindeki hakikatler ve varoluş üzerine gençlere derin bir ufuk açan düşünce ve inanç yolculuğu.',
-    readerUrl: 'kitap-oku.html?book=gordugume-gormedigime&page=1'
+    readerUrl: 'kitap-oku?book=gordugume-gormedigime&page=1'
   },
   {
     id: 'nasil-inanmali',
@@ -68,7 +68,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '4 saat 15 dk',
     summary: 'Modern dünyada inanç, akıl ve kalp dengesini kuran, temel itikadi meseleleri anlaşılır dille açıklayan rehber eser.',
-    readerUrl: 'kitap-oku.html?book=nasil-inanmali&page=1'
+    readerUrl: 'kitap-oku?book=nasil-inanmali&page=1'
   },
 
   // --- 2024 (12. Ufka Yolculuk - İbadet / İlmihal / Ahlak) ---
@@ -86,7 +86,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '2 saat 10 dk',
     summary: 'Dürüstlük, güven ve doğru sözlülüğün çocukların dünyasındaki renkli ve öğretici hikayesi.',
-    readerUrl: 'kitap-oku.html?book=kuslarin-cagrisi'
+    readerUrl: 'kitap-oku?book=kuslarin-cagrisi'
   },
   {
     id: 'zamanin-tozu-2024',
@@ -102,7 +102,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '3 saat 15 dk',
     summary: 'Zamanı doğru kullanma, ibadet bilinci ve sorumluluk üzerine kurgulanmış macera dolu bir roman.',
-    readerUrl: 'kitap-oku.html?book=tevhid-muhafizlari'
+    readerUrl: 'kitap-oku?book=tevhid-muhafizlari'
   },
   {
     id: 'vakit-geldi-2024',
@@ -118,7 +118,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '3 saat 40 dk',
     summary: 'Gençlerin hayatı anlamlandırma ve namaz ibadetinin getirdiği huzuru keşfetme serüveni.',
-    readerUrl: 'kitap-oku.html?book=gordugume-gormedigime'
+    readerUrl: 'kitap-oku?book=gordugume-gormedigime'
   },
   {
     id: 'ilmihal-ibadetler-2024',
@@ -134,7 +134,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '5 saat 20 dk',
     summary: 'Günlük hayatımızda ibadetlerin uygulanışı, hikmetleri ve fıkhi esaslarını içeren temel başvuru kitabı.',
-    readerUrl: 'kitap-oku.html?book=nasil-inanmali'
+    readerUrl: 'kitap-oku?book=nasil-inanmali'
   },
 
   // --- 2023 (11. Ufka Yolculuk - Sağlıklı Yaşam) ---
@@ -152,7 +152,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '1 saat 50 dk',
     summary: 'Helal ve sağlıklı beslenme alışkanlıklarını çocuklara neşeyle kazandıran eğlenceli çizimlerle dolu bir eser.',
-    readerUrl: 'kitap-oku.html?book=kuslarin-cagrisi'
+    readerUrl: 'kitap-oku?book=kuslarin-cagrisi'
   },
   {
     id: 'saglik-olsun-2023',
@@ -168,7 +168,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '2 saat 45 dk',
     summary: 'Beden ve ruh sağlığının korunması, zararlı alışkanlıklardan uzak durma bilinci.',
-    readerUrl: 'kitap-oku.html?book=tevhid-muhafizlari'
+    readerUrl: 'kitap-oku?book=tevhid-muhafizlari'
   },
   {
     id: 'iki-cihan-bahtiyarligi-2023',
@@ -184,7 +184,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '3 saat 10 dk',
     summary: 'Sağlıklı bir gençlik, dengeli yaşam ve manevi huzur üzerine rehberlik eden başucu kitabı.',
-    readerUrl: 'kitap-oku.html?book=gordugume-gormedigime'
+    readerUrl: 'kitap-oku?book=gordugume-gormedigime'
   },
   {
     id: 'saglikli-dinc-yasam-2023',
@@ -200,7 +200,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '4 saat 30 dk',
     summary: 'Tıbbi ve İslami prensipler ışığında koruyucu sağlık ve dengeli hayat reçetesi.',
-    readerUrl: 'kitap-oku.html?book=nasil-inanmali'
+    readerUrl: 'kitap-oku?book=nasil-inanmali'
   },
 
   // --- 2022 (10. Ufka Yolculuk - Sağlıklı Düşünmek) ---
@@ -218,7 +218,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '2 saat 05 dk',
     summary: 'Doğru düşünme, merak etme ve akıl yürütme üzerine çocuklara ilham veren neşeli bir serüven.',
-    readerUrl: 'kitap-oku.html?book=kuslarin-cagrisi'
+    readerUrl: 'kitap-oku?book=kuslarin-cagrisi'
   },
   {
     id: 'eyvah-ceviz-catladi-2022',
@@ -234,7 +234,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '2 saat 50 dk',
     summary: 'Önyargıları kırma, doğru bilgiye ulaşma ve eleştirel düşünme becerileri kazandıran gençlik hikayesi.',
-    readerUrl: 'kitap-oku.html?book=tevhid-muhafizlari'
+    readerUrl: 'kitap-oku?book=tevhid-muhafizlari'
   },
   {
     id: 'dusun-bir-kez-2022',
@@ -250,7 +250,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '3 saat 15 dk',
     summary: 'Bilgi kirliliği çağında hakikati arama ve zihni tuzaklardan korunma yolları.',
-    readerUrl: 'kitap-oku.html?book=gordugume-gormedigime'
+    readerUrl: 'kitap-oku?book=gordugume-gormedigime'
   },
   {
     id: 'elestirel-dusunme-2022',
@@ -266,7 +266,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '4 saat 10 dk',
     summary: 'Mantık kuralları, algı yönetimi ve sağlam düşünce metodolojisi üzerine derin bir inceleme.',
-    readerUrl: 'kitap-oku.html?book=nasil-inanmali'
+    readerUrl: 'kitap-oku?book=nasil-inanmali'
   },
 
   // --- 2021 (9. Ufka Yolculuk - Edepli Olmak) ---
@@ -284,7 +284,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '1 saat 45 dk',
     summary: 'Büyüklere saygı, küçüklere sevgi ve güzel ahlakın çocuk masallarıyla harmanlanmış hali.',
-    readerUrl: 'kitap-oku.html?book=kuslarin-cagrisi'
+    readerUrl: 'kitap-oku?book=kuslarin-cagrisi'
   },
   {
     id: 'edep-mektebi-2021',
@@ -300,7 +300,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '2 saat 30 dk',
     summary: 'Okulda, sokakta ve ailede nezaket, haya ve güzel davranış rehberi.',
-    readerUrl: 'kitap-oku.html?book=tevhid-muhafizlari'
+    readerUrl: 'kitap-oku?book=tevhid-muhafizlari'
   },
 
   // --- 2020 (8. Ufka Yolculuk - Adap) ---
@@ -318,7 +318,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '1 saat 30 dk',
     summary: 'Yemek, uyku, selamlaşma ve günlük hayat adabı üzerine eğlenceli ve öğretici hikayeler.',
-    readerUrl: 'kitap-oku.html?book=kuslarin-cagrisi'
+    readerUrl: 'kitap-oku?book=kuslarin-cagrisi'
   },
   {
     id: 'gorgu-ve-nezaket-2020',
@@ -334,7 +334,7 @@ let ALL_BOOKS_DATA = [
     hasAudio: true,
     audioDuration: '2 saat 15 dk',
     summary: 'Toplumsal yaşamda saygı, empati, konuşma ve dinleme adabı.',
-    readerUrl: 'kitap-oku.html?book=tevhid-muhafizlari'
+    readerUrl: 'kitap-oku?book=tevhid-muhafizlari'
   }
 ];
 
@@ -369,7 +369,7 @@ function formatApiBook(b) {
   }
 
   const startPage = b.start_page ? parseInt(b.start_page, 10) : 1;
-  const readerUrl = `kitap-oku.html?book=${encodeURIComponent(b.id)}&page=${startPage}`;
+  const readerUrl = `kitap-oku?book=${encodeURIComponent(b.id)}&page=${startPage}`;
 
   let totalPages = b.total_pages ? parseInt(b.total_pages, 10) : 0;
   if (!totalPages) {

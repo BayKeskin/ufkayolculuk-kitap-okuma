@@ -150,11 +150,11 @@
                       <span>Sayfa 125 / 185</span>
                     </div>
                     <div class="dash-book-actions-row">
-                      <a href="kitap-oku.html?book=tevhid-muhafizlari&page=125" class="btn-dash-read"
+                      <a href="<?= base_url('kitap-oku?book=tevhid-muhafizlari&page=125') ?>" class="btn-dash-read"
                         title="Kaldığın Yerden Oku">
                         <i class="fa-solid fa-book-open"></i> <span>Kaldığın Yerden Oku</span>
                       </a>
-                      <a href="kitap-oku.html?book=tevhid-muhafizlari&page=125" class="btn-dash-listen"
+                      <a href="<?= base_url('kitap-oku?book=tevhid-muhafizlari&page=125&audio=1') ?>" class="btn-dash-listen"
                         title="Sesli Dinle">
                         <i class="fa-solid fa-headphones"></i>
                       </a>
@@ -182,11 +182,11 @@
                       <span>160 / 160 Sayfa</span>
                     </div>
                     <div class="dash-book-actions-row">
-                      <a href="kitap-oku.html?book=kuslarin-cagrisi&page=1" class="btn-dash-read bg-success"
+                      <a href="<?= base_url('kitap-oku?book=kuslarin-cagrisi&page=1') ?>" class="btn-dash-read bg-success"
                         title="Tekrar Oku">
                         <i class="fa-solid fa-rotate-left"></i> <span>Gözden Geçir</span>
                       </a>
-                      <a href="kitap-oku.html?book=kuslarin-cagrisi&page=1" class="btn-dash-listen" title="Sesli Dinle">
+                      <a href="<?= base_url('kitap-oku?book=kuslarin-cagrisi&page=1&audio=1') ?>" class="btn-dash-listen" title="Sesli Dinle">
                         <i class="fa-solid fa-headphones"></i>
                       </a>
                     </div>
@@ -213,11 +213,11 @@
                       <span>Sayfa 66 / 190</span>
                     </div>
                     <div class="dash-book-actions-row">
-                      <a href="kitap-oku.html?book=gordugume-gormedigime&page=66" class="btn-dash-read"
+                      <a href="<?= base_url('kitap-oku?book=gordugume-gormedigime&page=66') ?>" class="btn-dash-read"
                         title="Devam Et">
                         <i class="fa-solid fa-book-open"></i> <span>Devam Et</span>
                       </a>
-                      <a href="kitap-oku.html?book=gordugume-gormedigime&page=66" class="btn-dash-listen"
+                      <a href="<?= base_url('kitap-oku?book=gordugume-gormedigime&page=66&audio=1') ?>" class="btn-dash-listen"
                         title="Sesli Dinle">
                         <i class="fa-solid fa-headphones"></i>
                       </a>
@@ -245,10 +245,10 @@
                       <span>Sayfa 32 / 210</span>
                     </div>
                     <div class="dash-book-actions-row">
-                      <a href="kitap-oku.html?book=nasil-inanmali&page=32" class="btn-dash-read" title="Okumaya Başla">
+                      <a href="<?= base_url('kitap-oku?book=nasil-inanmali&page=32') ?>" class="btn-dash-read" title="Okumaya Başla">
                         <i class="fa-solid fa-book-open"></i> <span>Devam Et</span>
                       </a>
-                      <a href="kitap-oku.html?book=nasil-inanmali&page=32" class="btn-dash-listen" title="Sesli Dinle">
+                      <a href="<?= base_url('kitap-oku?book=nasil-inanmali&page=32&audio=1') ?>" class="btn-dash-listen" title="Sesli Dinle">
                         <i class="fa-solid fa-headphones"></i>
                       </a>
                     </div>

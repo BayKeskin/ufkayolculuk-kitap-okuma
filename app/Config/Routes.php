@@ -23,10 +23,16 @@ $routes->get('yonerge', 'Home::sayfa/yonerge');
 $routes->get('sss', 'Home::sayfa/sss');
 $routes->get('kvkk', 'Home::sayfa/uy-kvkk-aydinlatma-metni');
 
+// Kitap Okuma Sayfaları (Herkese Açık - kitap-oku, kitapoku, kitap_oku ve .html varyasyonları)
+$routes->get('kitap-oku', 'Home::kitapOku');
+$routes->get('kitap-oku.html', 'Home::kitapOku');
+$routes->get('kitapoku', 'Home::kitapOku');
+$routes->get('kitapoku.html', 'Home::kitapOku');
+$routes->get('kitap_oku', 'Home::kitapOku');
+$routes->get('kitap_oku.html', 'Home::kitapOku');
+
 // Oturum Gerektiren Korumalı Sayfalar (Cross-Subdomain AuthFilter)
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
-    $routes->get('kitap-oku', 'Home::kitapOku');
-    $routes->get('kitap-oku.html', 'Home::kitapOku');
     $routes->get('sinav-ekrani', 'Home::sinavEkrani');
     $routes->get('sinav-ekrani.html', 'Home::sinavEkrani');
     $routes->get('dashboard', 'Home::dashboard');

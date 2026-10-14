@@ -224,8 +224,8 @@ $userCat   = $currentUser['category_title'] ?? 'Katılımcı (2025)';
               </div>
             </div>
             <p class="fs-8 text-muted mb-3">Yarışma kuralları ve portal kullanımıyla ilgili sorularınız için bize ulaşabilirsiniz.</p>
-            <a href="mailto:destek@ufkayolculuk.com" class="btn btn-outline-primary btn-sm w-100 fw-bold rounded-pill">
-              <i class="fa-solid fa-envelope me-1"></i> destek@ufkayolculuk.com
+            <a href="mailto:destek@tkmdev.com" class="btn btn-outline-primary btn-sm w-100 fw-bold rounded-pill">
+              <i class="fa-solid fa-envelope me-1"></i> destek@tkmdev.com
             </a>
           </div>
         </div>
