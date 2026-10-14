@@ -6,7 +6,9 @@ use CodeIgniter\Router\RouteCollection;
 
 // Herkese Açık Sayfalar
 $routes->get('/', 'Home::index');
+$routes->get('home', 'Home::index');
 $routes->get('home.html', 'Home::index');
+$routes->get('index.html', 'Home::index');
 $routes->get('kitaplar', 'Home::kitaplar');
 $routes->get('kitaplar.html', 'Home::kitaplar');
 $routes->get('siralamalar', 'Home::siralamalar');

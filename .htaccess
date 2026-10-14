@@ -5,10 +5,12 @@
     RewriteCond %{REQUEST_URI} (^|/)public/ [NC]
     RewriteRule ^ - [L]
 
-    # 2. Ana dizinde doğrudan mevcut olan statik dosyaları (html vb.) doğrudan sun
+    # 2. Ana dizindeki statik asset'leri (assets/, resimler vb.) doğrudan sun
+    # HTML istekleri kesinlikle CodeIgniter'a yönlendirilir; statik HTML sunulmaz!
     RewriteCond %{REQUEST_FILENAME} -f
+    RewriteCond %{REQUEST_URI} !\.(html|htm)$ [NC]
     RewriteRule ^ - [L]
 
-    # 3. Diğer tüm istekleri (dinamik rotalar, public altındaki asset'ler) public/'e yönlendir
+    # 3. Diğer tüm istekleri (dinamik rotalar, .html sayfaları, public altındaki asset'ler) public/'e yönlendir
     RewriteRule ^(.*)$ public/$1 [L,QSA]
 </IfModule>
