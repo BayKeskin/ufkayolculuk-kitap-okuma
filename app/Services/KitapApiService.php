@@ -342,6 +342,7 @@ class KitapApiService
             'user_id'      => $userId,
             'book_id'      => $bookId,
             'page'         => max(1, $page),
+            'last_page'    => max(1, $page),
             'audio_time'   => max(0.0, $audioTime),
             'read_seconds' => max(0, $readSeconds),
             'is_completed' => $isCompleted ? 1 : 0,
@@ -358,6 +359,8 @@ class KitapApiService
         $res = $this->request('saveUserProgress', $postData, 'POST', false);
 
         if (is_array($res) && ($res['status'] ?? false)) {
+            $res['page'] = $page;
+            $res['last_page'] = $page;
             return $res;
         }
 
@@ -366,6 +369,7 @@ class KitapApiService
             'code'               => 200,
             'message'            => 'İlerleme yerel olarak başarıyla kaydedildi.',
             'page'               => $page,
+            'last_page'          => $page,
             'audio_time'         => $audioTime,
             'completion_percent' => min(100, (int)(($page / max(1, $this->getBookTotalPages($bookId))) * 100)),
         ];
@@ -380,12 +384,18 @@ class KitapApiService
         if ($bookId !== null) {
             $sessionKey = "user_progress_{$userId}_{$bookId}";
             $local = session()->get($sessionKey);
-            if (!empty($local)) {
+            if (!empty($local) && is_array($local)) {
+                if (!isset($local['last_page']) && isset($local['page'])) {
+                    $local['last_page'] = $local['page'];
+                }
                 return $local;
             }
             try {
                 $cached = cache('kitap_' . $sessionKey);
-                if (!empty($cached)) {
+                if (!empty($cached) && is_array($cached)) {
+                    if (!isset($cached['last_page']) && isset($cached['page'])) {
+                        $cached['last_page'] = $cached['page'];
+                    }
                     return $cached;
                 }
             } catch (\Throwable $e) {}
@@ -400,7 +410,16 @@ class KitapApiService
 
         if (is_array($res) && ($res['status'] ?? false)) {
             if ($bookId !== null) {
-                return $res['progress'] ?? null;
+                $p = $res['progress'] ?? [];
+                if (is_array($p)) {
+                    if (!isset($p['last_page']) && isset($p['page'])) {
+                        $p['last_page'] = $p['page'];
+                    }
+                    if (!isset($p['page']) && isset($p['last_page'])) {
+                        $p['page'] = $p['last_page'];
+                    }
+                }
+                return $p;
             }
             return $res['progresses'] ?? [];
         }
@@ -410,6 +429,7 @@ class KitapApiService
             'user_id'            => $userId,
             'book_id'            => $bookId,
             'page'               => 1,
+            'last_page'          => 1,
             'audio_time'         => 0.0,
             'read_seconds'       => 0,
             'completion_percent' => 0,
