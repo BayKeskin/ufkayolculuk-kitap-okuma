@@ -407,18 +407,32 @@ function initBooksSlider() {
   const slider = document.getElementById('contestBooksSlider');
   const prevBtn = document.getElementById('prevBookBtn');
   const nextBtn = document.getElementById('nextBookBtn');
+  const prevBtnMobile = document.getElementById('prevBookBtnMobile');
+  const nextBtnMobile = document.getElementById('nextBookBtnMobile');
 
   if (!slider) return;
 
+  const scrollDistance = 255;
+
   if (prevBtn) {
     prevBtn.addEventListener('click', () => {
-      slider.scrollBy({ left: -220, behavior: 'smooth' });
+      slider.scrollBy({ left: -scrollDistance, behavior: 'smooth' });
+    });
+  }
+  if (prevBtnMobile) {
+    prevBtnMobile.addEventListener('click', () => {
+      slider.scrollBy({ left: -scrollDistance, behavior: 'smooth' });
     });
   }
 
   if (nextBtn) {
     nextBtn.addEventListener('click', () => {
-      slider.scrollBy({ left: 220, behavior: 'smooth' });
+      slider.scrollBy({ left: scrollDistance, behavior: 'smooth' });
+    });
+  }
+  if (nextBtnMobile) {
+    nextBtnMobile.addEventListener('click', () => {
+      slider.scrollBy({ left: scrollDistance, behavior: 'smooth' });
     });
   }
 

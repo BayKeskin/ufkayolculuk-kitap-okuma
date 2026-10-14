@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
 
   <!-- Özel Stil Dosyası -->
-  <link rel="stylesheet" href="assets/css/style.css?v=3.0">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.5">
 </head>
 <body>
 
@@ -443,20 +443,57 @@
             <!-- Yarışma Kitapları Slider / Carousel (Geniş Alan) -->
             <div class="col-xl-7 col-lg-7 col-md-12">
               <div class="portal-section-card">
-                <div class="section-header-row flex-wrap gap-2 align-items-center">
-                  <h2 class="section-main-heading mb-0">Yarışma Kitapları</h2>
-                  <div class="filter-pills-row home-cat-filter-pills ms-sm-3">
-                    <button type="button" class="filter-pill-btn home-cat-pill active" data-cat="all">Tümü</button>
-                    <button type="button" class="filter-pill-btn home-cat-pill" data-cat="ilkokul">İlkokul</button>
-                    <button type="button" class="filter-pill-btn home-cat-pill" data-cat="ortaokul">Ortaokul</button>
-                    <button type="button" class="filter-pill-btn home-cat-pill" data-cat="lise">Lise</button>
-                    <button type="button" class="filter-pill-btn home-cat-pill" data-cat="yetiskin">Yetişkin</button>
+                <!-- Üst Başlık ve Aksiyonlar -->
+                <div class="section-header-row align-items-center mb-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="section-icon-badge">
+                      <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div>
+                      <h2 class="section-main-heading mb-0">Yarışma Kitapları</h2>
+                      <span class="section-sub-desc">13. Dönem Resmi Yarışma Kitapları</span>
+                    </div>
                   </div>
-                  <a href="kitaplar.html" class="section-link-all ms-auto">Tümünü Gör</a>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="carousel-nav-group d-none d-sm-inline-flex">
+                      <button type="button" class="carousel-header-btn" id="prevBookBtn" title="Önceki Kitap">
+                        <i class="fa-solid fa-chevron-left"></i>
+                      </button>
+                      <button type="button" class="carousel-header-btn" id="nextBookBtn" title="Sonraki Kitap">
+                        <i class="fa-solid fa-chevron-right"></i>
+                      </button>
+                    </div>
+                    <a href="kitaplar.html" class="section-link-all">
+                      <span>Tümünü Gör</span>
+                      <i class="fa-solid fa-arrow-right fs-9 ms-1"></i>
+                    </a>
+                  </div>
                 </div>
 
+                <!-- Kategori Filtreleme Şeridi (Ayrı, Ferah Satır) -->
+                <div class="home-cat-filter-wrapper">
+                  <div class="home-cat-filter-pills">
+                    <button type="button" class="home-cat-pill active" data-cat="all">
+                      <i class="fa-solid fa-layer-group me-1"></i>Tüm Kitaplar
+                    </button>
+                    <button type="button" class="home-cat-pill" data-cat="ilkokul">
+                      <i class="fa-solid fa-shapes me-1"></i>İlkokul
+                    </button>
+                    <button type="button" class="home-cat-pill" data-cat="ortaokul">
+                      <i class="fa-solid fa-compass me-1"></i>Ortaokul
+                    </button>
+                    <button type="button" class="home-cat-pill" data-cat="lise">
+                      <i class="fa-solid fa-graduation-cap me-1"></i>Lise
+                    </button>
+                    <button type="button" class="home-cat-pill" data-cat="yetiskin">
+                      <i class="fa-solid fa-briefcase me-1"></i>Yetişkin
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Carousel Alanı -->
                 <div class="books-carousel-wrapper">
-                  <button type="button" class="carousel-nav-btn prev" id="prevBookBtn" title="Önceki Kitaplar">
+                  <button type="button" class="carousel-nav-btn prev d-sm-none" id="prevBookBtnMobile" title="Önceki Kitap">
                     <i class="fa-solid fa-chevron-left"></i>
                   </button>
 
@@ -466,49 +503,97 @@
                     foreach ($sliderBooks as $sBook):
                       $sCat = $sBook['category_slug'] ?? 'ortaokul';
                       $sStartPage = (int)($sBook['start_page'] ?? 1);
+                      $sTotalPages = (int)($sBook['total_pages'] ?? 180);
                       $sReaderUrl = 'kitap-oku.html?book=' . urlencode($sBook['id']) . '&page=' . $sStartPage;
-                      $sAudioUrl = $sBook['sound_file'] ?? 'assets/audio/tevhid-muhafizlari.mp3';
+                      $sAudioUrl = !empty($sBook['sound_file']) ? $sBook['sound_file'] : 'assets/audio/tevhid-muhafizlari.mp3';
                       $sAuthor = !empty($sBook['author']) ? $sBook['author'] : 'Ufka Yolculuk Yayınları';
+                      $sLevelBadge = match($sCat) {
+                        'ilkokul' => 'İlkokul',
+                        'ortaokul' => 'Ortaokul',
+                        'lise' => 'Lise',
+                        'yetiskin' => 'Yetişkin',
+                        default => 'Genel'
+                      };
+                      $sProgress = match($sCat) {
+                        'ilkokul' => 35,
+                        'ortaokul' => 68,
+                        'lise' => 20,
+                        'yetiskin' => 40,
+                        default => 25
+                      };
+                      $sReadPages = (int)round(($sTotalPages * $sProgress) / 100);
                     ?>
                     <!-- Kitap Kartı: <?= esc($sBook['name']) ?> -->
                     <div class="book-card-item" data-category="<?= $sCat ?>" data-book-id="<?= esc($sBook['id']) ?>" data-book-title="<?= esc(mb_strtolower($sBook['name'] ?? '')) ?>" data-book-author="<?= esc(mb_strtolower($sAuthor)) ?>">
-                      <div class="book-thumb-container position-relative">
-                        <a href="<?= $sReaderUrl ?>">
-                          <img src="<?= esc($sBook['cover_image']) ?>" alt="<?= esc($sBook['name']) ?>" onerror="this.src='assets/images/books/book-kuslarin-cagrisi.svg'">
-                        </a>
+                      
+                      <!-- Kapak Vitrini -->
+                      <div class="book-thumb-container">
+                        <span class="badge-cat-tag cat-<?= $sCat ?>"><?= esc($sLevelBadge) ?></span>
                         <?php if (!empty($sBook['sound_file'])): ?>
-                          <span class="badge-audio-overlay position-absolute top-0 end-0 m-2 badge bg-primary text-white rounded-pill px-2 py-1 shadow-sm" title="Seslendirme Mevcut">
-                            <i class="fa-solid fa-headphones"></i>
+                          <span class="badge-audio-tag" title="Sesli Dinleme Mevcut">
+                            <i class="fa-solid fa-volume-high"></i> Sesli
                           </span>
                         <?php endif; ?>
+                        
+                        <a href="<?= $sReaderUrl ?>" title="<?= esc($sBook['name']) ?>">
+                          <img src="<?= esc($sBook['cover_image']) ?>" alt="<?= esc($sBook['name']) ?>" onerror="this.src='assets/images/books/book-kuslarin-cagrisi.svg'">
+                        </a>
                       </div>
-                      <div class="book-item-title text-truncate" title="<?= esc($sBook['name']) ?>"><?= esc($sBook['name']) ?></div>
-                      <div class="d-flex align-items-center justify-content-between my-1">
-                        <span class="book-item-level badge bg-light text-primary border rounded-pill px-2 py-1 fw-bold"><?= esc($sBook['level']) ?></span>
-                        <small class="text-muted fs-8"><i class="fa-solid fa-pen-nib me-1"></i><?= esc($sAuthor) ?></small>
+
+                      <!-- Başlık -->
+                      <div class="book-item-title" title="<?= esc($sBook['name']) ?>">
+                        <a href="<?= $sReaderUrl ?>"><?= esc($sBook['name']) ?></a>
                       </div>
+
+                      <!-- Yazar ve Sayfa Sayısı Meta -->
+                      <div class="book-item-meta-row">
+                        <span class="text-truncate me-2" title="<?= esc($sAuthor) ?>">
+                          <i class="fa-solid fa-feather-pointed me-1 text-primary opacity-75"></i><?= esc($sAuthor) ?>
+                        </span>
+                        <span class="text-nowrap fw-semibold">
+                          <i class="fa-solid fa-book-open me-1 text-muted"></i><?= $sTotalPages ?> sf
+                        </span>
+                      </div>
+
+                      <!-- Okuma İlerlemesi -->
                       <div class="book-progress-wrap">
-                        <div class="d-flex align-items-center justify-content-between text-muted fs-8 mb-1">
-                          <span><i class="fa-solid fa-book-open me-1 text-primary"></i><?= (int)($sBook['total_pages'] ?? 180) ?> Sayfa</span>
-                          <?php if (!empty($sBook['sound_file'])): ?>
-                            <span class="badge bg-success-subtle text-success fw-bold"><i class="fa-solid fa-volume-high me-1"></i>Sesli</span>
-                          <?php endif; ?>
+                        <div class="progress-info-row">
+                          <span class="text-primary fw-bold">
+                            <i class="fa-regular fa-circle-check me-1"></i>%<?= $sProgress ?> Okundu
+                          </span>
+                          <span class="text-muted"><?= $sReadPages ?> / <?= $sTotalPages ?></span>
+                        </div>
+                        <div class="progress-track-custom">
+                          <div class="progress-fill-custom" style="width: <?= $sProgress ?>%;"></div>
                         </div>
                       </div>
+
+                      <!-- Butonlar -->
                       <div class="book-action-btns">
-                        <a href="<?= $sReaderUrl ?>" class="btn-book-action btn-book-continue" title="Kitabı Oku">Kitabı Oku</a>
-                        <?php if (!empty($sBook['sound_file'])): ?>
-                        <a href="<?= $sReaderUrl ?>&audio=1" class="btn-book-action btn-book-audio" title="Sesli Dinle">
-                          <i class="fa-solid fa-headphones"></i>
-                          <span>Dinle</span>
+                        <a href="<?= $sReaderUrl ?>" class="btn-book-action btn-book-continue" title="Kitabı Oku">
+                          <i class="fa-solid fa-book-open"></i>
+                          <span>Kitabı Oku</span>
                         </a>
+                        <?php if (!empty($sBook['sound_file'])): ?>
+                        <button type="button" class="btn-book-action btn-book-audio btn-listen-trigger"
+                                data-book-id="<?= esc($sBook['id']) ?>"
+                                data-book-title="<?= esc($sBook['name']) ?>"
+                                data-book-chapter="<?= esc($sBook['name']) ?> - Sesli Kitap"
+                                data-book-img="<?= esc($sBook['cover_image']) ?>"
+                                data-audio-src="<?= esc($sAudioUrl) ?>"
+                                data-start-time="0"
+                                data-start-page="<?= $sStartPage ?>"
+                                title="Hemen Sesli Dinle">
+                          <i class="fa-solid fa-headphones"></i>
+                        </button>
                         <?php endif; ?>
                       </div>
+
                     </div>
                     <?php endforeach; ?>
                   </div>
 
-                  <button type="button" class="carousel-nav-btn next" id="nextBookBtn" title="Sonraki Kitaplar">
+                  <button type="button" class="carousel-nav-btn next d-sm-none" id="nextBookBtnMobile" title="Sonraki Kitap">
                     <i class="fa-solid fa-chevron-right"></i>
                   </button>
                 </div>

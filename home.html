@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
 
   <!-- Özel Stil Dosyası -->
-  <link rel="stylesheet" href="assets/css/style.css?v=3.0">
+  <link rel="stylesheet" href="assets/css/style.css?v=3.5">
 </head>
 <body>
 
@@ -465,35 +465,100 @@
             <!-- Yarışma Kitapları Slider / Carousel (Geniş Alan) -->
             <div class="col-xl-7 col-lg-7 col-md-12">
               <div class="portal-section-card">
-                <div class="section-header-row">
-                  <h2 class="section-main-heading">Yarışma Kitapları</h2>
-                  <a href="kitaplar.html" class="section-link-all">Tümünü Gör</a>
+                <!-- Üst Başlık ve Aksiyonlar -->
+                <div class="section-header-row align-items-center mb-2">
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="section-icon-badge">
+                      <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div>
+                      <h2 class="section-main-heading mb-0">Yarışma Kitapları</h2>
+                      <span class="section-sub-desc">13. Dönem Resmi Yarışma Kitapları</span>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="carousel-nav-group d-none d-sm-inline-flex">
+                      <button type="button" class="carousel-header-btn" id="prevBookBtn" title="Önceki Kitap">
+                        <i class="fa-solid fa-chevron-left"></i>
+                      </button>
+                      <button type="button" class="carousel-header-btn" id="nextBookBtn" title="Sonraki Kitap">
+                        <i class="fa-solid fa-chevron-right"></i>
+                      </button>
+                    </div>
+                    <a href="kitaplar.html" class="section-link-all">
+                      <span>Tümünü Gör</span>
+                      <i class="fa-solid fa-arrow-right fs-9 ms-1"></i>
+                    </a>
+                  </div>
                 </div>
 
+                <!-- Kategori Filtreleme Şeridi (Ayrı, Ferah Satır) -->
+                <div class="home-cat-filter-wrapper">
+                  <div class="home-cat-filter-pills">
+                    <button type="button" class="home-cat-pill active" data-cat="all">
+                      <i class="fa-solid fa-layer-group me-1"></i>Tüm Kitaplar
+                    </button>
+                    <button type="button" class="home-cat-pill" data-cat="ilkokul">
+                      <i class="fa-solid fa-shapes me-1"></i>İlkokul
+                    </button>
+                    <button type="button" class="home-cat-pill" data-cat="ortaokul">
+                      <i class="fa-solid fa-compass me-1"></i>Ortaokul
+                    </button>
+                    <button type="button" class="home-cat-pill" data-cat="lise">
+                      <i class="fa-solid fa-graduation-cap me-1"></i>Lise
+                    </button>
+                    <button type="button" class="home-cat-pill" data-cat="yetiskin">
+                      <i class="fa-solid fa-briefcase me-1"></i>Yetişkin
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Carousel Alanı -->
                 <div class="books-carousel-wrapper">
-                  <button type="button" class="carousel-nav-btn prev" id="prevBookBtn" title="Önceki Kitaplar">
+                  <button type="button" class="carousel-nav-btn prev d-sm-none" id="prevBookBtnMobile" title="Önceki Kitap">
                     <i class="fa-solid fa-chevron-left"></i>
                   </button>
 
                   <div class="books-slider-scroll" id="contestBooksSlider">
                     
-                    <!-- Kitap Kartı 1: Kuşların Çağrısı -->
-                    <div class="book-card-item" data-category="ilkokul">
+                    <!-- Kitap Kartı 1: Kuşların Çağrısı (İlkokul) -->
+                    <div class="book-card-item" data-category="ilkokul" data-book-id="kuslarin-cagrisi">
                       <div class="book-thumb-container">
-                        <a href="kitap-oku.html?book=kuslarin-cagrisi">
+                        <span class="badge-cat-tag cat-ilkokul">İlkokul</span>
+                        <span class="badge-audio-tag" title="Sesli Dinleme Mevcut">
+                          <i class="fa-solid fa-volume-high"></i> Sesli
+                        </span>
+                        <a href="kitap-oku.html?book=kuslarin-cagrisi" title="Kuşların Çağrısı">
                           <img src="assets/images/books/book-kuslarin-cagrisi.svg" alt="Kuşların Çağrısı">
                         </a>
                       </div>
-                      <div class="book-item-title" title="Kuşların Çağrısı">Kuşların Çağrısı</div>
-                      <div class="book-item-level">İlkokul Düzeyi</div>
+                      <div class="book-item-title" title="Kuşların Çağrısı">
+                        <a href="kitap-oku.html?book=kuslarin-cagrisi">Kuşların Çağrısı</a>
+                      </div>
+                      <div class="book-item-meta-row">
+                        <span class="text-truncate me-2" title="Ufka Yolculuk Yayınları">
+                          <i class="fa-solid fa-feather-pointed me-1 text-primary opacity-75"></i>Ufka Yolculuk
+                        </span>
+                        <span class="text-nowrap fw-semibold">
+                          <i class="fa-solid fa-book-open me-1 text-muted"></i>128 sf
+                        </span>
+                      </div>
                       <div class="book-progress-wrap">
+                        <div class="progress-info-row">
+                          <span class="text-primary fw-bold">
+                            <i class="fa-regular fa-circle-check me-1"></i>%35 Okundu
+                          </span>
+                          <span class="text-muted">45 / 128</span>
+                        </div>
                         <div class="progress-track-custom">
                           <div class="progress-fill-custom" style="width: 35%;"></div>
                         </div>
-                        <span class="progress-text-badge">%35 Okundu</span>
                       </div>
                       <div class="book-action-btns">
-                        <a href="kitap-oku.html?book=kuslarin-cagrisi" class="btn-book-action btn-book-continue">Devam Et</a>
+                        <a href="kitap-oku.html?book=kuslarin-cagrisi" class="btn-book-action btn-book-continue" title="Kitabı Oku">
+                          <i class="fa-solid fa-book-open"></i>
+                          <span>Kitabı Oku</span>
+                        </a>
                         <button type="button" class="btn-book-action btn-book-audio btn-listen-trigger"
                                 data-book-id="kuslarin-cagrisi"
                                 data-book-title="Kuşların Çağrısı"
@@ -502,30 +567,50 @@
                                 data-audio-src="assets/audio/tevhid-muhafizlari.mp3"
                                 data-start-time="2.313"
                                 data-start-page="1"
-                                title="Sesli Dinle">
+                                title="Hemen Sesli Dinle">
                           <i class="fa-solid fa-headphones"></i>
-                          <span>Sesli Dinle</span>
                         </button>
                       </div>
                     </div>
 
-                    <!-- Kitap Kartı 2: Tevhid Muhafızları -->
-                    <div class="book-card-item" data-category="ortaokul">
+                    <!-- Kitap Kartı 2: Tevhid Muhafızları (Ortaokul) -->
+                    <div class="book-card-item" data-category="ortaokul" data-book-id="tevhid-muhafizlari">
                       <div class="book-thumb-container">
-                        <a href="kitap-oku.html?book=tevhid-muhafizlari&page=5">
+                        <span class="badge-cat-tag cat-ortaokul">Ortaokul</span>
+                        <span class="badge-audio-tag" title="Sesli Dinleme Mevcut">
+                          <i class="fa-solid fa-volume-high"></i> Sesli
+                        </span>
+                        <a href="kitap-oku.html?book=tevhid-muhafizlari&page=5" title="Tevhid Muhafızları">
                           <img src="assets/images/books/book-tevhid-muhafizlari.svg" alt="Tevhid Muhafızları">
                         </a>
                       </div>
-                      <div class="book-item-title" title="Tevhid Muhafızları">Tevhid Muhafızları</div>
-                      <div class="book-item-level">Ortaokul Düzeyi</div>
+                      <div class="book-item-title" title="Tevhid Muhafızları">
+                        <a href="kitap-oku.html?book=tevhid-muhafizlari&page=5">Tevhid Muhafızları</a>
+                      </div>
+                      <div class="book-item-meta-row">
+                        <span class="text-truncate me-2" title="Ufka Yolculuk Yayınları">
+                          <i class="fa-solid fa-feather-pointed me-1 text-primary opacity-75"></i>Ufka Yolculuk
+                        </span>
+                        <span class="text-nowrap fw-semibold">
+                          <i class="fa-solid fa-book-open me-1 text-muted"></i>185 sf
+                        </span>
+                      </div>
                       <div class="book-progress-wrap">
+                        <div class="progress-info-row">
+                          <span class="text-primary fw-bold">
+                            <i class="fa-regular fa-circle-check me-1"></i>%68 Okundu
+                          </span>
+                          <span class="text-muted">126 / 185</span>
+                        </div>
                         <div class="progress-track-custom">
                           <div class="progress-fill-custom" style="width: 68%;"></div>
                         </div>
-                        <span class="progress-text-badge">%68 Okundu</span>
                       </div>
                       <div class="book-action-btns">
-                        <a href="kitap-oku.html?book=tevhid-muhafizlari&page=5" class="btn-book-action btn-book-continue">Devam Et</a>
+                        <a href="kitap-oku.html?book=tevhid-muhafizlari&page=5" class="btn-book-action btn-book-continue" title="Kitabı Oku">
+                          <i class="fa-solid fa-book-open"></i>
+                          <span>Kitabı Oku</span>
+                        </a>
                         <button type="button" class="btn-book-action btn-book-audio btn-listen-trigger"
                                 data-book-id="tevhid-muhafizlari"
                                 data-book-title="Tevhid Muhafızları"
@@ -534,30 +619,50 @@
                                 data-audio-src="assets/audio/tevhid-muhafizlari.mp3"
                                 data-start-time="2.313"
                                 data-start-page="5"
-                                title="Sesli Dinle">
+                                title="Hemen Sesli Dinle">
                           <i class="fa-solid fa-headphones"></i>
-                          <span>Sesli Dinle</span>
                         </button>
                       </div>
                     </div>
 
-                    <!-- Kitap Kartı 3: Gördüğüme Görmediğime -->
-                    <div class="book-card-item" data-category="lise">
+                    <!-- Kitap Kartı 3: Gördüğüme Görmediğime (Lise) -->
+                    <div class="book-card-item" data-category="lise" data-book-id="gordugume-gormedigime">
                       <div class="book-thumb-container">
-                        <a href="kitap-oku.html?book=gordugume-gormedigime">
+                        <span class="badge-cat-tag cat-lise">Lise</span>
+                        <span class="badge-audio-tag" title="Sesli Dinleme Mevcut">
+                          <i class="fa-solid fa-volume-high"></i> Sesli
+                        </span>
+                        <a href="kitap-oku.html?book=gordugume-gormedigime" title="Gördüğüme Görmediğime">
                           <img src="assets/images/books/book-gordugume-gormedigime.svg" alt="Gördüğüme Görmediğime">
                         </a>
                       </div>
-                      <div class="book-item-title" title="Gördüğüme Görmediğime">Gördüğüme Görmediğime</div>
-                      <div class="book-item-level">Lise Düzeyi</div>
+                      <div class="book-item-title" title="Gördüğüme Görmediğime">
+                        <a href="kitap-oku.html?book=gordugume-gormedigime">Gördüğüme Görmediğime</a>
+                      </div>
+                      <div class="book-item-meta-row">
+                        <span class="text-truncate me-2" title="Ufka Yolculuk Yayınları">
+                          <i class="fa-solid fa-feather-pointed me-1 text-primary opacity-75"></i>Ufka Yolculuk
+                        </span>
+                        <span class="text-nowrap fw-semibold">
+                          <i class="fa-solid fa-book-open me-1 text-muted"></i>160 sf
+                        </span>
+                      </div>
                       <div class="book-progress-wrap">
+                        <div class="progress-info-row">
+                          <span class="text-primary fw-bold">
+                            <i class="fa-regular fa-circle-check me-1"></i>%20 Okundu
+                          </span>
+                          <span class="text-muted">32 / 160</span>
+                        </div>
                         <div class="progress-track-custom">
                           <div class="progress-fill-custom" style="width: 20%;"></div>
                         </div>
-                        <span class="progress-text-badge">%20 Okundu</span>
                       </div>
                       <div class="book-action-btns">
-                        <a href="kitap-oku.html?book=gordugume-gormedigime" class="btn-book-action btn-book-continue">Devam Et</a>
+                        <a href="kitap-oku.html?book=gordugume-gormedigime" class="btn-book-action btn-book-continue" title="Kitabı Oku">
+                          <i class="fa-solid fa-book-open"></i>
+                          <span>Kitabı Oku</span>
+                        </a>
                         <button type="button" class="btn-book-action btn-book-audio btn-listen-trigger"
                                 data-book-id="gordugume-gormedigime"
                                 data-book-title="Gördüğüme Görmediğime"
@@ -566,30 +671,50 @@
                                 data-audio-src="assets/audio/tevhid-muhafizlari.mp3"
                                 data-start-time="2.313"
                                 data-start-page="1"
-                                title="Sesli Dinle">
+                                title="Hemen Sesli Dinle">
                           <i class="fa-solid fa-headphones"></i>
-                          <span>Sesli Dinle</span>
                         </button>
                       </div>
                     </div>
 
-                    <!-- Kitap Kartı 4: Nasıl İnanmalı? -->
-                    <div class="book-card-item" data-category="yetiskin">
+                    <!-- Kitap Kartı 4: Nasıl İnanmalı? (Yetişkin) -->
+                    <div class="book-card-item" data-category="yetiskin" data-book-id="nasil-inanmali">
                       <div class="book-thumb-container">
-                        <a href="kitap-oku.html?book=nasil-inanmali">
+                        <span class="badge-cat-tag cat-yetiskin">Yetişkin</span>
+                        <span class="badge-audio-tag" title="Sesli Dinleme Mevcut">
+                          <i class="fa-solid fa-volume-high"></i> Sesli
+                        </span>
+                        <a href="kitap-oku.html?book=nasil-inanmali" title="Nasıl İnanmalı?">
                           <img src="assets/images/books/book-nasil-inanmali.svg" alt="Nasıl İnanmalı?">
                         </a>
                       </div>
-                      <div class="book-item-title" title="Nasıl İnanmalı?">Nasıl İnanmalı?</div>
-                      <div class="book-item-level">Yetişkin Düzeyi</div>
+                      <div class="book-item-title" title="Nasıl İnanmalı?">
+                        <a href="kitap-oku.html?book=nasil-inanmali">Nasıl İnanmalı?</a>
+                      </div>
+                      <div class="book-item-meta-row">
+                        <span class="text-truncate me-2" title="Ufka Yolculuk Yayınları">
+                          <i class="fa-solid fa-feather-pointed me-1 text-primary opacity-75"></i>Ufka Yolculuk
+                        </span>
+                        <span class="text-nowrap fw-semibold">
+                          <i class="fa-solid fa-book-open me-1 text-muted"></i>240 sf
+                        </span>
+                      </div>
                       <div class="book-progress-wrap">
+                        <div class="progress-info-row">
+                          <span class="text-primary fw-bold">
+                            <i class="fa-regular fa-circle-check me-1"></i>%40 Okundu
+                          </span>
+                          <span class="text-muted">96 / 240</span>
+                        </div>
                         <div class="progress-track-custom">
                           <div class="progress-fill-custom" style="width: 40%;"></div>
                         </div>
-                        <span class="progress-text-badge">%40 Okundu</span>
                       </div>
                       <div class="book-action-btns">
-                        <a href="kitap-oku.html?book=nasil-inanmali" class="btn-book-action btn-book-continue">Devam Et</a>
+                        <a href="kitap-oku.html?book=nasil-inanmali" class="btn-book-action btn-book-continue" title="Kitabı Oku">
+                          <i class="fa-solid fa-book-open"></i>
+                          <span>Kitabı Oku</span>
+                        </a>
                         <button type="button" class="btn-book-action btn-book-audio btn-listen-trigger"
                                 data-book-id="nasil-inanmali"
                                 data-book-title="Nasıl İnanmalı?"
@@ -598,16 +723,15 @@
                                 data-audio-src="assets/audio/tevhid-muhafizlari.mp3"
                                 data-start-time="2.313"
                                 data-start-page="1"
-                                title="Sesli Dinle">
+                                title="Hemen Sesli Dinle">
                           <i class="fa-solid fa-headphones"></i>
-                          <span>Sesli Dinle</span>
                         </button>
                       </div>
                     </div>
 
                   </div>
 
-                  <button type="button" class="carousel-nav-btn next" id="nextBookBtn" title="Sonraki Kitaplar">
+                  <button type="button" class="carousel-nav-btn next d-sm-none" id="nextBookBtnMobile" title="Sonraki Kitap">
                     <i class="fa-solid fa-chevron-right"></i>
                   </button>
                 </div>
