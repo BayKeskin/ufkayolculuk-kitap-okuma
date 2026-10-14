@@ -310,7 +310,7 @@
                           </a>
                         <?php endif; ?>
                         
-                        <a href="<?= $sReaderUrl ?>" title="<?= esc($sBook['name']) ?>">
+                        <a href="<?= $sReaderUrl ?>" class="book-cover-link" title="<?= esc($sBook['name']) ?>">
                           <img src="<?= esc($sBook['cover_image']) ?>" alt="<?= esc($sBook['name']) ?>" onerror="this.src='assets/images/books/book-kuslarin-cagrisi.svg'">
                         </a>
                       </div>
