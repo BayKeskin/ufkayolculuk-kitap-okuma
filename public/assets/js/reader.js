@@ -13,6 +13,8 @@ class BookReaderEngine {
     this.books = {};
     this.pageCache = new Map();
     this.audioSyncData = new Map();
+    this.pageTimestamps = {};
+    this.isLoadingSync = false;
 
     // 1. Canlı API kitap kütüphanesini oluştur
     this.buildBooksLibrary();
@@ -144,10 +146,21 @@ class BookReaderEngine {
     this.renderChaptersDrawer();
     this.renderThumbnailsGrid();
 
+    // Sayfa ve ses zaman damgalarını canlı API'den yükle
+    await this.loadBookPagesAndSync(this.currentBook.apiId);
+
     // İlk çift/tek sayfa spread renderı
     await this.renderSpread(this.currentPage, 'init');
     this.updateUI();
     this.preloadAdjacentPages();
+
+    // Eğer başlangıç sayfası 1'den farklıysa sesi o sayfanın zamanına ayarla
+    if (this.currentPage > 1) {
+      const pTime = this.getPageAudioStartTime(this.currentPage);
+      if (pTime !== null && pTime > 0) {
+        this.audio.currentTime = pTime;
+      }
+    }
 
     if (this.autoAudio) {
       setTimeout(() => {
@@ -310,16 +323,105 @@ class BookReaderEngine {
     }
   }
 
-  async checkAutoPageTurn(currentTime) {
-    const rightPageNum = this.currentPage + 1;
-    if (rightPageNum > this.currentBook.totalPages) return;
+  checkAutoPageTurn(currentTime) {
+    if (!this.autoPageTurn || this.isSliding || !this.pageTimestamps || Object.keys(this.pageTimestamps).length === 0) {
+      return;
+    }
 
-    const rightPageData = await this.getPageData(this.currentBook.apiId, rightPageNum);
-    if (!rightPageData || !rightPageData.body) return;
+    const isSinglePage = window.innerWidth <= 1080;
+    const curLeft = this.currentPage;
+    const curRight = isSinglePage ? curLeft : curLeft + 1;
 
-    const rightFirstTime = this.extractFirstDataTime(rightPageData.body);
-    if (rightFirstTime !== null && currentTime >= rightFirstTime + 0.2) {
-      this.turnPage('next', false);
+    // Sesin o an denk geldiği sayfa numarasını bul
+    const matchedPage = this.findPageForTime(currentTime);
+    if (matchedPage !== null && matchedPage > curRight && matchedPage <= this.currentBook.totalPages) {
+      // Ses ekrandaki spread'i geçmiş, sayfayı senkronize çevir (syncAudio = false çünkü ses zaten akıyor)
+      this.goToPage(matchedPage, false);
+    }
+  }
+
+  /**
+   * Belirli bir ses saniyesinin hangi sayfaya denk geldiğini hesaplar
+   */
+  findPageForTime(currentTime) {
+    if (!this.pageTimestamps || Object.keys(this.pageTimestamps).length === 0) {
+      return null;
+    }
+
+    const pages = Object.keys(this.pageTimestamps).map(Number).sort((a, b) => a - b);
+    let matched = null;
+
+    for (let i = 0; i < pages.length; i++) {
+      const p = pages[i];
+      const stamp = this.pageTimestamps[p];
+      const start = typeof stamp === 'object' ? stamp.start : stamp;
+      let end = typeof stamp === 'object' ? stamp.end : null;
+
+      if (end === null || end === undefined) {
+        end = (i < pages.length - 1) ? (typeof this.pageTimestamps[pages[i + 1]] === 'object' ? this.pageTimestamps[pages[i + 1]].start : this.pageTimestamps[pages[i + 1]]) : 999999;
+      }
+
+      if (currentTime >= start - 0.15 && currentTime < end) {
+        matched = p;
+        break;
+      }
+    }
+    return matched;
+  }
+
+  /**
+   * Kitabın tüm sayfalarını ve ses-zaman damgalarını canlı API'den tek seferde yükler
+   */
+  async loadBookPagesAndSync(bookApiId) {
+    try {
+      const url = `${this.getBaseUrl()}api/v1/books/${bookApiId}/pages`;
+      const response = await fetch(url, { cache: 'default' });
+      if (response.ok) {
+        const json = await response.json();
+        if (json) {
+          if (Array.isArray(json.pages)) {
+            json.pages.forEach(p => {
+              const pNo = parseInt(p.page_no, 10);
+              if (!isNaN(pNo)) {
+                this.pageCache.set(`${bookApiId}_${pNo}`, {
+                  image: p.image || `https://ufkayolculuk.com/uploads/2025-09/pdf_page_${bookApiId}_${pNo}.jpg`,
+                  body: p.body_html || p.body || '',
+                  pageNo: pNo
+                });
+              }
+            });
+          }
+          if (json.page_timestamps && typeof json.page_timestamps === 'object') {
+            this.pageTimestamps = json.page_timestamps;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Sayfa ve zaman haritası API isteği başarısız:', e);
+    }
+
+    // Eğer pageTimestamps henüz boşsa arka planda audio-sync çek
+    if (!this.pageTimestamps || Object.keys(this.pageTimestamps).length === 0) {
+      this.fetchAudioSyncInBackground(bookApiId);
+    }
+  }
+
+  async fetchAudioSyncInBackground(bookApiId) {
+    if (this.isLoadingSync) return;
+    this.isLoadingSync = true;
+    try {
+      const url = `${this.getBaseUrl()}api/v1/books/${bookApiId}/audio-sync`;
+      const res = await fetch(url);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.page_timestamps && typeof data.page_timestamps === 'object') {
+          this.pageTimestamps = data.page_timestamps;
+        }
+      }
+    } catch (e) {
+      console.warn('Audio-sync arka plan isteği başarısız:', e);
+    } finally {
+      this.isLoadingSync = false;
     }
   }
 
@@ -338,17 +440,22 @@ class BookReaderEngine {
       const response = await fetch(url, { cache: 'default' });
       if (response.ok) {
         const json = await response.json();
-        if (json && Array.isArray(json.pages)) {
-          json.pages.forEach(p => {
-            const pNo = parseInt(p.page_no, 10);
-            if (!isNaN(pNo)) {
-              this.pageCache.set(`${bookApiId}_${pNo}`, {
-                image: p.image || `https://ufkayolculuk.com/uploads/2025-09/pdf_page_${bookApiId}_${pNo}.jpg`,
-                body: p.body_html || p.body || '',
-                pageNo: pNo
-              });
-            }
-          });
+        if (json) {
+          if (Array.isArray(json.pages)) {
+            json.pages.forEach(p => {
+              const pNo = parseInt(p.page_no, 10);
+              if (!isNaN(pNo)) {
+                this.pageCache.set(`${bookApiId}_${pNo}`, {
+                  image: p.image || `https://ufkayolculuk.com/uploads/2025-09/pdf_page_${bookApiId}_${pNo}.jpg`,
+                  body: p.body_html || p.body || '',
+                  pageNo: pNo
+                });
+              }
+            });
+          }
+          if (json.page_timestamps && typeof json.page_timestamps === 'object') {
+            this.pageTimestamps = json.page_timestamps;
+          }
           if (this.pageCache.has(cacheKey)) {
             return this.pageCache.get(cacheKey);
           }
@@ -495,22 +602,63 @@ class BookReaderEngine {
   }
 
   async syncAudioToPage(pageNum) {
-    const pageData = await this.getPageData(this.currentBook.apiId, pageNum);
-    let targetTime = null;
+    const targetTime = this.getPageAudioStartTime(pageNum);
 
-    if (pageData && pageData.body) {
-      targetTime = this.extractFirstDataTime(pageData.body);
-    }
-
-    if (targetTime === null) {
-      const chap = this.findChapterForPage(pageNum);
-      if (chap) targetTime = chap.time;
-    }
-
-    if (targetTime !== null && targetTime !== undefined) {
+    if (targetTime !== null && targetTime !== undefined && !isNaN(targetTime)) {
       this.audio.currentTime = targetTime;
-      this.audio.play().catch(e => console.log('Oynatma kısıtlaması:', e));
+      if (this.isPlaying) {
+        this.audio.play().catch(e => console.log('Oynatma kısıtlaması:', e));
+      }
     }
+    // DİKKAT: targetTime bulunamazsa asla currentTime = 0 yapılmaz! Mevcut ses korunur!
+  }
+
+  /**
+   * Sayfanın ses başlangıç zaman damgasını hesaplar (Zaman yoksa asla 0'a sarmaz!)
+   */
+  getPageAudioStartTime(pageNum) {
+    const p = parseInt(pageNum, 10);
+    if (isNaN(p) || p < 1) return null;
+
+    // 1. pageTimestamps haritasında tam eşleşme
+    if (this.pageTimestamps && this.pageTimestamps[p]) {
+      const stamp = this.pageTimestamps[p];
+      const start = typeof stamp === 'object' ? stamp.start : stamp;
+      if (start !== null && start !== undefined && !isNaN(start)) {
+        return parseFloat(start);
+      }
+    }
+
+    // 2. Sayfanın HTML body'si cache'de varsa
+    const cacheKey = `${this.currentBook.apiId}_${p}`;
+    if (this.pageCache.has(cacheKey)) {
+      const pData = this.pageCache.get(cacheKey);
+      if (pData && pData.body) {
+        const ext = this.extractFirstDataTime(pData.body);
+        if (ext !== null) return ext;
+      }
+    }
+
+    // 3. Eğer sayfa metinsizse (illüstrasyon/resim), bir önceki geçerli sayfanın zamanını al
+    if (this.pageTimestamps && Object.keys(this.pageTimestamps).length > 0) {
+      for (let prevP = p - 1; prevP >= 1; prevP--) {
+        if (this.pageTimestamps[prevP]) {
+          const stamp = this.pageTimestamps[prevP];
+          const val = typeof stamp === 'object' ? (stamp.end || stamp.start) : stamp;
+          if (val !== null && val !== undefined && !isNaN(val)) {
+            return parseFloat(val);
+          }
+        }
+      }
+    }
+
+    // 4. Bölüm bilgisi varsa ve sayfa tam eşleşiyorsa (yalnızca zaman > 0 ise!)
+    const chap = this.findChapterForPage(p);
+    if (chap && chap.page === p && chap.time > 0) {
+      return chap.time;
+    }
+
+    return null;
   }
 
   extractFirstDataTime(htmlString) {
@@ -677,9 +825,19 @@ class BookReaderEngine {
       item.classList.toggle('active', isAct);
     });
 
+    this.pageTimestamps = {};
+    await this.loadBookPagesAndSync(this.currentBook.apiId);
+
     this.renderChaptersDrawer();
     this.renderThumbnailsGrid();
     await this.renderSpread(this.currentPage, 'init');
+
+    if (this.currentPage > 1) {
+      const pTime = this.getPageAudioStartTime(this.currentPage);
+      if (pTime !== null && pTime > 0) {
+        this.audio.currentTime = pTime;
+      }
+    }
   }
 
   renderChaptersDrawer() {

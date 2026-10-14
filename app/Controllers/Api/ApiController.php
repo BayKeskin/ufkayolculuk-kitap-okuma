@@ -82,11 +82,14 @@ class ApiController extends BaseController
             return $this->failNotFound('Kitap bulunamadı.');
         }
 
+        $pageTimestamps = $this->apiService->getPageTimestamps($id);
+
         return $this->respond([
-            'status'      => 'success',
-            'book_id'     => (int)$id,
-            'total_pages' => $book['total_pages'] ?? count($book['pages'] ?? []),
-            'pages'       => $book['pages'] ?? []
+            'status'          => 'success',
+            'book_id'         => (int)$id,
+            'total_pages'     => $book['total_pages'] ?? count($book['pages'] ?? []),
+            'pages'           => $book['pages'] ?? [],
+            'page_timestamps' => $pageTimestamps,
         ]);
     }
 

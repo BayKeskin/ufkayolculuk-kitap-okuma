@@ -232,30 +232,89 @@ class KitapApiService
 
     /**
      * Seslendirme ve cümle zaman damgalarını döner
+    /**
+     * Seslendirme ve cümle zaman damgalarını döner (Sayfa bazlı zaman haritası dahil)
      */
     public function getAudioSync(int|string $bookId): array
     {
         $book = $this->getBook($bookId, true);
         if (!$book) {
-            return ['sound_file' => null, 'sentences' => []];
+            return [
+                'sound_file'      => null,
+                'total_sentences' => 0,
+                'page_timestamps' => [],
+                'sentences'       => []
+            ];
         }
 
         $sentences = [];
+        $pageTimestamps = [];
+
         if (!empty($book['pages']) && is_array($book['pages'])) {
             foreach ($book['pages'] as $page) {
+                $pNo = (int)($page['page_no'] ?? 0);
                 if (!empty($page['sentences']) && is_array($page['sentences'])) {
+                    $firstTime = null;
+                    $lastTime = null;
+
                     foreach ($page['sentences'] as $s) {
+                        $s['page_no'] = $pNo;
                         $sentences[] = $s;
+
+                        if (isset($s['start_time'])) {
+                            $startTime = (float)$s['start_time'];
+                            if ($firstTime === null || $startTime < $firstTime) {
+                                $firstTime = $startTime;
+                            }
+                        }
+                        if (isset($s['end_time'])) {
+                            $endTime = (float)$s['end_time'];
+                            if ($lastTime === null || $endTime > $lastTime) {
+                                $lastTime = $endTime;
+                            }
+                        }
+                    }
+
+                    if ($firstTime !== null) {
+                        $pageTimestamps[$pNo] = [
+                            'start' => round($firstTime, 3),
+                            'end'   => round($lastTime ?? ($firstTime + 5.0), 3),
+                        ];
                     }
                 }
             }
         }
 
+        // Cache page timestamps for fast lookup
+        if (!empty($pageTimestamps)) {
+            try {
+                cache()->save("book_page_timestamps_{$bookId}", $pageTimestamps, 86400);
+            } catch (\Throwable $e) {}
+        }
+
         return [
             'sound_file'      => $book['sound_file'] ?? null,
             'total_sentences' => count($sentences),
+            'page_timestamps' => $pageTimestamps,
             'sentences'       => $sentences,
         ];
+    }
+
+    /**
+     * Kitap için sayfa bazlı ses başlangıç-bitiş zaman damgası haritasını döner
+     */
+    public function getPageTimestamps(int|string $bookId): array
+    {
+        $cacheKey = "book_page_timestamps_{$bookId}";
+        try {
+            $cached = cache($cacheKey);
+            if (is_array($cached) && !empty($cached)) {
+                return $cached;
+            }
+        } catch (\Throwable $e) {}
+
+        $sync = $this->getAudioSync($bookId);
+        return $sync['page_timestamps'] ?? [];
     }
 
     /**
