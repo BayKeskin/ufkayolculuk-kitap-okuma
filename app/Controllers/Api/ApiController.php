@@ -114,6 +114,26 @@ class ApiController extends BaseController
     }
 
     /**
+     * Tekil Sayfa Zengin Metin & Cümle Altyazı Verisi (Metin Modu İçin)
+     */
+    public function pageText($bookId = null, $pageNo = null)
+    {
+        if (empty($bookId) || $pageNo === null) {
+            return $this->failNotFound('Kitap ID veya Sayfa Numarası belirtilmedi.');
+        }
+
+        $textData = $this->apiService->getPageText($bookId, (int)$pageNo);
+
+        return $this->respond([
+            'status'    => 'success',
+            'book_id'   => (int)$bookId,
+            'page_no'   => (int)$pageNo,
+            'body_html' => $textData['body_html'] ?? '',
+            'sentences' => $textData['sentences'] ?? []
+        ]);
+    }
+
+    /**
      * Kullanıcı Okuma İlerlemesi Kaydetme & Senkronizasyon
      */
     public function saveProgress()

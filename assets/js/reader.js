@@ -755,19 +755,28 @@ class BookReaderEngine {
     }
   }
 
-  applyViewMode() {
+  async applyViewMode() {
     const isText = this.viewMode === 'text';
 
     if (isText) {
       this.leftPageScan.classList.add('d-none');
       this.leftPageText.classList.remove('d-none');
-      this.rightPageScan.classList.add('d-none');
-      this.rightPageText.classList.remove('d-none');
+      if (this.rightPageScan) this.rightPageScan.classList.add('d-none');
+      if (this.rightPageText) this.rightPageText.classList.remove('d-none');
+
+      // Metin moduna geçildiğinde sol ve sağ sayfanın zengin metinlerini canlı yükle
+      this.ensurePageTextLoaded(this.currentPage, this.leftPageText);
+      const isSinglePage = window.innerWidth <= 1080;
+      if (!isSinglePage && this.currentPage + 1 <= this.currentBook.totalPages) {
+        this.ensurePageTextLoaded(this.currentPage + 1, this.rightPageText);
+      }
     } else {
       this.leftPageScan.classList.remove('d-none');
       this.leftPageText.classList.add('d-none');
-      this.rightPageScan.classList.remove('d-none');
-      this.rightPageText.classList.add('d-none');
+      if (this.rightPageScan && this.rightPageNumber && this.rightPageNumber.textContent !== '') {
+        this.rightPageScan.classList.remove('d-none');
+      }
+      if (this.rightPageText) this.rightPageText.classList.add('d-none');
     }
 
     const btnToggle = document.getElementById('btnToggleViewMode');
@@ -775,6 +784,49 @@ class BookReaderEngine {
       btnToggle.innerHTML = isText 
         ? '<i class="fa-solid fa-image"></i> <span>Görsel Mod</span>' 
         : '<i class="fa-solid fa-align-left"></i> <span>Metin Modu</span>';
+    }
+  }
+
+  /**
+   * Sayfanın zengin metnini canlı REST API'den yükleyip sayfaya enjekte eder
+   */
+  async ensurePageTextLoaded(pageNum, targetElement) {
+    if (!pageNum || !targetElement) return;
+    const cacheKey = `${this.currentBook.apiId}_${pageNum}`;
+    let pData = this.pageCache.get(cacheKey);
+
+    // Eğer cache'de metin doluysa bas
+    if (pData && pData.body && pData.body.trim().length > 0) {
+      targetElement.innerHTML = pData.body;
+      return;
+    }
+
+    // Cache'de metin yoksa API'den çek
+    try {
+      const url = `${this.getBaseUrl()}api/v1/books/${this.currentBook.apiId}/page-text/${pageNum}`;
+      const res = await fetch(url);
+      if (res.ok) {
+        const json = await res.json();
+        if (json && json.body_html && json.body_html.trim().length > 0) {
+          if (!pData) {
+            pData = {
+              image: `https://ufkayolculuk.com/uploads/2025-09/pdf_page_${this.currentBook.apiId}_${pageNum}.jpg`,
+              pageNo: pageNum
+            };
+          }
+          pData.body = json.body_html;
+          this.pageCache.set(cacheKey, pData);
+          targetElement.innerHTML = json.body_html;
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn(`Sayfa ${pageNum} metni yüklenemedi:`, e);
+    }
+
+    // Eğer sayfada metin yoksa (resim/illüstrasyon)
+    if (!targetElement.innerHTML || targetElement.innerHTML.trim() === '' || targetElement.innerHTML.includes('fa-circle-notch')) {
+      targetElement.innerHTML = `<div class="p-4 text-center text-muted"><em>Bu sayfa görsel içerik içermektedir.</em></div>`;
     }
   }
 

@@ -52,6 +52,7 @@ $routes->group('api/v1', static function ($routes) {
     $routes->get('books', 'Api\ApiController::books');
     $routes->get('books/(:num)', 'Api\ApiController::bookDetail/$1');
     $routes->get('books/(:num)/pages', 'Api\ApiController::bookPages/$1');
+    $routes->get('books/(:num)/page-text/(:num)', 'Api\ApiController::pageText/$1/$2');
     $routes->get('books/(:num)/audio-sync', 'Api\ApiController::audioSync/$1');
     $routes->get('exams', 'Api\ApiController::exams');
     $routes->get('exams/(:num)', 'Api\ApiController::examDetail/$1');

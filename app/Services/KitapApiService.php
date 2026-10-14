@@ -318,6 +318,44 @@ class KitapApiService
     }
 
     /**
+     * Belirli bir sayfanın zengin metnini (body_html) ve cümle altyazılarını döner
+     */
+    public function getPageText(int|string $bookId, int $pageNo): array
+    {
+        $book = $this->getBook($bookId, true);
+        if (!$book || empty($book['pages']) || !is_array($book['pages'])) {
+            return ['page_no' => $pageNo, 'body_html' => '', 'sentences' => []];
+        }
+
+        foreach ($book['pages'] as $page) {
+            if ((int)($page['page_no'] ?? 0) === (int)$pageNo) {
+                $bodyHtml = $page['body_html'] ?? $page['body'] ?? '';
+                $sentences = $page['sentences'] ?? [];
+
+                // Eğer body_html boş ama cümleler varsa otomatik HTML oluştur
+                if (empty(trim($bodyHtml)) && !empty($sentences)) {
+                    $parts = [];
+                    foreach ($sentences as $s) {
+                        $txt = esc($s['text'] ?? '');
+                        $t1 = (float)($s['start_time'] ?? 0);
+                        $t2 = (float)($s['end_time'] ?? ($t1 + 4.0));
+                        $parts[] = "<a href='javascript:void(0)' class='subtitlePart' data-time='{$t1}' data-time2='{$t2}'>{$txt}</a>";
+                    }
+                    $bodyHtml = implode(' ', $parts);
+                }
+
+                return [
+                    'page_no'   => $pageNo,
+                    'body_html' => $bodyHtml,
+                    'sentences' => $sentences,
+                ];
+            }
+        }
+
+        return ['page_no' => $pageNo, 'body_html' => '', 'sentences' => []];
+    }
+
+    /**
      * Kitap meta verilerini normalize eder ve tam bağlantılar oluşturur
      */
     public function formatBookItem(array $book): array
