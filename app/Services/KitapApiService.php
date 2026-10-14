@@ -294,6 +294,30 @@ class KitapApiService
             $book['category_name'] = implode(', ', $catNames);
         }
 
+        // Seviye ve Kategori Slug Çözümleme
+        $catSearch = mb_strtolower(($book['category_name'] ?? '') . ' ' . ($book['name'] ?? '') . ' ' . ($book['level'] ?? ''));
+        $catSlug = 'ortaokul';
+        $levelTitle = 'Ortaokul Düzeyi';
+
+        if (str_contains($catSearch, 'ilkokul') || $book['id'] == 8) {
+            $catSlug = 'ilkokul';
+            $levelTitle = 'İlkokul Düzeyi';
+        } elseif (str_contains($catSearch, 'orta') || $book['id'] == 11) {
+            $catSlug = 'ortaokul';
+            $levelTitle = 'Ortaokul Düzeyi';
+        } elseif (str_contains($catSearch, 'lise') || $book['id'] == 12) {
+            $catSlug = 'lise';
+            $levelTitle = 'Lise Düzeyi';
+        } elseif (str_contains($catSearch, 'yetişkin') || str_contains($catSearch, 'yetiskin') || $book['id'] == 13) {
+            $catSlug = 'yetiskin';
+            $levelTitle = 'Yetişkin Düzeyi';
+        }
+
+        if (empty($book['level']) || $book['level'] === 'Tüm Düzeyler') {
+            $book['level'] = $levelTitle;
+        }
+        $book['category_slug'] = $catSlug;
+
         return $book;
     }
 

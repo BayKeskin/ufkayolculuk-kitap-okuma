@@ -422,32 +422,28 @@ function initBooksSlider() {
     });
   }
 
-  // Mouse Drag Support
-  let isDown = false;
-  let startX;
-  let scrollLeft;
+  // Kategori Filtreleme Butonları (Home Slider)
+  const catPills = document.querySelectorAll('.home-cat-pill');
+  if (catPills && catPills.length > 0) {
+    catPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        catPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const cat = pill.getAttribute('data-cat') || 'all';
 
-  slider.addEventListener('mousedown', (e) => {
-    isDown = true;
-    startX = e.pageX - slider.offsetLeft;
-    scrollLeft = slider.scrollLeft;
-  });
-
-  slider.addEventListener('mouseleave', () => {
-    isDown = false;
-  });
-
-  slider.addEventListener('mouseup', () => {
-    isDown = false;
-  });
-
-  slider.addEventListener('mousemove', (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - slider.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    slider.scrollLeft = scrollLeft - walk;
-  });
+        const cards = slider.querySelectorAll('.book-card-item');
+        cards.forEach(card => {
+          const itemCat = card.getAttribute('data-category') || '';
+          if (cat === 'all' || itemCat === cat) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+        slider.scrollLeft = 0;
+      });
+    });
+  }
 }
 
 /* ==========================================================================

@@ -143,12 +143,32 @@ class BookReaderEngine {
     await this.renderSpread(this.currentPage, 'init');
     this.updateUI();
     this.preloadAdjacentPages();
+
+    if (this.autoAudio) {
+      setTimeout(() => {
+        if (this.btnPlayMaster && !this.isPlaying) {
+          this.btnPlayMaster.click();
+        }
+      }, 500);
+    }
   }
 
   parseUrlParams() {
     const params = new URLSearchParams(window.location.search);
-    const bookParam = params.get('book') || params.get('id');
+    let bookParam = params.get('book') || params.get('id');
     const pageParam = parseInt(params.get('page'), 10);
+    this.autoAudio = params.get('audio') === '1' || params.get('play') === '1';
+
+    const idMap = {
+      '8': 'kuslarin-cagrisi',
+      '11': 'tevhid-muhafizlari',
+      '12': 'gordugume-gormedigime',
+      '13': 'nasil-inanmali'
+    };
+
+    if (bookParam && idMap[bookParam]) {
+      bookParam = idMap[bookParam];
+    }
 
     if (bookParam && this.books[bookParam]) {
       this.currentBookKey = bookParam;

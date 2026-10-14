@@ -6,8 +6,11 @@ use CodeIgniter\Router\RouteCollection;
 
 // Herkese Açık Sayfalar
 $routes->get('/', 'Home::index');
+$routes->get('home.html', 'Home::index');
 $routes->get('kitaplar', 'Home::kitaplar');
+$routes->get('kitaplar.html', 'Home::kitaplar');
 $routes->get('siralamalar', 'Home::siralamalar');
+$routes->get('siralamalar.html', 'Home::siralamalar');
 
 // Kurumsal & İçerik Sayfaları (Ufka Yolculuk API Destekli)
 $routes->get('sayfa', 'Home::sayfa');
@@ -21,9 +24,13 @@ $routes->get('kvkk', 'Home::sayfa/uy-kvkk-aydinlatma-metni');
 // Oturum Gerektiren Korumalı Sayfalar (Cross-Subdomain AuthFilter)
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('kitap-oku', 'Home::kitapOku');
+    $routes->get('kitap-oku.html', 'Home::kitapOku');
     $routes->get('sinav-ekrani', 'Home::sinavEkrani');
+    $routes->get('sinav-ekrani.html', 'Home::sinavEkrani');
     $routes->get('dashboard', 'Home::dashboard');
+    $routes->get('dashboard.html', 'Home::dashboard');
     $routes->get('deneme-sinavlari', 'Home::denemeSinavlari');
+    $routes->get('deneme-sinavlari.html', 'Home::denemeSinavlari');
 });
 
 // Oturum Test & Simülasyon Rotaları (Localhost geliştirme için)

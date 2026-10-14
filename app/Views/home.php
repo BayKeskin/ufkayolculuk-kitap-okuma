@@ -443,9 +443,16 @@
             <!-- Yarışma Kitapları Slider / Carousel (Geniş Alan) -->
             <div class="col-xl-7 col-lg-7 col-md-12">
               <div class="portal-section-card">
-                <div class="section-header-row">
-                  <h2 class="section-main-heading">Yarışma Kitapları</h2>
-                  <a href="kitaplar.html" class="section-link-all">Tümünü Gör</a>
+                <div class="section-header-row flex-wrap gap-2 align-items-center">
+                  <h2 class="section-main-heading mb-0">Yarışma Kitapları</h2>
+                  <div class="filter-pills-row home-cat-filter-pills ms-sm-3">
+                    <button type="button" class="filter-pill-btn home-cat-pill active" data-cat="all">Tümü</button>
+                    <button type="button" class="filter-pill-btn home-cat-pill" data-cat="ilkokul">İlkokul</button>
+                    <button type="button" class="filter-pill-btn home-cat-pill" data-cat="ortaokul">Ortaokul</button>
+                    <button type="button" class="filter-pill-btn home-cat-pill" data-cat="lise">Lise</button>
+                    <button type="button" class="filter-pill-btn home-cat-pill" data-cat="yetiskin">Yetişkin</button>
+                  </div>
+                  <a href="kitaplar.html" class="section-link-all ms-auto">Tümünü Gör</a>
                 </div>
 
                 <div class="books-carousel-wrapper">
@@ -457,49 +464,44 @@
                     <?php 
                     $sliderBooks = !empty($books) ? $books : [];
                     foreach ($sliderBooks as $sBook):
-                      $sCat = 'ortaokul';
-                      $sLvl = mb_strtolower($sBook['level'] ?? $sBook['category_name'] ?? '');
-                      if (str_contains($sLvl, 'ilkokul')) $sCat = 'ilkokul';
-                      elseif (str_contains($sLvl, 'orta')) $sCat = 'ortaokul';
-                      elseif (str_contains($sLvl, 'lise')) $sCat = 'lise';
-                      elseif (str_contains($sLvl, 'yetişkin') || str_contains($sLvl, 'yetiskin')) $sCat = 'yetiskin';
-
+                      $sCat = $sBook['category_slug'] ?? 'ortaokul';
                       $sStartPage = (int)($sBook['start_page'] ?? 1);
                       $sReaderUrl = 'kitap-oku.html?book=' . urlencode($sBook['id']) . '&page=' . $sStartPage;
                       $sAudioUrl = $sBook['sound_file'] ?? 'assets/audio/tevhid-muhafizlari.mp3';
+                      $sAuthor = !empty($sBook['author']) ? $sBook['author'] : 'Ufka Yolculuk Yayınları';
                     ?>
                     <!-- Kitap Kartı: <?= esc($sBook['name']) ?> -->
-                    <div class="book-card-item" data-category="<?= $sCat ?>" data-book-id="<?= esc($sBook['id']) ?>">
-                      <div class="book-thumb-container">
+                    <div class="book-card-item" data-category="<?= $sCat ?>" data-book-id="<?= esc($sBook['id']) ?>" data-book-title="<?= esc(mb_strtolower($sBook['name'] ?? '')) ?>" data-book-author="<?= esc(mb_strtolower($sAuthor)) ?>">
+                      <div class="book-thumb-container position-relative">
                         <a href="<?= $sReaderUrl ?>">
                           <img src="<?= esc($sBook['cover_image']) ?>" alt="<?= esc($sBook['name']) ?>" onerror="this.src='assets/images/books/book-kuslarin-cagrisi.svg'">
                         </a>
+                        <?php if (!empty($sBook['sound_file'])): ?>
+                          <span class="badge-audio-overlay position-absolute top-0 end-0 m-2 badge bg-primary text-white rounded-pill px-2 py-1 shadow-sm" title="Seslendirme Mevcut">
+                            <i class="fa-solid fa-headphones"></i>
+                          </span>
+                        <?php endif; ?>
                       </div>
-                      <div class="book-item-title" title="<?= esc($sBook['name']) ?>"><?= esc($sBook['name']) ?></div>
-                      <div class="book-item-level"><?= esc($sBook['level']) ?></div>
+                      <div class="book-item-title text-truncate" title="<?= esc($sBook['name']) ?>"><?= esc($sBook['name']) ?></div>
+                      <div class="d-flex align-items-center justify-content-between my-1">
+                        <span class="book-item-level badge bg-light text-primary border rounded-pill px-2 py-1 fw-bold"><?= esc($sBook['level']) ?></span>
+                        <small class="text-muted fs-8"><i class="fa-solid fa-pen-nib me-1"></i><?= esc($sAuthor) ?></small>
+                      </div>
                       <div class="book-progress-wrap">
                         <div class="d-flex align-items-center justify-content-between text-muted fs-8 mb-1">
-                          <span><i class="fa-solid fa-book-open me-1"></i><?= (int)($sBook['total_pages'] ?? 180) ?> Sayfa</span>
+                          <span><i class="fa-solid fa-book-open me-1 text-primary"></i><?= (int)($sBook['total_pages'] ?? 180) ?> Sayfa</span>
                           <?php if (!empty($sBook['sound_file'])): ?>
-                            <span class="badge bg-primary-subtle text-primary"><i class="fa-solid fa-headphones me-1"></i>Sesli</span>
+                            <span class="badge bg-success-subtle text-success fw-bold"><i class="fa-solid fa-volume-high me-1"></i>Sesli</span>
                           <?php endif; ?>
                         </div>
                       </div>
                       <div class="book-action-btns">
-                        <a href="<?= $sReaderUrl ?>" class="btn-book-action btn-book-continue">Kitabı Oku</a>
+                        <a href="<?= $sReaderUrl ?>" class="btn-book-action btn-book-continue" title="Kitabı Oku">Kitabı Oku</a>
                         <?php if (!empty($sBook['sound_file'])): ?>
-                        <button type="button" class="btn-book-action btn-book-audio btn-listen-trigger"
-                                data-book-id="<?= esc($sBook['id']) ?>"
-                                data-book-title="<?= esc($sBook['name']) ?>"
-                                data-book-chapter="<?= esc($sBook['name']) ?>"
-                                data-book-img="<?= esc($sBook['cover_image']) ?>"
-                                data-audio-src="<?= esc($sAudioUrl) ?>"
-                                data-start-time="0"
-                                data-start-page="<?= $sStartPage ?>"
-                                title="Sesli Dinle">
+                        <a href="<?= $sReaderUrl ?>&audio=1" class="btn-book-action btn-book-audio" title="Sesli Dinle">
                           <i class="fa-solid fa-headphones"></i>
-                          <span>Sesli Dinle</span>
-                        </button>
+                          <span>Dinle</span>
+                        </a>
                         <?php endif; ?>
                       </div>
                     </div>

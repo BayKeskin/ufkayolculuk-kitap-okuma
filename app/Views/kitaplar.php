@@ -258,7 +258,7 @@
                   <i class="fa-solid fa-star text-warning"></i>
                 </div>
                 <div class="books-stat-info">
-                  <span class="books-stat-num">4 Kitap</span>
+                  <span class="books-stat-num"><?= !empty($books) ? count($books) : 4 ?> Kitap</span>
                   <span class="books-stat-label">2025 Güncel Yarışma</span>
                 </div>
               </div>

@@ -351,31 +351,49 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function formatApiBook(b) {
-  let catSlug = 'ortaokul';
+  let catSlug = b.category_slug || 'ortaokul';
   const rawLvl = (b.level || b.category_name || b.name || '').toLowerCase();
-  if (rawLvl.includes('ilkokul')) catSlug = 'ilkokul';
-  else if (rawLvl.includes('orta')) catSlug = 'ortaokul';
-  else if (rawLvl.includes('lise')) catSlug = 'lise';
-  else if (rawLvl.includes('yetişkin') || rawLvl.includes('yetiskin')) catSlug = 'yetiskin';
+  const bookId = parseInt(b.id, 10);
+  if (rawLvl.includes('ilkokul') || bookId === 8) catSlug = 'ilkokul';
+  else if (rawLvl.includes('orta') || bookId === 11) catSlug = 'ortaokul';
+  else if (rawLvl.includes('lise') || bookId === 12) catSlug = 'lise';
+  else if (rawLvl.includes('yetişkin') || rawLvl.includes('yetiskin') || bookId === 13) catSlug = 'yetiskin';
 
-  const startPage = b.start_page ? parseInt(b.start_page) : 1;
-  const bookId = b.id || 'tevhid-muhafizlari';
-  const readerUrl = `kitap-oku.html?book=${encodeURIComponent(bookId)}&page=${startPage}`;
+  let catLabel = b.level;
+  if (!catLabel || catLabel === 'Tüm Düzeyler') {
+    if (catSlug === 'ilkokul') catLabel = 'İlkokul Düzeyi';
+    else if (catSlug === 'ortaokul') catLabel = 'Ortaokul Düzeyi';
+    else if (catSlug === 'lise') catLabel = 'Lise Düzeyi';
+    else if (catSlug === 'yetiskin') catLabel = 'Yetişkin Düzeyi';
+    else catLabel = 'Tüm Düzeyler';
+  }
+
+  const startPage = b.start_page ? parseInt(b.start_page, 10) : 1;
+  const readerUrl = `kitap-oku.html?book=${encodeURIComponent(b.id)}&page=${startPage}`;
+
+  let totalPages = b.total_pages ? parseInt(b.total_pages, 10) : 0;
+  if (!totalPages) {
+    if (bookId === 8) totalPages = 239;
+    else if (bookId === 11) totalPages = 185;
+    else if (bookId === 12) totalPages = 306;
+    else if (bookId === 13) totalPages = 361;
+    else totalPages = 180;
+  }
 
   return {
-    id: String(bookId),
+    id: String(b.id),
     title: b.name || b.title || 'Ufka Yolculuk Kitabı',
     category: catSlug,
-    categoryLabel: b.level || b.category_name || 'Tüm Düzeyler',
+    categoryLabel: catLabel,
     year: '2025',
     edition: '13. Ufka Yolculuk',
     isCurrent: true,
     author: b.author || 'Ufka Yolculuk Yayınları',
-    pages: b.total_pages ? parseInt(b.total_pages) : 180,
+    pages: totalPages,
     coverImg: b.cover_image || b.image || 'assets/images/books/book-kuslarin-cagrisi.svg',
     hasAudio: !!(b.sound_file),
     soundFile: b.sound_file || '',
-    audioDuration: b.audio_duration || '3 saat',
+    audioDuration: b.audio_duration || (catSlug === 'ilkokul' ? '2 saat 45 dk' : (catSlug === 'ortaokul' ? '3 saat 53 dk' : (catSlug === 'lise' ? '3 saat 30 dk' : '4 saat 15 dk'))),
     summary: b.description ? b.description.replace(/<[^>]*>/g, '').trim() : 'Ufka Yolculuk Bilgi ve Kültür Yarışması güncel yarışma kitabı.',
     readerUrl: readerUrl
   };
@@ -650,10 +668,14 @@ function createListBookCard(book) {
         </div>
       </div>
 
-      <div class="book-list-actions">
-        <a href="${book.readerUrl}" class="btn btn-primary btn-sm px-3 fw-bold rounded-pill">
-          <i class="fa-solid fa-book-open me-1"></i> Oku & Dinle
+      <div class="book-list-actions d-flex align-items-center gap-2">
+        <a href="${book.readerUrl}" class="btn btn-primary btn-sm px-3 fw-bold rounded-pill" title="Kitabı Oku">
+          <i class="fa-solid fa-book-open me-1"></i> Oku
         </a>
+        ${book.hasAudio ? `
+        <a href="${book.readerUrl}&audio=1" class="btn btn-outline-success btn-sm px-3 fw-bold rounded-pill" title="Sesli Dinle">
+          <i class="fa-solid fa-headphones me-1"></i> Dinle
+        </a>` : ''}
         <button type="button" class="btn btn-light btn-sm rounded-pill btn-open-detail" data-id="${book.id}" title="Detay">
           <i class="fa-solid fa-circle-info"></i>
         </button>
@@ -697,7 +719,27 @@ function attachDetailModalEvents() {
       if (pagesEl) pagesEl.textContent = `${book.pages} Sayfa`;
       if (audioEl) audioEl.textContent = book.audioDuration;
       if (summaryEl) summaryEl.textContent = book.summary;
-      if (btnRead) btnRead.href = book.readerUrl;
+      if (btnRead) {
+        btnRead.href = book.readerUrl;
+        btnRead.innerHTML = '<i class="fa-solid fa-book-open me-2"></i> Kitabı Oku';
+      }
+
+      let btnListen = document.getElementById('modalDetailBtnListen');
+      if (!btnListen && btnRead && btnRead.parentElement) {
+        btnListen = document.createElement('a');
+        btnListen.id = 'modalDetailBtnListen';
+        btnListen.className = 'btn btn-outline-success px-4 py-2 fw-bold rounded-pill';
+        btnRead.parentElement.insertBefore(btnListen, btnRead.nextSibling);
+      }
+      if (btnListen) {
+        if (book.hasAudio) {
+          btnListen.style.display = 'inline-flex';
+          btnListen.href = `${book.readerUrl}&audio=1`;
+          btnListen.innerHTML = '<i class="fa-solid fa-headphones me-2"></i> Sesli Dinle';
+        } else {
+          btnListen.style.display = 'none';
+        }
+      }
 
       if (window.detailModalEl && window.bootstrap) {
         const bsModal = bootstrap.Modal.getOrCreateInstance(window.detailModalEl);
