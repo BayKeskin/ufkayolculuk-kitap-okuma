@@ -396,13 +396,10 @@ $rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['bo
     </div>
   </div>
 
-  <?php
-    $lightActiveBook = $activeBook;
-    unset($lightActiveBook['pages']);
-  ?>
   <!-- Dinamik CodeIgniter Veri Köprüsü -->
   <script>
-    window.ACTIVE_BOOK = <?= json_encode($lightActiveBook, JSON_UNESCAPED_UNICODE) ?>;
+    window.BASE_URL = '<?= rtrim(base_url(), '/') . '/' ?>';
+    window.ACTIVE_BOOK = <?= json_encode($activeBook, JSON_UNESCAPED_UNICODE) ?>;
     window.ALL_BOOKS_LIST = <?= json_encode($allBooks ?? [], JSON_UNESCAPED_UNICODE) ?>;
     window.START_PAGE = <?= (int)$bStartPage ?>;
     window.TARGET_PAGE = <?= (int)$bCurPage ?>;

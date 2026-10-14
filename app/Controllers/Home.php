@@ -40,9 +40,9 @@ class Home extends BaseController
             $bookId = 11;
         }
 
-        $activeBook = $this->apiService->getBook($bookId, true);
+        $activeBook = $this->apiService->getBook($bookId, false);
         if (!$activeBook) {
-            $activeBook = $this->apiService->getBook(11, true);
+            $activeBook = $this->apiService->getBook(11, false);
         }
 
         $allBooks = $this->apiService->getBooks();
