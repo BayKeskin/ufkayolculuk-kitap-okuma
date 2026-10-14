@@ -444,17 +444,22 @@ function initBooksSlider() {
         catPills.forEach(p => p.classList.remove('active'));
         pill.classList.add('active');
         const cat = pill.getAttribute('data-cat') || 'all';
+        
+        const catSelect = document.getElementById('categorySelect');
+        if (catSelect) {
+          catSelect.value = cat;
+        }
 
-        const cards = slider.querySelectorAll('.book-card-item');
-        cards.forEach(card => {
-          const itemCat = card.getAttribute('data-category') || '';
-          if (cat === 'all' || itemCat === cat) {
-            card.style.display = '';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-        slider.scrollLeft = 0;
+        if (window.applyHomeBookCardsFilter) {
+          window.applyHomeBookCardsFilter();
+        } else {
+          const cards = slider.querySelectorAll('.book-card-item');
+          cards.forEach(card => {
+            const itemCat = card.getAttribute('data-category') || '';
+            card.style.display = (cat === 'all' || itemCat === cat) ? '' : 'none';
+          });
+          slider.scrollLeft = 0;
+        }
       });
     });
   }
@@ -464,10 +469,10 @@ function initBooksSlider() {
    3. Search and Filter Functionality
    ========================================================================== */
 let HOME_SEARCH_BOOKS = [
-  { id: 'kuslarin-cagrisi', title: 'Kuşların Çağrısı', category: 'ilkokul', categoryLabel: 'İlkokul Düzeyi', year: '2025', url: 'kitap-oku.html?book=kuslarin-cagrisi&page=1', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'tevhid-muhafizlari', title: 'Tevhid Muhafızları', category: 'ortaokul', categoryLabel: 'Ortaokul Düzeyi', year: '2025', url: 'kitap-oku.html?book=tevhid-muhafizlari&page=5', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'gordugume-gormedigime', title: 'Gördüğüme Görmediğime', category: 'lise', categoryLabel: 'Lise Düzeyi', year: '2025', url: 'kitap-oku.html?book=gordugume-gormedigime&page=1', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'nasil-inanmali', title: 'Nasıl İnanmalı?', category: 'yetiskin', categoryLabel: 'Yetişkin Düzeyi', year: '2025', url: 'kitap-oku.html?book=nasil-inanmali&page=1', author: 'Ufka Yolculuk Yayınları' },
+  { id: '8', title: 'Kuşların Çağrısı', category: 'ilkokul', categoryLabel: 'İlkokul Düzeyi', year: '2025', url: 'kitap-oku.html?book=8&page=1', author: 'Ufka Yolculuk Yayınları' },
+  { id: '11', title: 'Tevhid Muhafızları', category: 'ortaokul', categoryLabel: 'Ortaokul Düzeyi', year: '2025', url: 'kitap-oku.html?book=11&page=5', author: 'Ufka Yolculuk Yayınları' },
+  { id: '12', title: 'Gördüğüme Görmediğime', category: 'lise', categoryLabel: 'Lise Düzeyi', year: '2025', url: 'kitap-oku.html?book=12&page=1', author: 'Ufka Yolculuk Yayınları' },
+  { id: '13', title: 'Nasıl İnanmalı?', category: 'yetiskin', categoryLabel: 'Yetişkin Düzeyi', year: '2025', url: 'kitap-oku.html?book=13&page=1', author: 'Ufka Yolculuk Yayınları' },
   { id: 'maske-dustu-2024', title: 'Maske Düştü', category: 'ilkokul', categoryLabel: 'İlkokul (2024)', year: '2024', url: 'kitaplar.html?search=Maske+D%C3%BC%C5%9Ft%C3%BC', author: 'Ufka Yolculuk Yayınları' },
   { id: 'zamanin-tozu-2024', title: 'Zamanın Tozu', category: 'ortaokul', categoryLabel: 'Ortaokul (2024)', year: '2024', url: 'kitaplar.html?search=Zaman%C4%B1n+Tozu', author: 'Ufka Yolculuk Yayınları' },
   { id: 'vakit-geldi-2024', title: 'Vakit Geldi', category: 'lise', categoryLabel: 'Lise (2024)', year: '2024', url: 'kitaplar.html?search=Vakit+Geldi', author: 'Ufka Yolculuk Yayınları' },
@@ -481,13 +486,14 @@ let HOME_SEARCH_BOOKS = [
 // Canlı API kitapları varsa arama dizisine dahil et
 if (window.DYNAMIC_BOOKS && Array.isArray(window.DYNAMIC_BOOKS) && window.DYNAMIC_BOOKS.length > 0) {
   const dynamicItems = window.DYNAMIC_BOOKS.map(b => {
-    let catSlug = 'ortaokul';
+    let catSlug = b.category_slug || 'ortaokul';
     const rawLvl = (b.level || b.category_name || b.name || '').toLowerCase();
-    if (rawLvl.includes('ilkokul')) catSlug = 'ilkokul';
-    else if (rawLvl.includes('orta')) catSlug = 'ortaokul';
-    else if (rawLvl.includes('lise')) catSlug = 'lise';
-    else if (rawLvl.includes('yetişkin') || rawLvl.includes('yetiskin')) catSlug = 'yetiskin';
-    const startPage = b.start_page ? parseInt(b.start_page) : 1;
+    const bId = parseInt(b.id, 10);
+    if (rawLvl.includes('ilkokul') || bId === 8) catSlug = 'ilkokul';
+    else if (rawLvl.includes('orta') || bId === 11) catSlug = 'ortaokul';
+    else if (rawLvl.includes('lise') || bId === 12) catSlug = 'lise';
+    else if (rawLvl.includes('yetişkin') || rawLvl.includes('yetiskin') || bId === 13) catSlug = 'yetiskin';
+    const startPage = b.start_page ? parseInt(b.start_page, 10) : 1;
     return {
       id: String(b.id),
       title: b.name || b.title,
@@ -508,27 +514,61 @@ function initSearchAndFilter() {
   const yearSelect = document.getElementById('yearSelect');
   const searchBtn = document.getElementById('searchBtn');
   const dropdown = document.getElementById('homeSearchDropdown');
-  const bookCards = document.querySelectorAll('.book-card-item');
+  const slider = document.getElementById('contestBooksSlider');
+  const bookCards = slider ? slider.querySelectorAll('.book-card-item') : document.querySelectorAll('.book-card-item');
 
   // Başlangıçta tüm yarışma kartlarının opaklığını net (1) yap
   bookCards.forEach(card => {
     card.style.opacity = '1';
   });
 
-  // Kategori filtresi değiştiğinde slider kartlarını anlık filtrele
-  if (categorySelect) {
-    categorySelect.addEventListener('change', () => {
-      const selected = categorySelect.value;
-      bookCards.forEach(card => {
-        const cardCat = card.dataset.category;
-        if (selected === 'all' || cardCat === selected) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
-      });
+  // Client-Side Anlık Arama ve Kategori Filtreleme Motoru
+  window.applyHomeBookCardsFilter = function() {
+    const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+    const selectedCat = categorySelect ? categorySelect.value : 'all';
+
+    let visibleCount = 0;
+    bookCards.forEach(card => {
+      const cardCat = card.getAttribute('data-category') || '';
+      const cardTitle = (card.getAttribute('data-book-title') || '').toLowerCase();
+      const cardAuthor = (card.getAttribute('data-book-author') || '').toLowerCase();
+
+      const catMatches = (selectedCat === 'all' || cardCat === selectedCat);
+      const queryMatches = (!query || cardTitle.includes(query) || cardAuthor.includes(query) || cardCat.includes(query));
+
+      if (catMatches && queryMatches) {
+        card.style.display = '';
+        card.style.opacity = '1';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
     });
-  }
+
+    // Slider Boş Sonuç Geribildirimi
+    if (slider) {
+      let emptyMsg = slider.querySelector('#sliderEmptyFeedback');
+      if (visibleCount === 0) {
+        if (!emptyMsg) {
+          emptyMsg = document.createElement('div');
+          emptyMsg.id = 'sliderEmptyFeedback';
+          emptyMsg.className = 'w-100 py-4 text-center';
+          emptyMsg.innerHTML = `
+            <div class="py-3 px-2">
+              <i class="fa-solid fa-book-open text-muted fs-3 mb-2 d-block opacity-50"></i>
+              <div class="fw-bold text-dark fs-7 mb-1">Aradığınız kriterlere uygun kitap bulunamadı.</div>
+              <div class="text-muted small">Farklı bir anahtar kelime deneyebilir veya kategori filtresini sıfırlayabilirsiniz.</div>
+            </div>
+          `;
+          slider.appendChild(emptyMsg);
+        }
+        emptyMsg.style.display = 'block';
+      } else if (emptyMsg) {
+        emptyMsg.style.display = 'none';
+      }
+      slider.scrollLeft = 0;
+    }
+  };
 
   // Arama navigasyonu fonksiyonu
   function executeSearch() {
@@ -545,8 +585,8 @@ function initSearchAndFilter() {
     window.location.href = `kitaplar.html${queryString ? '?' + queryString : ''}`;
   }
 
-  // Canlı arama öneri menüsünü güncelle (Yarışma kitapları kartlarını ASLA silikleştirmeden)
-  function handleSearchInput() {
+  // Canlı arama öneri menüsünü güncelle
+  function handleSearchDropdown() {
     const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
     const selectedCat = categorySelect ? categorySelect.value : 'all';
     const selectedYear = yearSelect ? yearSelect.value : 'all';
@@ -612,26 +652,13 @@ function initSearchAndFilter() {
     }
   }
 
-  // Kategori seçildiğinde kartları filtrele (Opaklık değiştirmeden, temiz göster/gizle)
-  function handleCategoryFilter() {
-    const selectedCat = categorySelect ? categorySelect.value : 'all';
-
-    bookCards.forEach(card => {
-      card.style.opacity = '1';
-      if (selectedCat === 'all' || card.dataset.category === selectedCat) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
+  // Input anında hem kartları hem dropdown'ı filtrele
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      window.applyHomeBookCardsFilter();
+      handleSearchDropdown();
     });
 
-    if (searchInput && searchInput.value.trim()) {
-      handleSearchInput();
-    }
-  }
-
-  if (searchInput) {
-    searchInput.addEventListener('input', handleSearchInput);
     searchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -642,14 +669,29 @@ function initSearchAndFilter() {
     });
   }
 
+  // Kategori seçildiğinde hapları senkronize et ve kartları filtrele
   if (categorySelect) {
-    categorySelect.addEventListener('change', handleCategoryFilter);
+    categorySelect.addEventListener('change', () => {
+      const selected = categorySelect.value;
+      const catPills = document.querySelectorAll('.home-cat-pill');
+      catPills.forEach(p => {
+        if (p.getAttribute('data-cat') === selected) {
+          p.classList.add('active');
+        } else {
+          p.classList.remove('active');
+        }
+      });
+      window.applyHomeBookCardsFilter();
+      if (searchInput && searchInput.value.trim()) {
+        handleSearchDropdown();
+      }
+    });
   }
 
   if (yearSelect) {
     yearSelect.addEventListener('change', () => {
       if (searchInput && searchInput.value.trim()) {
-        handleSearchInput();
+        handleSearchDropdown();
       }
     });
   }

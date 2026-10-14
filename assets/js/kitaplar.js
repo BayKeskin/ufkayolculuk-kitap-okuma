@@ -5,9 +5,9 @@
 
 // Tüm Kitaplar Veri Seti (2025 Güncel + 2020-2024 Arşiv)
 let ALL_BOOKS_DATA = [
-  // --- 2025 (13. Ufka Yolculuk - Güncel) ---
+  // --- 2025 (13. Ufka Yolculuk - Güncel Canlı API Verileri) ---
   {
-    id: 'kuslarin-cagrisi',
+    id: '8',
     title: 'Kuşların Çağrısı',
     category: 'ilkokul',
     categoryLabel: 'İlkokul Düzeyi',
@@ -15,15 +15,16 @@ let ALL_BOOKS_DATA = [
     edition: '13. Ufka Yolculuk',
     isCurrent: true,
     author: 'Ufka Yolculuk Yayınları',
-    pages: 160,
-    coverImg: 'assets/images/books/book-kuslarin-cagrisi.svg',
+    pages: 239,
+    coverImg: 'https://ufkayolculuk.com/uploads/2025-12/ilkokul_68d9a114d5496_693e4df60bfe0.webp',
     hasAudio: true,
+    soundFile: 'https://ufkayolculuk.com/uploads/2025-10/ilkokul-kuslarin-cagrisi.mp3',
     audioDuration: '2 saat 45 dk',
     summary: 'Ormanın derinliklerinde yaşayan kuşların dostluk, birlik, cesaret ve tevhid inancını anlatan sıcacık bir macera.',
-    readerUrl: 'kitap-oku.html?book=kuslarin-cagrisi&page=1'
+    readerUrl: 'kitap-oku.html?book=8&page=1'
   },
   {
-    id: 'tevhid-muhafizlari',
+    id: '11',
     title: 'Tevhid Muhafızları',
     category: 'ortaokul',
     categoryLabel: 'Ortaokul Düzeyi',
@@ -32,14 +33,15 @@ let ALL_BOOKS_DATA = [
     isCurrent: true,
     author: 'Ufka Yolculuk Yayınları',
     pages: 185,
-    coverImg: 'assets/images/books/book-tevhid-muhafizlari.svg',
+    coverImg: 'https://ufkayolculuk.com/uploads/2025-12/ortaokul_68d9a11bca841_693e4f59d850b.webp',
     hasAudio: true,
+    soundFile: 'https://ufkayolculuk.com/uploads/2025-10/tevhid-muhafizlari.mp3',
     audioDuration: '3 saat 53 dk',
     summary: 'Boş damacana ile başlayan ve gençlerin inanç, tevekkül ve ahlak değerlerini keşfettiği sürükleyici bir gençlik romanı.',
-    readerUrl: 'kitap-oku.html?book=tevhid-muhafizlari&page=5'
+    readerUrl: 'kitap-oku.html?book=11&page=5'
   },
   {
-    id: 'gordugume-gormedigime',
+    id: '12',
     title: 'Gördüğüme Görmediğime',
     category: 'lise',
     categoryLabel: 'Lise Düzeyi',
@@ -47,15 +49,16 @@ let ALL_BOOKS_DATA = [
     edition: '13. Ufka Yolculuk',
     isCurrent: true,
     author: 'Ufka Yolculuk Yayınları',
-    pages: 190,
-    coverImg: 'assets/images/books/book-gordugume-gormedigime.svg',
+    pages: 306,
+    coverImg: 'https://ufkayolculuk.com/uploads/2025-12/lise_68d9a116d8120_693e4d7585337.webp',
     hasAudio: true,
+    soundFile: 'https://ufkayolculuk.com/uploads/2025-10/lise-gordugume-gormedigime.mp3',
     audioDuration: '3 saat 30 dk',
     summary: 'Aklın sınırları, görünenin ötesindeki hakikatler ve varoluş üzerine gençlere derin bir ufuk açan düşünce ve inanç yolculuğu.',
-    readerUrl: 'kitap-oku.html?book=gordugume-gormedigime&page=1'
+    readerUrl: 'kitap-oku.html?book=12&page=1'
   },
   {
-    id: 'nasil-inanmali',
+    id: '13',
     title: 'Nasıl İnanmalı?',
     category: 'yetiskin',
     categoryLabel: 'Yetişkin Düzeyi',
@@ -63,12 +66,13 @@ let ALL_BOOKS_DATA = [
     edition: '13. Ufka Yolculuk',
     isCurrent: true,
     author: 'Ufka Yolculuk Yayınları',
-    pages: 210,
-    coverImg: 'assets/images/books/book-nasil-inanmali.svg',
+    pages: 361,
+    coverImg: 'https://ufkayolculuk.com/uploads/2026-02/nasilinanmali-removebg-preview_69825015406e6.webp',
     hasAudio: true,
+    soundFile: 'https://ufkayolculuk.com/uploads/2025-09/Nasil-inanmali-seslikitap_v2.mp3',
     audioDuration: '4 saat 15 dk',
     summary: 'Modern dünyada inanç, akıl ve kalp dengesini kuran, temel itikadi meseleleri anlaşılır dille açıklayan rehber eser.',
-    readerUrl: 'kitap-oku.html?book=nasil-inanmali&page=1'
+    readerUrl: 'kitap-oku.html?book=13&page=1'
   },
 
   // --- 2024 (12. Ufka Yolculuk - İbadet / İlmihal / Ahlak) ---
@@ -608,12 +612,13 @@ function renderBooks() {
 function createGridBookCard(book) {
   const yearBadgeClass = book.isCurrent ? 'book-badge-year current' : 'book-badge-year';
   const yearText = book.isCurrent ? '2025 • Güncel' : book.year;
+  const audioUrl = `${book.readerUrl}&audio=1`;
 
   return `
     <div class="book-card-3d" data-book-id="${book.id}">
       <div class="book-card-cover-stage">
         <span class="${yearBadgeClass}">${yearText}</span>
-        ${book.hasAudio ? '<span class="book-badge-audio" title="Sesli Dinleme Mevcut"><i class="fa-solid fa-headphones"></i></span>' : ''}
+        ${book.hasAudio ? `<a href="${audioUrl}" class="book-badge-audio text-decoration-none" title="Sesli Dinleme Mevcut (Tıkla ve Dinle)"><i class="fa-solid fa-headphones me-1"></i>Sesli</a>` : ''}
         <img src="${book.coverImg}" alt="${book.title}" loading="lazy" onerror="this.src='assets/images/books/book-kuslarin-cagrisi.svg'">
       </div>
 
@@ -628,12 +633,13 @@ function createGridBookCard(book) {
       </div>
 
       <div class="book-card-buttons">
-        <a href="${book.readerUrl}" class="btn-book-read-primary" title="Kitabı Oku">
+        <a href="${book.readerUrl}" class="btn-book-read-primary" title="Kitabı Oku (${book.readerUrl})">
           <i class="fa-solid fa-book-open"></i> <span>Kitabı Oku</span>
         </a>
-        <a href="${book.readerUrl}${book.hasAudio ? '&audio=1' : ''}" class="btn-book-audio-circle" title="Sesli Dinle">
+        ${book.hasAudio ? `
+        <a href="${audioUrl}" class="btn-book-audio-circle" title="Sesli Dinle (${audioUrl})">
           <i class="fa-solid fa-headphones"></i>
-        </a>
+        </a>` : ''}
         <button type="button" class="btn-book-detail-circle btn-open-detail" data-id="${book.id}" title="Özet ve Detaylar">
           <i class="fa-solid fa-circle-info"></i>
         </button>

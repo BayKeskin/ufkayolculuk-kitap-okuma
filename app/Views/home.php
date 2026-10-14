@@ -302,10 +302,12 @@
                       <!-- Kapak Vitrini -->
                       <div class="book-thumb-container">
                         <span class="badge-cat-tag cat-<?= $sCat ?>"><?= esc($sLevelBadge) ?></span>
-                        <?php if (!empty($sBook['sound_file'])): ?>
-                          <span class="badge-audio-tag" title="Sesli Dinleme Mevcut">
+                        <?php if (!empty($sBook['sound_file'])): 
+                          $sAudioReaderUrl = 'kitap-oku.html?book=' . urlencode($sBook['id']) . '&page=' . $sStartPage . '&audio=1';
+                        ?>
+                          <a href="<?= $sAudioReaderUrl ?>" class="badge-audio-tag text-decoration-none" title="Sesli Dinleme Mevcut (Tıkla ve Dinle)">
                             <i class="fa-solid fa-volume-high"></i> Sesli
-                          </span>
+                          </a>
                         <?php endif; ?>
                         
                         <a href="<?= $sReaderUrl ?>" title="<?= esc($sBook['name']) ?>">
@@ -343,12 +345,14 @@
 
                       <!-- Butonlar -->
                       <div class="book-action-btns">
-                        <a href="<?= $sReaderUrl ?>" class="btn-book-action btn-book-continue" title="Kitabı Oku">
+                        <a href="<?= $sReaderUrl ?>" class="btn-book-action btn-book-continue" title="Kitabı Oku (kitap-oku.html?book=<?= esc($sBook['id']) ?>&page=<?= $sStartPage ?>)">
                           <i class="fa-solid fa-book-open"></i>
                           <span>Kitabı Oku</span>
                         </a>
-                        <?php if (!empty($sBook['sound_file'])): ?>
-                        <button type="button" class="btn-book-action btn-book-audio btn-listen-trigger"
+                        <?php if (!empty($sBook['sound_file'])): 
+                          $sAudioReaderUrl = 'kitap-oku.html?book=' . urlencode($sBook['id']) . '&page=' . $sStartPage . '&audio=1';
+                        ?>
+                        <a href="<?= $sAudioReaderUrl ?>" class="btn-book-action btn-book-audio btn-listen-trigger"
                                 data-book-id="<?= esc($sBook['id']) ?>"
                                 data-book-title="<?= esc($sBook['name']) ?>"
                                 data-book-chapter="<?= esc($sBook['name']) ?> - Sesli Kitap"
@@ -356,9 +360,10 @@
                                 data-audio-src="<?= esc($sAudioUrl) ?>"
                                 data-start-time="0"
                                 data-start-page="<?= $sStartPage ?>"
-                                title="Hemen Sesli Dinle">
+                                title="Sesli Dinle (kitap-oku.html?book=<?= esc($sBook['id']) ?>&page=<?= $sStartPage ?>&audio=1)">
                           <i class="fa-solid fa-headphones"></i>
-                        </button>
+                          <span>Dinle</span>
+                        </a>
                         <?php endif; ?>
                       </div>
 

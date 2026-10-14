@@ -141,9 +141,58 @@
       <!-- 3. Kitaplar Grid / Liste Galerisi -->
       <section>
 
-        <!-- Grid Konteyneri -->
+        <!-- Grid Konteyneri (Canlı API Verileriyle Dinamik Önizleme) -->
         <div class="books-grid-container" id="booksGridContainer">
-          <!-- JS dinamik dolduracak -->
+          <?php if (!empty($books)): ?>
+            <?php foreach ($books as $b): 
+              $bCat = $b['category_slug'] ?? 'ortaokul';
+              $bStartPage = (int)($b['start_page'] ?? 1);
+              $bTotalPages = (int)($b['total_pages'] ?? 180);
+              $bReaderUrl = 'kitap-oku.html?book=' . urlencode($b['id']) . '&page=' . $bStartPage;
+              $bAudioReaderUrl = $bReaderUrl . '&audio=1';
+              $bAuthor = !empty($b['author']) ? $b['author'] : 'Ufka Yolculuk Yayınları';
+              $bLevelBadge = $b['level'] ?? 'Tüm Düzeyler';
+              $bHasAudio = !empty($b['sound_file']);
+            ?>
+            <div class="book-card-3d" data-book-id="<?= esc($b['id']) ?>">
+              <div class="book-card-cover-stage">
+                <span class="book-badge-year current">2025 • Güncel</span>
+                <?php if ($bHasAudio): ?>
+                  <a href="<?= $bAudioReaderUrl ?>" class="book-badge-audio text-decoration-none" title="Sesli Dinleme Mevcut (Tıkla ve Dinle)">
+                    <i class="fa-solid fa-headphones me-1"></i>Sesli
+                  </a>
+                <?php endif; ?>
+                <img src="<?= esc($b['cover_image']) ?>" alt="<?= esc($b['name']) ?>" loading="lazy" onerror="this.src='assets/images/books/book-kuslarin-cagrisi.svg'">
+              </div>
+
+              <div class="book-card-info">
+                <span class="book-level-pill <?= esc($bCat) ?>"><?= esc($bLevelBadge) ?></span>
+                <h3 class="book-card-title"><?= esc($b['name']) ?></h3>
+                <div class="book-card-author"><?= esc($bAuthor) ?></div>
+                <div class="book-card-meta-row">
+                  <span><i class="fa-solid fa-book-open me-1"></i><?= $bTotalPages ?> Sayfa</span>
+                  <?php if ($bHasAudio): ?>
+                    <span><i class="fa-regular fa-clock me-1"></i>3+ saat</span>
+                  <?php endif; ?>
+                </div>
+              </div>
+
+              <div class="book-card-buttons">
+                <a href="<?= $bReaderUrl ?>" class="btn-book-read-primary" title="Kitabı Oku (<?= $bReaderUrl ?>)">
+                  <i class="fa-solid fa-book-open"></i> <span>Kitabı Oku</span>
+                </a>
+                <?php if ($bHasAudio): ?>
+                  <a href="<?= $bAudioReaderUrl ?>" class="btn-book-audio-circle" title="Sesli Dinle (<?= $bAudioReaderUrl ?>)">
+                    <i class="fa-solid fa-headphones"></i>
+                  </a>
+                <?php endif; ?>
+                <button type="button" class="btn-book-detail-circle btn-open-detail" data-id="<?= esc($b['id']) ?>" title="Özet ve Detaylar">
+                  <i class="fa-solid fa-circle-info"></i>
+                </button>
+              </div>
+            </div>
+            <?php endforeach; ?>
+          <?php endif; ?>
         </div>
 
         <!-- Liste Konteyneri -->
