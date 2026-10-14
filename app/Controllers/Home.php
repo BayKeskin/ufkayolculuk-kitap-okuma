@@ -5,11 +5,12 @@ namespace App\Controllers;
 class Home extends BaseController
 {
     /**
-     * Portal Ana Sayfası
+     * Portal Ana Sayfası (Dinamik Kitap API Entegrasyonlu)
      */
     public function index(): string
     {
-        return view('home');
+        $books = $this->apiService->getBooks();
+        return view('home', ['books' => $books]);
     }
 
     /**
@@ -21,11 +22,12 @@ class Home extends BaseController
     }
 
     /**
-     * Kitaplar Listesi & Arşiv
+     * Kitaplar Listesi & Arşiv (Dinamik Kitap API Entegrasyonlu)
      */
     public function kitaplar(): string
     {
-        return view('kitaplar');
+        $books = $this->apiService->getBooks();
+        return view('kitaplar', ['books' => $books]);
     }
 
     /**
@@ -60,11 +62,11 @@ class Home extends BaseController
         return view('siralamalar');
     }
 
-    protected \App\Services\UfkaApiService $apiService;
+    protected \App\Services\KitapApiService $apiService;
 
     public function __construct()
     {
-        $this->apiService = new \App\Services\UfkaApiService();
+        $this->apiService = new \App\Services\KitapApiService();
     }
 
     /**

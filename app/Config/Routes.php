@@ -39,6 +39,11 @@ $routes->group('api/v1', static function ($routes) {
     $routes->get('books/(:num)/pages', 'Api\ApiController::bookPages/$1');
     $routes->get('books/(:num)/audio-sync', 'Api\ApiController::audioSync/$1');
     $routes->get('exams', 'Api\ApiController::exams');
+    $routes->get('exams/(:num)', 'Api\ApiController::examDetail/$1');
+    $routes->post('exams/(:num)/submit', 'Api\ApiController::submitExam/$1');
+    $routes->get('leaderboard', 'Api\ApiController::leaderboard');
+    $routes->get('stats', 'Api\ApiController::stats');
+    $routes->get('progress/(:num)/(:num)', 'Api\ApiController::getProgress/$1/$2');
 
     // Sayfalar & İçerikler REST API
     $routes->get('pages', 'Api\ApiController::pages');

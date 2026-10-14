@@ -36,6 +36,11 @@ class UfkaApi extends BaseConfig
      */
     public int $tokenTTL = 6600;
 
+    /**
+     * HTTP request timeout in seconds
+     */
+    public int $timeout = 15;
+
     public function __construct()
     {
         parent::__construct();
@@ -44,5 +49,6 @@ class UfkaApi extends BaseConfig
         $this->username   = env('api.ufka.username', $this->username);
         $this->password   = env('api.ufka.password', $this->password);
         $this->uploadsURL = env('api.ufka.uploadsURL', $this->uploadsURL);
+        $this->timeout    = (int)env('api.ufka.timeout', $this->timeout);
     }
 }

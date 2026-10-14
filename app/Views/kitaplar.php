@@ -494,6 +494,9 @@
   <!-- Bootstrap JS (Yerel) -->
   <script src="assets/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/header-search.js?v=4.0"></script>
+  <script>
+    window.DYNAMIC_BOOKS = <?= json_encode($books ?? [], JSON_UNESCAPED_UNICODE) ?>;
+  </script>
   <script src="assets/js/kitaplar.js?v=4.0"></script>
 </body>
 </html>

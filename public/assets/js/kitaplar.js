@@ -4,7 +4,7 @@
  */
 
 // Tüm Kitaplar Veri Seti (2025 Güncel + 2020-2024 Arşiv)
-const ALL_BOOKS_DATA = [
+let ALL_BOOKS_DATA = [
   // --- 2025 (13. Ufka Yolculuk - Güncel) ---
   {
     id: 'kuslarin-cagrisi',
@@ -350,9 +350,64 @@ document.addEventListener('DOMContentLoaded', () => {
   initBookListPage();
 });
 
-function initBookListPage() {
+function formatApiBook(b) {
+  let catSlug = 'ortaokul';
+  const rawLvl = (b.level || b.category_name || b.name || '').toLowerCase();
+  if (rawLvl.includes('ilkokul')) catSlug = 'ilkokul';
+  else if (rawLvl.includes('orta')) catSlug = 'ortaokul';
+  else if (rawLvl.includes('lise')) catSlug = 'lise';
+  else if (rawLvl.includes('yetişkin') || rawLvl.includes('yetiskin')) catSlug = 'yetiskin';
+
+  const startPage = b.start_page ? parseInt(b.start_page) : 1;
+  const bookId = b.id || 'tevhid-muhafizlari';
+  const readerUrl = `kitap-oku.html?book=${encodeURIComponent(bookId)}&page=${startPage}`;
+
+  return {
+    id: String(bookId),
+    title: b.name || b.title || 'Ufka Yolculuk Kitabı',
+    category: catSlug,
+    categoryLabel: b.level || b.category_name || 'Tüm Düzeyler',
+    year: '2025',
+    edition: '13. Ufka Yolculuk',
+    isCurrent: true,
+    author: b.author || 'Ufka Yolculuk Yayınları',
+    pages: b.total_pages ? parseInt(b.total_pages) : 180,
+    coverImg: b.cover_image || b.image || 'assets/images/books/book-kuslarin-cagrisi.svg',
+    hasAudio: !!(b.sound_file),
+    soundFile: b.sound_file || '',
+    audioDuration: b.audio_duration || '3 saat',
+    summary: b.description ? b.description.replace(/<[^>]*>/g, '').trim() : 'Ufka Yolculuk Bilgi ve Kültür Yarışması güncel yarışma kitabı.',
+    readerUrl: readerUrl
+  };
+}
+
+function applyDynamicBooks(apiBooks) {
+  if (!Array.isArray(apiBooks) || apiBooks.length === 0) return;
+  const dynamicFormatted = apiBooks.map(formatApiBook);
+  const archiveBooks = ALL_BOOKS_DATA.filter(b => !b.isCurrent);
+  ALL_BOOKS_DATA = [...dynamicFormatted, ...archiveBooks];
+}
+
+async function initBookListPage() {
   parseUrlQueryParams();
   setupFilterControls();
+
+  if (window.DYNAMIC_BOOKS && Array.isArray(window.DYNAMIC_BOOKS) && window.DYNAMIC_BOOKS.length > 0) {
+    applyDynamicBooks(window.DYNAMIC_BOOKS);
+  } else {
+    try {
+      const resp = await fetch('api/v1/books');
+      if (resp.ok) {
+        const json = await resp.json();
+        if (json && json.status === 'success' && Array.isArray(json.data) && json.data.length > 0) {
+          applyDynamicBooks(json.data);
+        }
+      }
+    } catch (e) {
+      // offline fallback
+    }
+  }
+
   renderBooks();
   initDetailModal();
   initHeaderPopovers();
@@ -558,7 +613,7 @@ function createGridBookCard(book) {
         <a href="${book.readerUrl}" class="btn-book-read-primary" title="Kitabı Oku">
           <i class="fa-solid fa-book-open"></i> <span>Kitabı Oku</span>
         </a>
-        <a href="${book.readerUrl}" class="btn-book-audio-circle" title="Sesli Dinle">
+        <a href="${book.readerUrl}${book.hasAudio ? '&audio=1' : ''}" class="btn-book-audio-circle" title="Sesli Dinle">
           <i class="fa-solid fa-headphones"></i>
         </a>
         <button type="button" class="btn-book-detail-circle btn-open-detail" data-id="${book.id}" title="Özet ve Detaylar">

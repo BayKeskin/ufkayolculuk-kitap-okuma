@@ -453,7 +453,7 @@ function initBooksSlider() {
 /* ==========================================================================
    3. Search and Filter Functionality
    ========================================================================== */
-const HOME_SEARCH_BOOKS = [
+let HOME_SEARCH_BOOKS = [
   { id: 'kuslarin-cagrisi', title: 'Kuşların Çağrısı', category: 'ilkokul', categoryLabel: 'İlkokul Düzeyi', year: '2025', url: 'kitap-oku.html?book=kuslarin-cagrisi&page=1', author: 'Ufka Yolculuk Yayınları' },
   { id: 'tevhid-muhafizlari', title: 'Tevhid Muhafızları', category: 'ortaokul', categoryLabel: 'Ortaokul Düzeyi', year: '2025', url: 'kitap-oku.html?book=tevhid-muhafizlari&page=5', author: 'Ufka Yolculuk Yayınları' },
   { id: 'gordugume-gormedigime', title: 'Gördüğüme Görmediğime', category: 'lise', categoryLabel: 'Lise Düzeyi', year: '2025', url: 'kitap-oku.html?book=gordugume-gormedigime&page=1', author: 'Ufka Yolculuk Yayınları' },
@@ -468,6 +468,30 @@ const HOME_SEARCH_BOOKS = [
   { id: 'bir-kucuk-odul-2022', title: 'Bir Küçük Ödül', category: 'ilkokul', categoryLabel: 'İlkokul (2022)', year: '2022', url: 'kitaplar.html?search=Bir+K%C3%BC%C3%A7%C3%BCk+%C3%96d%C3%BCl', author: 'Ufka Yolculuk Yayınları' }
 ];
 
+// Canlı API kitapları varsa arama dizisine dahil et
+if (window.DYNAMIC_BOOKS && Array.isArray(window.DYNAMIC_BOOKS) && window.DYNAMIC_BOOKS.length > 0) {
+  const dynamicItems = window.DYNAMIC_BOOKS.map(b => {
+    let catSlug = 'ortaokul';
+    const rawLvl = (b.level || b.category_name || b.name || '').toLowerCase();
+    if (rawLvl.includes('ilkokul')) catSlug = 'ilkokul';
+    else if (rawLvl.includes('orta')) catSlug = 'ortaokul';
+    else if (rawLvl.includes('lise')) catSlug = 'lise';
+    else if (rawLvl.includes('yetişkin') || rawLvl.includes('yetiskin')) catSlug = 'yetiskin';
+    const startPage = b.start_page ? parseInt(b.start_page) : 1;
+    return {
+      id: String(b.id),
+      title: b.name || b.title,
+      category: catSlug,
+      categoryLabel: b.level || b.category_name || 'Tüm Düzeyler',
+      year: '2025',
+      url: `kitap-oku.html?book=${encodeURIComponent(b.id)}&page=${startPage}`,
+      author: b.author || 'Ufka Yolculuk Yayınları'
+    };
+  });
+  const archiveOnly = HOME_SEARCH_BOOKS.filter(b => b.year !== '2025');
+  HOME_SEARCH_BOOKS = [...dynamicItems, ...archiveOnly];
+}
+
 function initSearchAndFilter() {
   const searchInput = document.getElementById('mainSearchInput');
   const categorySelect = document.getElementById('categorySelect');
@@ -480,6 +504,21 @@ function initSearchAndFilter() {
   bookCards.forEach(card => {
     card.style.opacity = '1';
   });
+
+  // Kategori filtresi değiştiğinde slider kartlarını anlık filtrele
+  if (categorySelect) {
+    categorySelect.addEventListener('change', () => {
+      const selected = categorySelect.value;
+      bookCards.forEach(card => {
+        const cardCat = card.dataset.category;
+        if (selected === 'all' || cardCat === selected) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  }
 
   // Arama navigasyonu fonksiyonu
   function executeSearch() {

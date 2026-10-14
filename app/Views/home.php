@@ -271,48 +271,26 @@
               <!-- Hero Sağ: 3D Kitaplar (Masaüstü: 4'lü Yan Yana, Mobil: Tekli 3D Slider) -->
               <div class="col-md-7 hero-stage-container" id="heroStageContainer">
                 <div class="hero-books-row" id="heroBooksRow">
-                  <!-- Kitap 1: İlkokul -->
-                  <div class="hero-3d-book btn-listen-trigger active-mobile-slide" 
-                       data-book-title="Kuşların Çağrısı" 
-                       data-book-chapter="Bölüm 3 - Cesaretin Kaynağı" 
-                       data-book-img="assets/images/books/book-kuslarin-cagrisi.svg"
-                       data-audio-src="assets/audio/tevhid-muhafizlari.mp3"
-                       data-slide-index="0"
-                       title="Kuşların Çağrısı (İlkokul Düzeyi)">
-                    <img src="assets/images/books/book-kuslarin-cagrisi.svg" alt="Kuşların Çağrısı">
+                  <?php 
+                  $heroBooks = !empty($books) ? $books : [];
+                  foreach ($heroBooks as $hIdx => $hBook):
+                    $hActive = ($hIdx === 0) ? ' active-mobile-slide' : '';
+                    $hStartPage = (int)($hBook['start_page'] ?? 1);
+                    $hAudioUrl = $hBook['sound_file'] ?? 'assets/audio/tevhid-muhafizlari.mp3';
+                  ?>
+                  <div class="hero-3d-book btn-listen-trigger<?= $hActive ?>" 
+                       data-book-id="<?= esc($hBook['id']) ?>"
+                       data-book-title="<?= esc($hBook['name']) ?>" 
+                       data-book-chapter="<?= esc($hBook['name']) ?>" 
+                       data-book-img="<?= esc($hBook['cover_image']) ?>"
+                       data-audio-src="<?= esc($hAudioUrl) ?>"
+                       data-start-time="0"
+                       data-start-page="<?= $hStartPage ?>"
+                       data-slide-index="<?= $hIdx ?>"
+                       title="<?= esc($hBook['name']) ?> (<?= esc($hBook['level']) ?>)">
+                    <img src="<?= esc($hBook['cover_image']) ?>" alt="<?= esc($hBook['name']) ?>" onerror="this.src='assets/images/books/book-kuslarin-cagrisi.svg'">
                   </div>
-                  <!-- Kitap 2: Ortaokul -->
-                  <div class="hero-3d-book btn-listen-trigger" 
-                       data-book-title="Tevhid Muhafızları" 
-                       data-book-chapter="1. Bölüm - Boş Damacana (Sayfa 5)" 
-                       data-book-img="assets/images/books/book-tevhid-muhafizlari.svg"
-                       data-audio-src="assets/audio/tevhid-muhafizlari.mp3"
-                       data-start-time="2.313"
-                       data-start-page="5"
-                       data-slide-index="1"
-                       title="Tevhid Muhafızları (Ortaokul Düzeyi)">
-                    <img src="assets/images/books/book-tevhid-muhafizlari.svg" alt="Tevhid Muhafızları">
-                  </div>
-                  <!-- Kitap 3: Lise -->
-                  <div class="hero-3d-book btn-listen-trigger" 
-                       data-book-title="Gördüğüme Görmediğime" 
-                       data-book-chapter="Bölüm 2 - Buzdağının Görünmeyen Yüzü" 
-                       data-book-img="assets/images/books/book-gordugume-gormedigime.svg"
-                       data-audio-src="assets/audio/tevhid-muhafizlari.mp3"
-                       data-slide-index="2"
-                       title="Gördüğüme Görmediğime (Lise Düzeyi)">
-                    <img src="assets/images/books/book-gordugume-gormedigime.svg" alt="Gördüğüme Görmediğime">
-                  </div>
-                  <!-- Kitap 4: Yetişkin -->
-                  <div class="hero-3d-book btn-listen-trigger" 
-                       data-book-title="Nasıl İnanmalı?" 
-                       data-book-chapter="Bölüm 1 - İnanç ve Akıl Dengesi" 
-                       data-book-img="assets/images/books/book-nasil-inanmali.svg"
-                       data-audio-src="assets/audio/tevhid-muhafizlari.mp3"
-                       data-slide-index="3"
-                       title="Nasıl İnanmalı? (Yetişkin Düzeyi)">
-                    <img src="assets/images/books/book-nasil-inanmali.svg" alt="Nasıl İnanmalı?">
-                  </div>
+                  <?php endforeach; ?>
                 </div>
 
                 <!-- Mobil Tekli Kitap Slider Navigasyon Kontrolleri -->
@@ -476,135 +454,56 @@
                   </button>
 
                   <div class="books-slider-scroll" id="contestBooksSlider">
-                    
-                    <!-- Kitap Kartı 1: Kuşların Çağrısı -->
-                    <div class="book-card-item" data-category="ilkokul">
+                    <?php 
+                    $sliderBooks = !empty($books) ? $books : [];
+                    foreach ($sliderBooks as $sBook):
+                      $sCat = 'ortaokul';
+                      $sLvl = mb_strtolower($sBook['level'] ?? $sBook['category_name'] ?? '');
+                      if (str_contains($sLvl, 'ilkokul')) $sCat = 'ilkokul';
+                      elseif (str_contains($sLvl, 'orta')) $sCat = 'ortaokul';
+                      elseif (str_contains($sLvl, 'lise')) $sCat = 'lise';
+                      elseif (str_contains($sLvl, 'yetişkin') || str_contains($sLvl, 'yetiskin')) $sCat = 'yetiskin';
+
+                      $sStartPage = (int)($sBook['start_page'] ?? 1);
+                      $sReaderUrl = 'kitap-oku.html?book=' . urlencode($sBook['id']) . '&page=' . $sStartPage;
+                      $sAudioUrl = $sBook['sound_file'] ?? 'assets/audio/tevhid-muhafizlari.mp3';
+                    ?>
+                    <!-- Kitap Kartı: <?= esc($sBook['name']) ?> -->
+                    <div class="book-card-item" data-category="<?= $sCat ?>" data-book-id="<?= esc($sBook['id']) ?>">
                       <div class="book-thumb-container">
-                        <a href="kitap-oku.html?book=kuslarin-cagrisi">
-                          <img src="assets/images/books/book-kuslarin-cagrisi.svg" alt="Kuşların Çağrısı">
+                        <a href="<?= $sReaderUrl ?>">
+                          <img src="<?= esc($sBook['cover_image']) ?>" alt="<?= esc($sBook['name']) ?>" onerror="this.src='assets/images/books/book-kuslarin-cagrisi.svg'">
                         </a>
                       </div>
-                      <div class="book-item-title" title="Kuşların Çağrısı">Kuşların Çağrısı</div>
-                      <div class="book-item-level">İlkokul Düzeyi</div>
+                      <div class="book-item-title" title="<?= esc($sBook['name']) ?>"><?= esc($sBook['name']) ?></div>
+                      <div class="book-item-level"><?= esc($sBook['level']) ?></div>
                       <div class="book-progress-wrap">
-                        <div class="progress-track-custom">
-                          <div class="progress-fill-custom" style="width: 35%;"></div>
+                        <div class="d-flex align-items-center justify-content-between text-muted fs-8 mb-1">
+                          <span><i class="fa-solid fa-book-open me-1"></i><?= (int)($sBook['total_pages'] ?? 180) ?> Sayfa</span>
+                          <?php if (!empty($sBook['sound_file'])): ?>
+                            <span class="badge bg-primary-subtle text-primary"><i class="fa-solid fa-headphones me-1"></i>Sesli</span>
+                          <?php endif; ?>
                         </div>
-                        <span class="progress-text-badge">%35 Okundu</span>
                       </div>
                       <div class="book-action-btns">
-                        <a href="kitap-oku.html?book=kuslarin-cagrisi" class="btn-book-action btn-book-continue">Devam Et</a>
+                        <a href="<?= $sReaderUrl ?>" class="btn-book-action btn-book-continue">Kitabı Oku</a>
+                        <?php if (!empty($sBook['sound_file'])): ?>
                         <button type="button" class="btn-book-action btn-book-audio btn-listen-trigger"
-                                data-book-id="kuslarin-cagrisi"
-                                data-book-title="Kuşların Çağrısı"
-                                data-book-chapter="Bölüm 1 - Başlangıç (Sayfa 1)"
-                                data-book-img="assets/images/books/book-kuslarin-cagrisi.svg"
-                                data-audio-src="assets/audio/tevhid-muhafizlari.mp3"
-                                data-start-time="2.313"
-                                data-start-page="1"
+                                data-book-id="<?= esc($sBook['id']) ?>"
+                                data-book-title="<?= esc($sBook['name']) ?>"
+                                data-book-chapter="<?= esc($sBook['name']) ?>"
+                                data-book-img="<?= esc($sBook['cover_image']) ?>"
+                                data-audio-src="<?= esc($sAudioUrl) ?>"
+                                data-start-time="0"
+                                data-start-page="<?= $sStartPage ?>"
                                 title="Sesli Dinle">
                           <i class="fa-solid fa-headphones"></i>
                           <span>Sesli Dinle</span>
                         </button>
+                        <?php endif; ?>
                       </div>
                     </div>
-
-                    <!-- Kitap Kartı 2: Tevhid Muhafızları -->
-                    <div class="book-card-item" data-category="ortaokul">
-                      <div class="book-thumb-container">
-                        <a href="kitap-oku.html?book=tevhid-muhafizlari&page=5">
-                          <img src="assets/images/books/book-tevhid-muhafizlari.svg" alt="Tevhid Muhafızları">
-                        </a>
-                      </div>
-                      <div class="book-item-title" title="Tevhid Muhafızları">Tevhid Muhafızları</div>
-                      <div class="book-item-level">Ortaokul Düzeyi</div>
-                      <div class="book-progress-wrap">
-                        <div class="progress-track-custom">
-                          <div class="progress-fill-custom" style="width: 68%;"></div>
-                        </div>
-                        <span class="progress-text-badge">%68 Okundu</span>
-                      </div>
-                      <div class="book-action-btns">
-                        <a href="kitap-oku.html?book=tevhid-muhafizlari&page=5" class="btn-book-action btn-book-continue">Devam Et</a>
-                        <button type="button" class="btn-book-action btn-book-audio btn-listen-trigger"
-                                data-book-id="tevhid-muhafizlari"
-                                data-book-title="Tevhid Muhafızları"
-                                data-book-chapter="1. Bölüm - Boş Damacana (Sayfa 5)"
-                                data-book-img="assets/images/books/book-tevhid-muhafizlari.svg"
-                                data-audio-src="assets/audio/tevhid-muhafizlari.mp3"
-                                data-start-time="2.313"
-                                data-start-page="5"
-                                title="Sesli Dinle">
-                          <i class="fa-solid fa-headphones"></i>
-                          <span>Sesli Dinle</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    <!-- Kitap Kartı 3: Gördüğüme Görmediğime -->
-                    <div class="book-card-item" data-category="lise">
-                      <div class="book-thumb-container">
-                        <a href="kitap-oku.html?book=gordugume-gormedigime">
-                          <img src="assets/images/books/book-gordugume-gormedigime.svg" alt="Gördüğüme Görmediğime">
-                        </a>
-                      </div>
-                      <div class="book-item-title" title="Gördüğüme Görmediğime">Gördüğüme Görmediğime</div>
-                      <div class="book-item-level">Lise Düzeyi</div>
-                      <div class="book-progress-wrap">
-                        <div class="progress-track-custom">
-                          <div class="progress-fill-custom" style="width: 20%;"></div>
-                        </div>
-                        <span class="progress-text-badge">%20 Okundu</span>
-                      </div>
-                      <div class="book-action-btns">
-                        <a href="kitap-oku.html?book=gordugume-gormedigime" class="btn-book-action btn-book-continue">Devam Et</a>
-                        <button type="button" class="btn-book-action btn-book-audio btn-listen-trigger"
-                                data-book-id="gordugume-gormedigime"
-                                data-book-title="Gördüğüme Görmediğime"
-                                data-book-chapter="Bölüm 1 - Giriş (Sayfa 1)"
-                                data-book-img="assets/images/books/book-gordugume-gormedigime.svg"
-                                data-audio-src="assets/audio/tevhid-muhafizlari.mp3"
-                                data-start-time="2.313"
-                                data-start-page="1"
-                                title="Sesli Dinle">
-                          <i class="fa-solid fa-headphones"></i>
-                          <span>Sesli Dinle</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    <!-- Kitap Kartı 4: Nasıl İnanmalı? -->
-                    <div class="book-card-item" data-category="yetiskin">
-                      <div class="book-thumb-container">
-                        <a href="kitap-oku.html?book=nasil-inanmali">
-                          <img src="assets/images/books/book-nasil-inanmali.svg" alt="Nasıl İnanmalı?">
-                        </a>
-                      </div>
-                      <div class="book-item-title" title="Nasıl İnanmalı?">Nasıl İnanmalı?</div>
-                      <div class="book-item-level">Yetişkin Düzeyi</div>
-                      <div class="book-progress-wrap">
-                        <div class="progress-track-custom">
-                          <div class="progress-fill-custom" style="width: 40%;"></div>
-                        </div>
-                        <span class="progress-text-badge">%40 Okundu</span>
-                      </div>
-                      <div class="book-action-btns">
-                        <a href="kitap-oku.html?book=nasil-inanmali" class="btn-book-action btn-book-continue">Devam Et</a>
-                        <button type="button" class="btn-book-action btn-book-audio btn-listen-trigger"
-                                data-book-id="nasil-inanmali"
-                                data-book-title="Nasıl İnanmalı?"
-                                data-book-chapter="Bölüm 1 - Temel İnançlar (Sayfa 1)"
-                                data-book-img="assets/images/books/book-nasil-inanmali.svg"
-                                data-audio-src="assets/audio/tevhid-muhafizlari.mp3"
-                                data-start-time="2.313"
-                                data-start-page="1"
-                                title="Sesli Dinle">
-                          <i class="fa-solid fa-headphones"></i>
-                          <span>Sesli Dinle</span>
-                        </button>
-                      </div>
-                    </div>
-
+                    <?php endforeach; ?>
                   </div>
 
                   <button type="button" class="carousel-nav-btn next" id="nextBookBtn" title="Sonraki Kitaplar">
@@ -1204,6 +1103,9 @@
   <!-- JavaScript Dosyaları (Yerel Bootstrap JS ve Saf JS) -->
   <script src="assets/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/header-search.js?v=4.0"></script>
+  <script>
+    window.DYNAMIC_BOOKS = <?= json_encode($books ?? [], JSON_UNESCAPED_UNICODE) ?>;
+  </script>
   <script src="assets/js/main.js?v=4.0"></script>
 </body>
 </html>

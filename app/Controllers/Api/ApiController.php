@@ -3,11 +3,19 @@
 namespace App\Controllers\Api;
 
 use App\Controllers\BaseController;
+use App\Services\KitapApiService;
 use CodeIgniter\API\ResponseTrait;
 
 class ApiController extends BaseController
 {
     use ResponseTrait;
+
+    protected KitapApiService $apiService;
+
+    public function __construct()
+    {
+        $this->apiService = new KitapApiService();
+    }
 
     /**
      * API Durum ve Sağlık Kontrolü
@@ -15,11 +23,12 @@ class ApiController extends BaseController
     public function health()
     {
         return $this->respond([
-            'status' => 'success',
-            'message' => 'Ufka Yolculuk Kitap Okuma & Sınav API V1 Servisi Aktif',
-            'framework' => 'CodeIgniter ' . \CodeIgniter\CodeIgniter::CI_VERSION,
+            'status'      => 'success',
+            'service'     => 'KitapApiService (Kitap Okuma & Sınav Bağımsız Servisi)',
+            'message'     => 'Ufka Yolculuk Kitap Okuma & Sınav API V1 Servisi Aktif',
+            'framework'   => 'CodeIgniter ' . \CodeIgniter\CodeIgniter::CI_VERSION,
             'environment' => ENVIRONMENT,
-            'timestamp' => date('c')
+            'timestamp'   => date('c')
         ]);
     }
 
@@ -28,45 +37,33 @@ class ApiController extends BaseController
      */
     public function books()
     {
-        $books = [
-            [
-                'id' => 1,
-                'slug' => 'tevhid-muhafizlari',
-                'title' => 'Tevhid Muhafızları',
-                'category' => 'Ortaokul Kategorisi (6-8. Sınıf)',
-                'total_pages' => 160,
-                'start_page' => 5,
-                'audio_url' => base_url('assets/audio/tevhid-muhafizlari.mp3'),
-                'cover_image' => base_url('assets/images/kitap-kapak-1.jpg')
-            ]
-        ];
+        $books = $this->apiService->getBooks();
 
         return $this->respond([
             'status' => 'success',
-            'total' => count($books),
-            'data' => $books
+            'total'  => count($books),
+            'data'   => $books
         ]);
     }
 
     /**
-     * Kitap Detayı
+     * Kitap Detayı (Bölümler ve Sayfa Verileriyle)
      */
     public function bookDetail($id = null)
     {
-        if ($id != 1) {
+        if (empty($id)) {
+            return $this->failNotFound('Kitap ID belirtilmedi.');
+        }
+
+        $book = $this->apiService->getBook($id, true);
+
+        if (!$book) {
             return $this->failNotFound('Kitap bulunamadı.');
         }
 
         return $this->respond([
             'status' => 'success',
-            'data' => [
-                'id' => 1,
-                'title' => 'Tevhid Muhafızları',
-                'category' => 'Ortaokul',
-                'author' => 'Ufka Yolculuk Yayın Kurulu',
-                'total_pages' => 160,
-                'start_page' => 5
-            ]
+            'data'   => $book
         ]);
     }
 
@@ -75,11 +72,21 @@ class ApiController extends BaseController
      */
     public function bookPages($id = null)
     {
+        if (empty($id)) {
+            return $this->failNotFound('Kitap ID belirtilmedi.');
+        }
+
+        $book = $this->apiService->getBook($id, false);
+
+        if (!$book) {
+            return $this->failNotFound('Kitap bulunamadı.');
+        }
+
         return $this->respond([
-            'status' => 'success',
-            'book_id' => $id,
-            'pages_dir' => base_url('assets/images/pages/tevhid/'),
-            'page_format' => 'page_{number}.jpg'
+            'status'      => 'success',
+            'book_id'     => (int)$id,
+            'total_pages' => $book['total_pages'] ?? count($book['pages'] ?? []),
+            'pages'       => $book['pages'] ?? []
         ]);
     }
 
@@ -88,25 +95,65 @@ class ApiController extends BaseController
      */
     public function audioSync($id = null)
     {
+        if (empty($id)) {
+            return $this->failNotFound('Kitap ID belirtilmedi.');
+        }
+
+        $sync = $this->apiService->getAudioSync($id);
+
         return $this->respond([
-            'status' => 'success',
-            'book_id' => $id,
-            'total_sentences' => 0,
-            'sentences' => []
+            'status'          => 'success',
+            'book_id'         => (int)$id,
+            'sound_file'      => $sync['sound_file'],
+            'total_sentences' => $sync['total_sentences'],
+            'sentences'       => $sync['sentences']
         ]);
     }
 
     /**
-     * Kullanıcı Okuma İlerlemesi Kaydetme
+     * Kullanıcı Okuma İlerlemesi Kaydetme & Senkronizasyon
      */
     public function saveProgress()
     {
-        $json = $this->request->getJSON(true);
+        $json = $this->request->getJSON(true) ?? $this->request->getPost();
+        $sessionUser = session()->get('ufka_user');
+
+        $userId      = (int)($json['user_id'] ?? $sessionUser['id'] ?? 1001);
+        $bookId      = (int)($json['book_id'] ?? 0);
+        $page        = (int)($json['page'] ?? 1);
+        $audioTime   = (float)($json['audio_time'] ?? 0.0);
+        $readSeconds = (int)($json['read_seconds'] ?? 0);
+        $isCompleted = (int)($json['is_completed'] ?? 0);
+
+        if (empty($bookId)) {
+            return $this->failValidationError('Geçerli bir book_id gönderilmelidir.');
+        }
+
+        $result = $this->apiService->saveUserProgress($userId, $bookId, $page, $audioTime, $readSeconds, $isCompleted);
 
         return $this->respondCreated([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Okuma ilerlemesi başarıyla kaydedildi.',
-            'saved' => $json
+            'saved'   => $result
+        ]);
+    }
+
+    /**
+     * Kullanıcı İlerlemesini Getir
+     */
+    public function getProgress($userId = null, $bookId = null)
+    {
+        $sessionUser = session()->get('ufka_user');
+        $targetUserId = (int)($userId ?? $sessionUser['id'] ?? 1001);
+        $targetBookId = $bookId !== null ? (int)$bookId : null;
+
+        $progress = $this->apiService->getUserProgress($targetUserId, $targetBookId);
+
+        return $this->respond([
+            'status'   => 'success',
+            'user_id'  => $targetUserId,
+            'book_id'  => $targetBookId,
+            'progress' => $progress
         ]);
     }
 
@@ -115,36 +162,99 @@ class ApiController extends BaseController
      */
     public function exams()
     {
+        $exams = $this->apiService->getExams();
+
         return $this->respond([
             'status' => 'success',
-            'exams' => [
-                [
-                    'id' => 101,
-                    'title' => 'Tevhid Muhafızları 1. Deneme Sınavı',
-                    'duration_minutes' => 15,
-                    'total_questions' => 10,
-                    'negative_marking' => true
-                ]
-            ]
+            'total'  => count($exams),
+            'exams'  => $exams
         ]);
     }
 
     /**
-     * Oturum Açmış Kullanıcı Bilgisi (Cross-Subdomain Session Kontrolü)
+     * Deneme Sınavı Detayı ve Soruları
+     */
+    public function examDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('Sınav ID belirtilmedi.');
+        }
+
+        $exam = $this->apiService->getExam($id);
+        if (!$exam) {
+            return $this->failNotFound('Sınav bulunamadı.');
+        }
+
+        return $this->respond([
+            'status' => 'success',
+            'data'   => $exam
+        ]);
+    }
+
+    /**
+     * Sınav Cevaplarını Gönderme & Karne Puanlama
+     */
+    public function submitExam($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('Sınav ID belirtilmedi.');
+        }
+
+        $json = $this->request->getJSON(true) ?? $this->request->getPost();
+        $sessionUser = session()->get('ufka_user');
+        $userId = (int)($json['user_id'] ?? $sessionUser['id'] ?? 1001);
+        $answers = $json['answers'] ?? [];
+
+        $result = $this->apiService->submitExam($userId, (int)$id, $answers);
+
+        return $this->respond($result);
+    }
+
+    /**
+     * Kullanıcı İstatistikleri & Karne
+     */
+    public function stats()
+    {
+        $sessionUser = session()->get('ufka_user');
+        $userId = (int)($sessionUser['id'] ?? 1001);
+
+        $stats = $this->apiService->getUserStats($userId);
+
+        return $this->respond([
+            'status' => 'success',
+            'data'   => $stats
+        ]);
+    }
+
+    /**
+     * Başarı Sıralamaları (Leaderboard)
+     */
+    public function leaderboard()
+    {
+        $leaderboard = $this->apiService->getLeaderboard();
+
+        return $this->respond([
+            'status' => 'success',
+            'data'   => $leaderboard
+        ]);
+    }
+
+    /**
+     * Oturum Açmış Kullanıcı Bilgisi
      */
     public function me()
     {
         $session = session();
         if (!$session->has('ufka_user')) {
-            return $this->failUnauthorized('Aktif oturum bulunamadı. Lütfen ufkayolculuk.com üzerinden giriş yapınız.');
+            return $this->failUnauthorized('Aktif oturum bulunamadı. Lütfen giriş yapınız.');
         }
 
         $user = $session->get('ufka_user');
 
         return $this->respond([
-            'status' => 'success',
+            'status'    => 'success',
             'logged_in' => true,
-            'user' => [
+            'user'      => [
                 'id'             => $user['id'] ?? null,
                 'name'           => $user['name'] ?? 'Yarışmacı',
                 'category_title' => $user['category_title'] ?? 'Ortaokul',
@@ -158,7 +268,7 @@ class ApiController extends BaseController
     }
 
     /**
-     * Yerel / WAMP Geliştirme Ortamı İçin Oturum Simülasyonu
+     * Yerel / Test Ortamı İçin Oturum Simülasyonu
      */
     public function simulateLogin()
     {
@@ -176,9 +286,9 @@ class ApiController extends BaseController
         session()->set('ufka_user', $demoUser);
 
         return $this->respond([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Simüle edilmiş oturum (ufka_user) başarıyla oluşturuldu.',
-            'user' => $demoUser
+            'user'    => $demoUser
         ]);
     }
 
@@ -190,7 +300,7 @@ class ApiController extends BaseController
         session()->remove('ufka_user');
 
         return $this->respond([
-            'status' => 'success',
+            'status'  => 'success',
             'message' => 'Oturum başarıyla sonlandırıldı.'
         ]);
     }
@@ -200,13 +310,12 @@ class ApiController extends BaseController
      */
     public function pages()
     {
-        $service = new \App\Services\UfkaApiService();
-        $contents = $service->getWebContents();
+        $contents = $this->apiService->getWebContents();
 
         return $this->respond([
             'status' => 'success',
-            'total' => count($contents),
-            'data' => $contents
+            'total'  => count($contents),
+            'data'   => $contents
         ]);
     }
 
@@ -219,8 +328,7 @@ class ApiController extends BaseController
             return $this->failNotFound('Sayfa slug belirtilmedi.');
         }
 
-        $service = new \App\Services\UfkaApiService();
-        $page = $service->getWebContent($slug);
+        $page = $this->apiService->getWebContent($slug);
 
         if (!$page) {
             return $this->failNotFound("'$slug' içeriği bulunamadı.");
@@ -228,7 +336,7 @@ class ApiController extends BaseController
 
         return $this->respond([
             'status' => 'success',
-            'data' => $page
+            'data'   => $page
         ]);
     }
 
@@ -237,14 +345,12 @@ class ApiController extends BaseController
      */
     public function faqs()
     {
-        $service = new \App\Services\UfkaApiService();
-        $faqs = $service->getFaqs();
+        $faqs = $this->apiService->getFaqs();
 
         return $this->respond([
             'status' => 'success',
-            'total' => count($faqs),
-            'data' => $faqs
+            'total'  => count($faqs),
+            'data'   => $faqs
         ]);
     }
 }
-
