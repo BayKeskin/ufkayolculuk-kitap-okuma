@@ -468,14 +468,14 @@ let HOME_SEARCH_BOOKS = [
   { id: 'tevhid-muhafizlari', title: 'Tevhid Muhafızları', category: 'ortaokul', categoryLabel: 'Ortaokul Düzeyi', year: '2025', url: 'kitap-oku?book=tevhid-muhafizlari&page=5', author: 'Ufka Yolculuk Yayınları' },
   { id: 'gordugume-gormedigime', title: 'Gördüğüme Görmediğime', category: 'lise', categoryLabel: 'Lise Düzeyi', year: '2025', url: 'kitap-oku?book=gordugume-gormedigime&page=1', author: 'Ufka Yolculuk Yayınları' },
   { id: 'nasil-inanmali', title: 'Nasıl İnanmalı?', category: 'yetiskin', categoryLabel: 'Yetişkin Düzeyi', year: '2025', url: 'kitap-oku?book=nasil-inanmali&page=1', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'maske-dustu-2024', title: 'Maske Düştü', category: 'ilkokul', categoryLabel: 'İlkokul (2024)', year: '2024', url: 'kitaplar.html?search=Maske+D%C3%BC%C5%9Ft%C3%BC', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'zamanin-tozu-2024', title: 'Zamanın Tozu', category: 'ortaokul', categoryLabel: 'Ortaokul (2024)', year: '2024', url: 'kitaplar.html?search=Zaman%C4%B1n+Tozu', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'vakit-geldi-2024', title: 'Vakit Geldi', category: 'lise', categoryLabel: 'Lise (2024)', year: '2024', url: 'kitaplar.html?search=Vakit+Geldi', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'ilmihal-ibadetler-2024', title: 'İlmihal - İbadet Esasları', category: 'yetiskin', categoryLabel: 'Yetişkin (2024)', year: '2024', url: 'kitaplar.html?search=%C4%B0lmihal', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'afiyetle-yasam-2023', title: 'Afiyetle Yaşam', category: 'ilkokul', categoryLabel: 'İlkokul (2023)', year: '2023', url: 'kitaplar.html?search=Afiyetle+Ya%C5%9Fam', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'gorev-tamam-2023', title: 'Görev Tamam', category: 'ortaokul', categoryLabel: 'Ortaokul (2023)', year: '2023', url: 'kitaplar.html?search=G%C3%B6rev+Tamam', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'saglikli-insan-2023', title: 'Sağlıklı İnsan Sağlıklı Gelecek', category: 'lise', categoryLabel: 'Lise (2023)', year: '2023', url: 'kitaplar.html?search=Sa%C4%9Fl%C4%B1kl%C4%B1+%C4%B0nsan', author: 'Ufka Yolculuk Yayınları' },
-  { id: 'bir-kucuk-odul-2022', title: 'Bir Küçük Ödül', category: 'ilkokul', categoryLabel: 'İlkokul (2022)', year: '2022', url: 'kitaplar.html?search=Bir+K%C3%BC%C3%A7%C3%BCk+%C3%96d%C3%BCl', author: 'Ufka Yolculuk Yayınları' }
+  { id: 'maske-dustu-2024', title: 'Maske Düştü', category: 'ilkokul', categoryLabel: 'İlkokul (2024)', year: '2024', url: 'kitaplar?search=Maske+D%C3%BC%C5%9Ft%C3%BC', author: 'Ufka Yolculuk Yayınları' },
+  { id: 'zamanin-tozu-2024', title: 'Zamanın Tozu', category: 'ortaokul', categoryLabel: 'Ortaokul (2024)', year: '2024', url: 'kitaplar?search=Zaman%C4%B1n+Tozu', author: 'Ufka Yolculuk Yayınları' },
+  { id: 'vakit-geldi-2024', title: 'Vakit Geldi', category: 'lise', categoryLabel: 'Lise (2024)', year: '2024', url: 'kitaplar?search=Vakit+Geldi', author: 'Ufka Yolculuk Yayınları' },
+  { id: 'ilmihal-ibadetler-2024', title: 'İlmihal - İbadet Esasları', category: 'yetiskin', categoryLabel: 'Yetişkin (2024)', year: '2024', url: 'kitaplar?search=%C4%B0lmihal', author: 'Ufka Yolculuk Yayınları' },
+  { id: 'afiyetle-yasam-2023', title: 'Afiyetle Yaşam', category: 'ilkokul', categoryLabel: 'İlkokul (2023)', year: '2023', url: 'kitaplar?search=Afiyetle+Ya%C5%9Fam', author: 'Ufka Yolculuk Yayınları' },
+  { id: 'gorev-tamam-2023', title: 'Görev Tamam', category: 'ortaokul', categoryLabel: 'Ortaokul (2023)', year: '2023', url: 'kitaplar?search=G%C3%B6rev+Tamam', author: 'Ufka Yolculuk Yayınları' },
+  { id: 'saglikli-insan-2023', title: 'Sağlıklı İnsan Sağlıklı Gelecek', category: 'lise', categoryLabel: 'Lise (2023)', year: '2023', url: 'kitaplar?search=Sa%C4%9Fl%C4%B1kl%C4%B1+%C4%B0nsan', author: 'Ufka Yolculuk Yayınları' },
+  { id: 'bir-kucuk-odul-2022', title: 'Bir Küçük Ödül', category: 'ilkokul', categoryLabel: 'İlkokul (2022)', year: '2022', url: 'kitaplar?search=Bir+K%C3%BC%C3%A7%C3%BCk+%C3%96d%C3%BCl', author: 'Ufka Yolculuk Yayınları' }
 ];
 
 // Canlı API kitapları varsa arama dizisine dahil et
@@ -542,7 +542,7 @@ function initSearchAndFilter() {
     if (selectedYear && selectedYear !== 'all') params.set('year', selectedYear);
 
     const queryString = params.toString();
-    window.location.href = `kitaplar.html${queryString ? '?' + queryString : ''}`;
+    window.location.href = `kitaplar${queryString ? '?' + queryString : ''}`;
   }
 
   // Canlı arama öneri menüsünü güncelle (Yarışma kitapları kartlarını ASLA silikleştirmeden)

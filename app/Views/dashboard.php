@@ -123,7 +123,7 @@
                   <p class="dash-card-sub">Kaldığınız sayfadan okumaya veya dinlemeye devam edin</p>
                 </div>
               </div>
-              <a href="index.html#kitaplar" class="btn-outline-hero py-1 px-3 fs-7">
+              <a href="<?= base_url('kitaplar') ?>" class="btn-outline-hero py-1 px-3 fs-7">
                 <span>Tüm Kitaplar</span>
                 <i class="fa-solid fa-chevron-right ms-1"></i>
               </a>

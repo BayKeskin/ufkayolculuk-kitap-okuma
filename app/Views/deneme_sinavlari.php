@@ -44,7 +44,7 @@
           </div>
 
           <!-- Marka & Logo (Ortalanmış) -->
-          <a href="home.html" class="sinav-brand-wrap" title="Ufka Yolculuk Anasayfa">
+          <a href="<?= base_url('/') ?>" class="sinav-brand-wrap" title="Ufka Yolculuk Anasayfa">
             <img src="assets/images/logo.png" alt="Ufka Yolculuk" class="sinav-brand-logo">
           </a>
 
@@ -52,7 +52,7 @@
           <nav class="mt-2">
             <ul class="sinav-sidebar-nav">
               <li>
-                <a href="deneme-sinavlari.html" class="sinav-nav-link active">
+                <a href="<?= base_url('deneme-sinavlari') ?>" class="sinav-nav-link active">
                   <i class="fa-solid fa-house"></i>
                   <span>Deneme Sınavları</span>
                 </a>
@@ -88,7 +88,7 @@
                 </a>
               </li>
               <li>
-                <a href="siralamalar.html" class="sinav-nav-link" id="btnSidebarLeaderboardNav">
+                <a href="<?= base_url('siralamalar') ?>" class="sinav-nav-link" id="btnSidebarLeaderboardNav">
                   <i class="fa-solid fa-trophy"></i>
                   <span>Sıralamalar</span>
                 </a>
@@ -111,7 +111,7 @@
           <div class="sinav-promo-title">
             Sınavlara düzenli katıl, puan kazan, sıralamada yüksel!
           </div>
-          <a href="dashboard.html" class="btn-sinav-promo-link">
+          <a href="<?= base_url('dashboard') ?>" class="btn-sinav-promo-link">
             <span>Puanlarımı Gör</span>
             <i class="fa-solid fa-arrow-right"></i>
           </a>
@@ -246,16 +246,16 @@
                 <i class="fa-solid fa-chevron-down text-muted ms-1" style="font-size: 0.7rem;"></i>
               </button>
               <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 p-2 mt-2">
-                <li><a class="dropdown-item rounded-3 py-2 fw-semibold" href="dashboard.html"><i
+                <li><a class="dropdown-item rounded-3 py-2 fw-semibold" href="<?= base_url('dashboard') ?>"><i
                       class="fa-solid fa-chart-pie me-2 text-primary"></i>Dashboard</a></li>
-                <li><a class="dropdown-item rounded-3 py-2 fw-semibold" href="kitaplar.html"><i
+                <li><a class="dropdown-item rounded-3 py-2 fw-semibold" href="<?= base_url('kitaplar') ?>"><i
                       class="fa-solid fa-book me-2 text-warning"></i>Yarışma Kitapları</a></li>
-                <li><a class="dropdown-item rounded-3 py-2 fw-semibold" href="home.html"><i
+                <li><a class="dropdown-item rounded-3 py-2 fw-semibold" href="<?= base_url('/') ?>"><i
                       class="fa-solid fa-house me-2 text-success"></i>Ana Portala Dön</a></li>
                 <li>
                   <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item rounded-3 py-2 fw-semibold text-danger" href="index.html"><i
+                <li><a class="dropdown-item rounded-3 py-2 fw-semibold text-danger" href="<?= base_url('/') ?>"><i
                       class="fa-solid fa-layer-group me-2"></i>Sayfa Dizini (Sunum)</a></li>
               </ul>
             </div>
@@ -1224,7 +1224,7 @@
                   data-bs-dismiss="modal">
                   <i class="fa-solid fa-check me-1"></i> Paneli Kapat
                 </button>
-                <a href="dashboard.html" class="btn btn-outline-primary btn-sm fw-bold px-3.5 rounded-pill">
+                <a href="<?= base_url('dashboard') ?>" class="btn btn-outline-primary btn-sm fw-bold px-3.5 rounded-pill">
                   <i class="fa-solid fa-chart-pie me-1"></i> Dashboard'da İncele
                 </a>
               </div>
@@ -1407,7 +1407,7 @@
           </div>
 
           <div class="d-flex justify-content-end gap-2 pt-2 border-top">
-            <a href="sinav-ekrani.html?sinav=genel" class="btn btn-primary btn-sm rounded-pill fw-bold px-3">
+            <a href="<?= base_url('sinav-ekrani?sinav=genel') ?>" class="btn btn-primary btn-sm rounded-pill fw-bold px-3">
               <i class="fa-solid fa-play me-1"></i> Yeni Deneme Başlat
             </a>
           </div>
@@ -1485,7 +1485,7 @@
         </div>
         <div class="modal-footer bg-light border-top p-2.5 d-flex justify-content-between">
           <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Kapat</button>
-          <a href="sinav-ekrani.html?topic=Siyer%20ve%20İslam%20Tarihi" class="btn btn-primary btn-sm rounded-pill fw-bold px-3">
+          <a href="<?= base_url('sinav-ekrani?topic=Siyer%20ve%20İslam%20Tarihi') ?>" class="btn btn-primary btn-sm rounded-pill fw-bold px-3">
             <i class="fa-solid fa-rotate-left me-1"></i> Yanlış Konulardan Test Çöz
           </a>
         </div>
@@ -1517,7 +1517,7 @@
                   <span class="badge bg-light text-muted border">150 Dakika</span>
                 </div>
               </div>
-              <a href="sinav-ekrani.html?sinav=genel" class="btn btn-primary btn-sm rounded-pill fw-bold px-3">
+              <a href="<?= base_url('sinav-ekrani?sinav=genel') ?>" class="btn btn-primary btn-sm rounded-pill fw-bold px-3">
                 <i class="fa-solid fa-play me-1"></i> Başlat
               </a>
             </div>
@@ -1533,7 +1533,7 @@
                   <span class="badge bg-light text-muted border">120 Dakika</span>
                 </div>
               </div>
-              <a href="sinav-ekrani.html?sinav=kuslarin-cagrisi" class="btn btn-primary btn-sm rounded-pill fw-bold px-3">
+              <a href="<?= base_url('sinav-ekrani?sinav=kuslarin-cagrisi') ?>" class="btn btn-primary btn-sm rounded-pill fw-bold px-3">
                 <i class="fa-solid fa-play me-1"></i> Başlat
               </a>
             </div>

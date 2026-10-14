@@ -19,16 +19,16 @@
         <div class="col-lg-6 col-md-12">
           <ul class="nav justify-content-center justify-content-lg-end gap-3 fs-8">
             <li class="nav-item">
-              <a href="<?= base_url('home.html') ?>" class="nav-link text-muted p-0">Anasayfa</a>
+              <a href="<?= base_url('/') ?>" class="nav-link text-muted p-0">Anasayfa</a>
             </li>
             <li class="nav-item">
-              <a href="<?= base_url('kitaplar.html') ?>" class="nav-link text-muted p-0">Yarışma Kitapları</a>
+              <a href="<?= base_url('kitaplar') ?>" class="nav-link text-muted p-0">Yarışma Kitapları</a>
             </li>
             <li class="nav-item">
-              <a href="<?= base_url('deneme-sinavlari.html') ?>" class="nav-link text-muted p-0">Deneme Sınavları</a>
+              <a href="<?= base_url('deneme-sinavlari') ?>" class="nav-link text-muted p-0">Deneme Sınavları</a>
             </li>
             <li class="nav-item">
-              <a href="<?= base_url('siralamalar.html') ?>" class="nav-link text-muted p-0">Sıralamalar</a>
+              <a href="<?= base_url('siralamalar') ?>" class="nav-link text-muted p-0">Sıralamalar</a>
             </li>
             <li class="nav-item">
               <a href="<?= base_url('sayfa/hakkimizda') ?>" class="nav-link text-muted p-0">Hakkımızda</a>

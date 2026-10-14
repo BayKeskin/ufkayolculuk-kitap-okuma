@@ -208,7 +208,7 @@
           <h3 class="fw-bold fs-5 text-dark mb-2">Aradığınız kriterlere uygun kitap bulunamadı</h3>
           <p class="text-muted fs-7 mb-3">Farklı bir arama terimi deneyebilir veya filtreleri sıfırlayabilirsiniz.</p>
           <button type="button" class="btn btn-outline-primary rounded-pill px-4 fw-bold fs-7"
-            onclick="location.href='kitaplar.html'">
+            onclick="location.href='<?= base_url('kitaplar') ?>'">
             Filtreleri Sıfırla
           </button>
         </div>

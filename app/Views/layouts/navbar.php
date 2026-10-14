@@ -11,7 +11,7 @@ $currentPath = trim($uri->getPath(), '/');
       <div class="d-flex align-items-center justify-content-between">
         
         <!-- Sol: Logo -->
-        <a href="<?= base_url('home.html') ?>" class="brand-logo-wrap" title="Ufka Yolculuk Anasayfa">
+        <a href="<?= base_url('/') ?>" class="brand-logo-wrap" title="Ufka Yolculuk Anasayfa">
           <img src="<?= base_url('assets/images/logo.png') ?>" alt="Ufka Yolculuk Logo" class="brand-logo-img">
         </a>
 
@@ -19,19 +19,19 @@ $currentPath = trim($uri->getPath(), '/');
         <nav class="d-none d-lg-block">
           <ul class="nav-menu-list">
             <li class="nav-menu-item">
-              <a href="<?= base_url('home.html') ?>" class="nav-link-custom <?= ($currentPath === '' || $currentPath === 'home' || $currentPath === 'home.html') ? 'active' : '' ?>">
+              <a href="<?= base_url('/') ?>" class="nav-link-custom <?= ($currentPath === '' || $currentPath === 'home') ? 'active' : '' ?>">
                 <i class="fa-solid fa-house"></i>
                 <span>Anasayfa</span>
               </a>
             </li>
             <li class="nav-menu-item">
-              <a href="<?= base_url('kitaplar.html') ?>" class="nav-link-custom <?= (str_starts_with($currentPath, 'kitaplar') && !str_contains($currentPath, 'archive')) ? 'active' : '' ?>">
+              <a href="<?= base_url('kitaplar') ?>" class="nav-link-custom <?= (str_starts_with($currentPath, 'kitaplar') && !str_contains($currentPath, 'archive')) ? 'active' : '' ?>">
                 <i class="fa-solid fa-book-open"></i>
                 <span>Yarışma Kitapları</span>
               </a>
             </li>
             <li class="nav-menu-item">
-              <a href="<?= base_url('kitaplar.html?year=archive') ?>" class="nav-link-custom">
+              <a href="<?= base_url('kitaplar?year=archive') ?>" class="nav-link-custom">
                 <i class="fa-solid fa-layer-group"></i>
                 <span>Geçmiş Yıllar</span>
               </a>
@@ -43,25 +43,25 @@ $currentPath = trim($uri->getPath(), '/');
               </a>
             </li>
             <li class="nav-menu-item">
-              <a href="<?= base_url('deneme-sinavlari.html') ?>" class="nav-link-custom <?= str_starts_with($currentPath, 'deneme-sinavlari') ? 'active' : '' ?>">
+              <a href="<?= base_url('deneme-sinavlari') ?>" class="nav-link-custom <?= str_starts_with($currentPath, 'deneme-sinavlari') ? 'active' : '' ?>">
                 <i class="fa-solid fa-laptop-code text-primary"></i>
                 <span>Deneme Sınavları</span>
               </a>
             </li>
             <li class="nav-menu-item">
-              <a href="<?= base_url('siralamalar.html') ?>" class="nav-link-custom <?= str_starts_with($currentPath, 'siralamalar') ? 'active' : '' ?>">
+              <a href="<?= base_url('siralamalar') ?>" class="nav-link-custom <?= str_starts_with($currentPath, 'siralamalar') ? 'active' : '' ?>">
                 <i class="fa-solid fa-trophy text-warning"></i>
                 <span>Sıralamalar</span>
               </a>
             </li>
             <li class="nav-menu-item">
-              <a href="<?= base_url('dashboard.html') ?>" class="nav-link-custom <?= str_starts_with($currentPath, 'dashboard') ? 'active' : '' ?>">
+              <a href="<?= base_url('dashboard') ?>" class="nav-link-custom <?= str_starts_with($currentPath, 'dashboard') ? 'active' : '' ?>">
                 <i class="fa-solid fa-chart-pie"></i>
                 <span>Dashboard</span>
               </a>
             </li>
             <li class="nav-menu-item">
-              <a href="<?= base_url('index.html') ?>" class="nav-link-custom text-warning">
+              <a href="<?= base_url('/') ?>" class="nav-link-custom text-warning">
                 <i class="fa-solid fa-layer-group"></i>
                 <span>Sayfalar (Sunum)</span>
               </a>
@@ -167,24 +167,24 @@ $currentPath = trim($uri->getPath(), '/');
               <div class="popover-divider"></div>
 
               <div class="profile-popover-menu-list">
-                <a href="<?= base_url('dashboard.html') ?>" class="profile-menu-item <?= str_starts_with($currentPath, 'dashboard') ? 'active' : '' ?>">
+                <a href="<?= base_url('dashboard') ?>" class="profile-menu-item <?= str_starts_with($currentPath, 'dashboard') ? 'active' : '' ?>">
                   <i class="fa-solid fa-chart-pie menu-icon text-primary"></i>
                   <span>İstatistiklerim & Dashboard</span>
                 </a>
-                <a href="<?= base_url('dashboard.html#rozetler') ?>" class="profile-menu-item">
+                <a href="<?= base_url('dashboard#rozetler') ?>" class="profile-menu-item">
                   <i class="fa-solid fa-trophy menu-icon text-warning"></i>
                   <span>Puanlarım & Rozetlerim</span>
                   <span class="badge bg-warning-subtle text-dark ms-auto" style="font-size: 0.68rem; font-weight: 700;">2.450 P</span>
                 </a>
-                <a href="<?= base_url('kitaplar.html') ?>" class="profile-menu-item <?= str_starts_with($currentPath, 'kitaplar') ? 'active' : '' ?>">
+                <a href="<?= base_url('kitaplar') ?>" class="profile-menu-item <?= str_starts_with($currentPath, 'kitaplar') ? 'active' : '' ?>">
                   <i class="fa-solid fa-bookmark menu-icon text-primary"></i>
                   <span>Yarışma Kitapları</span>
                 </a>
-                <a href="<?= base_url('siralamalar.html') ?>" class="profile-menu-item <?= str_starts_with($currentPath, 'siralamalar') ? 'active' : '' ?>">
+                <a href="<?= base_url('siralamalar') ?>" class="profile-menu-item <?= str_starts_with($currentPath, 'siralamalar') ? 'active' : '' ?>">
                   <i class="fa-solid fa-trophy menu-icon text-warning"></i>
                   <span>Başarı Sıralamaları</span>
                 </a>
-                <a href="<?= base_url('index.html') ?>" class="profile-menu-item">
+                <a href="<?= base_url('/') ?>" class="profile-menu-item">
                   <i class="fa-solid fa-layer-group menu-icon text-info"></i>
                   <span>Tüm Sayfalar (Sunum)</span>
                 </a>

@@ -30,7 +30,7 @@
                   13 yıldır milyonlarca gönüle ilham oluyoruz.
                 </p>
                 <div class="hero-actions">
-                  <a href="kitaplar.html" class="btn-primary-hero">
+                  <a href="<?= base_url('kitaplar') ?>" class="btn-primary-hero">
                     <span>Yarışmaya Katıl</span>
                     <i class="fa-solid fa-chevron-right"></i>
                   </a>
@@ -236,7 +236,7 @@
                         <i class="fa-solid fa-chevron-right"></i>
                       </button>
                     </div>
-                    <a href="kitaplar.html" class="section-link-all">
+                    <a href="<?= base_url('kitaplar') ?>" class="section-link-all">
                       <span>Tümünü Gör</span>
                       <i class="fa-solid fa-arrow-right fs-9 ms-1"></i>
                     </a>
@@ -383,7 +383,7 @@
               <div class="portal-section-card">
                 <div class="section-header-row">
                   <h2 class="section-main-heading">Sesli Kitaplar</h2>
-                  <a href="kitaplar.html" class="section-link-all">Tümünü Gör</a>
+                  <a href="<?= base_url('kitaplar') ?>" class="section-link-all">Tümünü Gör</a>
                 </div>
 
                 <div class="audio-player-component">
@@ -463,13 +463,13 @@
           <section class="portal-section-card mb-4">
             <div class="section-header-row">
               <h2 class="section-main-heading">Geçmiş Yıllar</h2>
-              <a href="kitaplar.html?year=archive" class="section-link-all">Tümünü Gör</a>
+              <a href="<?= base_url('kitaplar?year=archive') ?>" class="section-link-all">Tümünü Gör</a>
             </div>
 
             <div class="archive-years-grid">
               
               <!-- 2024 -->
-              <a href="kitaplar.html?year=2024" class="archive-year-card text-decoration-none">
+              <a href="<?= base_url('kitaplar?year=2024') ?>" class="archive-year-card text-decoration-none">
                 <div class="archive-card-left">
                   <div class="archive-year-num">2024</div>
                   <div class="archive-year-title">Ufka Yolculuk 12</div>
@@ -481,7 +481,7 @@
               </a>
 
               <!-- 2023 -->
-              <a href="kitaplar.html?year=2023" class="archive-year-card text-decoration-none">
+              <a href="<?= base_url('kitaplar?year=2023') ?>" class="archive-year-card text-decoration-none">
                 <div class="archive-card-left">
                   <div class="archive-year-num" style="color: #f59e0b;">2023</div>
                   <div class="archive-year-title">Ufka Yolculuk 11</div>
@@ -493,7 +493,7 @@
               </a>
 
               <!-- 2022 -->
-              <a href="kitaplar.html?year=2022" class="archive-year-card text-decoration-none">
+              <a href="<?= base_url('kitaplar?year=2022') ?>" class="archive-year-card text-decoration-none">
                 <div class="archive-card-left">
                   <div class="archive-year-num" style="color: #10b981;">2022</div>
                   <div class="archive-year-title">Ufka Yolculuk 10</div>
@@ -505,7 +505,7 @@
               </a>
 
               <!-- 2021 -->
-              <a href="kitaplar.html?year=2021" class="archive-year-card text-decoration-none">
+              <a href="<?= base_url('kitaplar?year=2021') ?>" class="archive-year-card text-decoration-none">
                 <div class="archive-card-left">
                   <div class="archive-year-num" style="color: #059669;">2021</div>
                   <div class="archive-year-title">Ufka Yolculuk 9</div>
@@ -517,7 +517,7 @@
               </a>
 
               <!-- 2020 -->
-              <a href="kitaplar.html?year=2020" class="archive-year-card text-decoration-none">
+              <a href="<?= base_url('kitaplar?year=2020') ?>" class="archive-year-card text-decoration-none">
                 <div class="archive-card-left">
                   <div class="archive-year-num" style="color: #0284c7;">2020</div>
                   <div class="archive-year-title">Ufka Yolculuk 8</div>

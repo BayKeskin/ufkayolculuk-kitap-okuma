@@ -729,7 +729,7 @@ function initExamEngineEvents() {
           leaveModal.show();
         }
       } else {
-        window.location.href = 'deneme-sinavlari.html';
+        window.location.href = 'deneme-sinavlari';
       }
     });
   }
@@ -737,7 +737,7 @@ function initExamEngineEvents() {
   if (btnModalConfirmLeave) {
     btnModalConfirmLeave.addEventListener('click', () => {
       if (examState.timerInterval) clearInterval(examState.timerInterval);
-      window.location.href = 'deneme-sinavlari.html';
+      window.location.href = 'deneme-sinavlari';
     });
   }
 

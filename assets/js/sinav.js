@@ -94,7 +94,7 @@ function initLiveSearch() {
             searchInput.value = item.title;
             if (dropdown) dropdown.classList.remove('show');
             // Müstakil sınav salonu sayfasına yönlendir
-            window.location.href = `sinav-ekrani.html?sinav=${encodeURIComponent(item.key)}`;
+            window.location.href = `sinav-ekrani?sinav=${encodeURIComponent(item.key)}`;
           });
           resultsList.appendChild(itemEl);
         });
@@ -426,7 +426,7 @@ function initExamSimulation() {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       const bookKey = btn.getAttribute('data-book') || 'genel';
-      window.location.href = `sinav-ekrani.html?sinav=${encodeURIComponent(bookKey)}`;
+      window.location.href = `sinav-ekrani?sinav=${encodeURIComponent(bookKey)}`;
     });
   });
 
@@ -658,7 +658,7 @@ function initTopicSelector() {
     btnStartTopicTest.addEventListener('click', () => {
       const topicTitleEl = document.getElementById('topicModalTitle');
       const topicName = topicTitleEl ? topicTitleEl.textContent : 'İnanç ve Değerler';
-      window.location.href = `sinav-ekrani.html?topic=${encodeURIComponent(topicName)}`;
+      window.location.href = `sinav-ekrani?topic=${encodeURIComponent(topicName)}`;
     });
   }
 }

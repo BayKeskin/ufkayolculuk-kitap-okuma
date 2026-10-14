@@ -30,7 +30,7 @@ $userCat   = $currentUser['category_title'] ?? 'Katılımcı (2025)';
       <!-- 1. Breadcrumb Yol Haritası -->
       <nav class="content-breadcrumb-nav" aria-label="Breadcrumb">
         <ul class="content-breadcrumb">
-          <li><a href="<?= base_url('home.html') ?>"><i class="fa-solid fa-house me-1"></i> Anasayfa</a></li>
+          <li><a href="<?= base_url('/') ?>"><i class="fa-solid fa-house me-1"></i> Anasayfa</a></li>
           <li class="breadcrumb-separator"><i class="fa-solid fa-chevron-right"></i></li>
           <li><a href="<?= base_url('sayfa') ?>">Kurumsal</a></li>
           <li class="breadcrumb-separator"><i class="fa-solid fa-chevron-right"></i></li>

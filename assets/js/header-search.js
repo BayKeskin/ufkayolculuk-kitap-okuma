@@ -78,7 +78,7 @@
       typeLabel: 'Geçmiş Yıl Kitabı',
       author: 'Ufka Yolculuk Yayınları',
       desc: '12. Ufka Yolculuk İlkokul kategorisi kitabı.',
-      url: 'kitaplar.html?search=Maske+D%C3%BC%C5%9Ft%C3%BC',
+      url: 'kitaplar?search=Maske+D%C3%BC%C5%9Ft%C3%BC',
       icon: 'fa-solid fa-box-archive',
       actionText: 'İncele'
     },
@@ -92,7 +92,7 @@
       typeLabel: 'Geçmiş Yıl Kitabı',
       author: 'Ufka Yolculuk Yayınları',
       desc: '12. Ufka Yolculuk Ortaokul kategorisi kitabı.',
-      url: 'kitaplar.html?search=Zaman%C4%B1n+Tozu',
+      url: 'kitaplar?search=Zaman%C4%B1n+Tozu',
       icon: 'fa-solid fa-box-archive',
       actionText: 'İncele'
     },
@@ -106,7 +106,7 @@
       typeLabel: 'Geçmiş Yıl Kitabı',
       author: 'Ufka Yolculuk Yayınları',
       desc: '12. Ufka Yolculuk Lise kategorisi kitabı.',
-      url: 'kitaplar.html?search=Vakit+Geldi',
+      url: 'kitaplar?search=Vakit+Geldi',
       icon: 'fa-solid fa-box-archive',
       actionText: 'İncele'
     },
@@ -120,7 +120,7 @@
       typeLabel: 'Geçmiş Yıl Kitabı',
       author: 'Ufka Yolculuk Yayınları',
       desc: '12. Ufka Yolculuk Yetişkin kategorisi kitabı.',
-      url: 'kitaplar.html?search=%C4%B0lmihal',
+      url: 'kitaplar?search=%C4%B0lmihal',
       icon: 'fa-solid fa-box-archive',
       actionText: 'İncele'
     },
@@ -134,7 +134,7 @@
       typeLabel: 'Geçmiş Yıl Kitabı',
       author: 'Ufka Yolculuk Yayınları',
       desc: '11. Ufka Yolculuk İlkokul kategorisi kitabı.',
-      url: 'kitaplar.html?search=Afiyetle+Ya%C5%9Fam',
+      url: 'kitaplar?search=Afiyetle+Ya%C5%9Fam',
       icon: 'fa-solid fa-box-archive',
       actionText: 'İncele'
     },
@@ -148,7 +148,7 @@
       typeLabel: 'Geçmiş Yıl Kitabı',
       author: 'Ufka Yolculuk Yayınları',
       desc: '11. Ufka Yolculuk Ortaokul kategorisi kitabı.',
-      url: 'kitaplar.html?search=G%C3%B6rev+Tamam',
+      url: 'kitaplar?search=G%C3%B6rev+Tamam',
       icon: 'fa-solid fa-box-archive',
       actionText: 'İncele'
     },
@@ -164,7 +164,7 @@
       typeLabel: 'Online Deneme Sınavı',
       author: '40 Soru • 50 Dakika',
       desc: 'Kuşların Çağrısı kitabı hazırlık deneme sınavı.',
-      url: 'deneme-sinavlari.html?level=ilkokul',
+      url: 'deneme-sinavlari?level=ilkokul',
       icon: 'fa-solid fa-file-pen',
       actionText: 'Sınava Gir'
     },
@@ -178,7 +178,7 @@
       typeLabel: 'Online Deneme Sınavı',
       author: '50 Soru • 60 Dakika',
       desc: 'Tevhid Muhafızları kitabı hazırlık deneme sınavı.',
-      url: 'deneme-sinavlari.html?level=ortaokul',
+      url: 'deneme-sinavlari?level=ortaokul',
       icon: 'fa-solid fa-file-pen',
       actionText: 'Sınava Gir'
     },
@@ -192,7 +192,7 @@
       typeLabel: 'Online Deneme Sınavı',
       author: '50 Soru • 60 Dakika',
       desc: 'Gördüğüme Görmediğime kitabı hazırlık deneme sınavı.',
-      url: 'deneme-sinavlari.html?level=lise',
+      url: 'deneme-sinavlari?level=lise',
       icon: 'fa-solid fa-file-pen',
       actionText: 'Sınava Gir'
     },
@@ -206,7 +206,7 @@
       typeLabel: 'Online Deneme Sınavı',
       author: '50 Soru • 60 Dakika',
       desc: 'Nasıl İnanmalı kitabı hazırlık deneme sınavı.',
-      url: 'deneme-sinavlari.html?level=yetiskin',
+      url: 'deneme-sinavlari?level=yetiskin',
       icon: 'fa-solid fa-file-pen',
       actionText: 'Sınava Gir'
     },
@@ -222,7 +222,7 @@
       typeLabel: 'Sıralamalar',
       author: '248.500+ Yarışmacı',
       desc: 'İl, ilçe ve okul bazlı anlık puan ve derece sıralaması.',
-      url: 'siralamalar.html',
+      url: 'siralamalar',
       icon: 'fa-solid fa-trophy',
       actionText: 'Görüntüle'
     },
@@ -236,7 +236,7 @@
       typeLabel: 'Dashboard',
       author: 'Puan, Okuma Serisi, Rozetler',
       desc: 'Okuma geçmişiniz, kazandığınız puanlar ve başarı rozetleriniz.',
-      url: 'dashboard.html',
+      url: 'dashboard',
       icon: 'fa-solid fa-chart-pie',
       actionText: 'Git'
     }
@@ -427,7 +427,7 @@
     if (allResultsBtn) {
       allResultsBtn.addEventListener('click', () => {
         const q = input.value.trim();
-        window.location.href = `kitaplar.html${q ? '?search=' + encodeURIComponent(q) : ''}`;
+        window.location.href = `kitaplar${q ? '?search=' + encodeURIComponent(q) : ''}`;
       });
     }
 
@@ -449,7 +449,7 @@
       if (!items.length) {
         if (e.key === 'Enter') {
           const q = input.value.trim();
-          window.location.href = `kitaplar.html${q ? '?search=' + encodeURIComponent(q) : ''}`;
+          window.location.href = `kitaplar${q ? '?search=' + encodeURIComponent(q) : ''}`;
         }
         return;
       }
@@ -468,7 +468,7 @@
           items[activeIndex].click();
         } else {
           const q = input.value.trim();
-          window.location.href = `kitaplar.html${q ? '?search=' + encodeURIComponent(q) : ''}`;
+          window.location.href = `kitaplar${q ? '?search=' + encodeURIComponent(q) : ''}`;
         }
       }
     });
@@ -529,7 +529,7 @@
             </div>
             <div class="empty-title">"${escapeHtml(query)}" için sonuç bulunamadı</div>
             <div class="empty-desc">Farklı bir kelime deneyebilir veya tüm arşivde arayabilirsiniz.</div>
-            <a href="kitaplar.html?search=${encodeURIComponent(query)}" class="btn btn-sm btn-primary rounded-pill mt-2">
+            <a href="kitaplar?search=${encodeURIComponent(query)}" class="btn btn-sm btn-primary rounded-pill mt-2">
               Kitaplar Sayfasında Ara
             </a>
           </div>

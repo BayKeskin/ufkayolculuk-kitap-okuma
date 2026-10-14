@@ -74,11 +74,11 @@ $rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['bo
       
       <!-- Sol: Geri Dön ve Logo -->
       <div class="reader-header-left">
-        <a href="home.html" class="reader-btn-back" title="Portala Geri Dön">
+        <a href="<?= base_url('/') ?>" class="reader-btn-back" title="Portala Geri Dön">
           <i class="fa-solid fa-arrow-left"></i>
           <span class="d-none d-sm-inline">Portala Dön</span>
         </a>
-        <a href="home.html" class="d-flex align-items-center">
+        <a href="<?= base_url('/') ?>" class="d-flex align-items-center">
           <img src="assets/images/logo.png" alt="Ufka Yolculuk" class="reader-brand-logo">
         </a>
       </div>
@@ -175,7 +175,7 @@ $rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['bo
         </button>
 
         <!-- Dashboard / İstatistikler Butonu -->
-        <a href="dashboard.html" class="reader-action-btn reader-icon-btn-only text-decoration-none" title="Dashboard / İstatistiklerim">
+        <a href="<?= base_url('dashboard') ?>" class="reader-action-btn reader-icon-btn-only text-decoration-none" title="Dashboard / İstatistiklerim">
           <i class="fa-solid fa-chart-pie text-primary"></i>
         </a>
       </div>

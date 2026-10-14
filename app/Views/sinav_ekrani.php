@@ -29,7 +29,7 @@
   <header class="sinav-system-header d-flex align-items-center justify-content-between">
     <!-- Sol Logo & Sınav Rozeti -->
     <div class="d-flex align-items-center gap-3">
-      <a href="deneme-sinavlari.html" class="sinav-system-brand" title="Deneme Sınavları Paneline Dön">
+      <a href="<?= base_url('deneme-sinavlari') ?>" class="sinav-system-brand" title="Deneme Sınavları Paneline Dön">
         <img src="assets/images/logo.png" alt="Ufka Yolculuk Logo" class="sinav-system-logo">
         <div class="d-none d-sm-block">
           <div class="sinav-system-brand-text">UFKA YOLCULUK</div>
@@ -345,10 +345,10 @@
       <button type="button" class="btn btn-primary fw-bold px-4 py-2 rounded-pill shadow-sm" id="btnRestartExam">
         <i class="fa-solid fa-rotate-left me-2"></i> Sınavı Tekrar Çöz
       </button>
-      <a href="deneme-sinavlari.html" class="btn btn-outline-primary fw-bold px-4 py-2 rounded-pill">
+      <a href="<?= base_url('deneme-sinavlari') ?>" class="btn btn-outline-primary fw-bold px-4 py-2 rounded-pill">
         <i class="fa-solid fa-laptop-code me-2"></i> Diğer Deneme Sınavları
       </a>
-      <a href="dashboard.html" class="btn btn-light border fw-bold px-4 py-2 rounded-pill">
+      <a href="<?= base_url('dashboard') ?>" class="btn btn-light border fw-bold px-4 py-2 rounded-pill">
         <i class="fa-solid fa-chart-pie me-2 text-primary"></i> Dashboard'da İncele
       </a>
     </div>

@@ -77,7 +77,7 @@
           </div>
         </div>
 
-        <a href="sinav-ekrani.html?sinav=genel" class="btn btn-light btn-sm fw-bold px-3 py-2 rounded-pill shadow-sm">
+        <a href="<?= base_url('sinav-ekrani?sinav=genel') ?>" class="btn btn-light btn-sm fw-bold px-3 py-2 rounded-pill shadow-sm">
           <i class="fa-solid fa-arrow-trend-up text-primary me-1"></i> Sıralamamı Yükselt
         </a>
       </div>
