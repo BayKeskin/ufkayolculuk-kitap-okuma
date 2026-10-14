@@ -1,10 +1,49 @@
+<?php
+$bId = (int)($activeBook['id'] ?? 11);
+$bTitle = $activeBook['name'] ?? $activeBook['title'] ?? 'Kitap Oku';
+$bAuthor = !empty($activeBook['author']) ? $activeBook['author'] : 'Ufka Yolculuk Yayınları';
+$bLevel = $activeBook['level'] ?? 'Tüm Düzeyler';
+$bTotalPages = (int)($activeBook['total_pages'] ?? 185);
+$bMinPage = (int)($activeBook['start_page'] ?? 1);
+$bStartPage = $bMinPage;
+$bCurPage = (int)($startPage ?? $bMinPage);
+if ($bCurPage < 1) $bCurPage = $bMinPage;
+if ($bCurPage > $bTotalPages && $bTotalPages > 0) $bCurPage = $bTotalPages;
+
+$bCoverImg = !empty($activeBook['cover_image']) ? $activeBook['cover_image'] : ($activeBook['image'] ?? 'assets/images/books/book-tevhid-muhafizlari.svg');
+$bSoundFile = !empty($activeBook['sound_file']) ? $activeBook['sound_file'] : '';
+
+// İlk Çift Sayfa Hesaplaması
+$leftPageNum = $bCurPage;
+$rightPageNum = ($leftPageNum + 1 <= $bTotalPages) ? ($leftPageNum + 1) : null;
+
+// $activeBook['pages'] içerisinden ilk sayfaları eşle
+$leftPageData = null;
+$rightPageData = null;
+if (!empty($activeBook['pages']) && is_array($activeBook['pages'])) {
+    foreach ($activeBook['pages'] as $p) {
+        $pNo = (int)($p['page_no'] ?? 0);
+        if ($pNo === $leftPageNum) {
+            $leftPageData = $p;
+        }
+        if ($rightPageNum !== null && $pNo === $rightPageNum) {
+            $rightPageData = $p;
+        }
+    }
+}
+
+$leftScanUrl = $leftPageData['image'] ?? "https://ufkayolculuk.com/uploads/2025-09/pdf_page_{$bId}_{$leftPageNum}.jpg";
+$rightScanUrl = $rightPageData ? ($rightPageData['image'] ?? "https://ufkayolculuk.com/uploads/2025-09/pdf_page_{$bId}_{$rightPageNum}.jpg") : '';
+$leftBody = $leftPageData['body_html'] ?? $leftPageData['body'] ?? '';
+$rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['body'] ?? '') : '';
+?>
 <!DOCTYPE html>
 <html lang="tr" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tevhid Muhafızları - Kitap Oku ve Sesli Dinle | Ufka Yolculuk</title>
-  <meta name="description" content="Ufka Yolculuk Tevhid Muhafızları interaktif çift sayfalı kitap okuma ve senkronize sesli dinleme deneyimi.">
+  <title><?= esc($bTitle) ?> - Kitap Oku ve Sesli Dinle | Ufka Yolculuk</title>
+  <meta name="description" content="Ufka Yolculuk <?= esc($bTitle) ?> interaktif çift sayfalı kitap okuma ve senkronize sesli dinleme deneyimi.">
 
   <!-- Google Fonts: Plus Jakarta Sans & Merriweather -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +57,7 @@
   <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
 
   <!-- Okuyucu Özel CSS -->
-  <link rel="stylesheet" href="assets/css/reader.css?v=3.5">
+  <link rel="stylesheet" href="assets/css/reader.css?v=3.6">
 </head>
 <body class="reader-body" data-theme="light">
 
@@ -46,49 +85,43 @@
 
       <!-- Orta: Aktif Kitap Başlığı ve Kitap Değiştirici -->
       <div class="reader-book-selector-wrap">
-        <span class="reader-book-badge d-none d-md-inline-block" id="currentBookBadge">Ortaokul Düzeyi</span>
+        <span class="reader-book-badge d-none d-md-inline-block" id="currentBookBadge"><?= esc($bLevel) ?></span>
         <div class="dropdown">
           <button class="reader-book-dropdown-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="currentBookTitle">
-            Tevhid Muhafızları
+            <?= esc($bTitle) ?>
           </button>
           <ul class="dropdown-menu reader-book-menu shadow-lg">
             <li><h6 class="dropdown-header text-uppercase fs-7 fw-bold">Yarışma Kitapları</h6></li>
-            <li>
-              <a class="dropdown-item" href="javascript:void(0)" data-switch-book="kuslarin-cagrisi">
-                <img src="assets/images/books/book-kuslarin-cagrisi.svg" class="book-thumb-mini" alt="Kuşların Çağrısı">
-                <div>
-                  <div class="fw-bold">Kuşların Çağrısı</div>
-                  <small class="text-muted">İlkokul Düzeyi</small>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item active" href="javascript:void(0)" data-switch-book="tevhid-muhafizlari">
-                <img src="assets/images/books/book-tevhid-muhafizlari.svg" class="book-thumb-mini" alt="Tevhid Muhafızları">
-                <div>
-                  <div class="fw-bold">Tevhid Muhafızları</div>
-                  <small class="text-muted">Ortaokul Düzeyi</small>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="javascript:void(0)" data-switch-book="gordugume-gormedigime">
-                <img src="assets/images/books/book-gordugume-gormedigime.svg" class="book-thumb-mini" alt="Gördüğüme Görmediğime">
-                <div>
-                  <div class="fw-bold">Gördüğüme Görmediğime</div>
-                  <small class="text-muted">Lise Düzeyi</small>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="javascript:void(0)" data-switch-book="nasil-inanmali">
-                <img src="assets/images/books/book-nasil-inanmali.svg" class="book-thumb-mini" alt="Nasıl İnanmalı?">
-                <div>
-                  <div class="fw-bold">Nasıl İnanmalı?</div>
-                  <small class="text-muted">Yetişkin Düzeyi</small>
-                </div>
-              </a>
-            </li>
+            <?php if (!empty($allBooks) && is_array($allBooks)): ?>
+              <?php foreach ($allBooks as $bk): ?>
+                <?php 
+                  $bkId = (int)$bk['id'];
+                  $isActive = ($bkId === $bId);
+                  $bkCover = !empty($bk['cover_image']) ? $bk['cover_image'] : ($bk['image'] ?? 'assets/images/books/book-kuslarin-cagrisi.svg');
+                  $bkLevel = $bk['level'] ?? 'Tüm Düzeyler';
+                  $bkStartPage = (int)($bk['start_page'] ?? 1);
+                ?>
+                <li>
+                  <a class="dropdown-item <?= $isActive ? 'active' : '' ?>" href="kitap-oku.html?book_id=<?= $bkId ?>&start_page=<?= $bkStartPage ?>" data-switch-book="<?= $bkId ?>">
+                    <img src="<?= esc($bkCover) ?>" class="book-thumb-mini" alt="<?= esc($bk['name']) ?>" onerror="this.src='assets/images/books/book-kuslarin-cagrisi.svg'">
+                    <div>
+                      <div class="fw-bold"><?= esc($bk['name']) ?></div>
+                      <small class="text-muted"><?= esc($bkLevel) ?></small>
+                    </div>
+                  </a>
+                </li>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <li>
+                <a class="dropdown-item active" href="kitap-oku.html?book_id=11&start_page=5" data-switch-book="11">
+                  <img src="assets/images/books/book-tevhid-muhafizlari.svg" class="book-thumb-mini" alt="Tevhid Muhafızları">
+                  <div>
+                    <div class="fw-bold">Tevhid Muhafızları</div>
+                    <small class="text-muted">Ortaokul Düzeyi</small>
+                  </div>
+                </a>
+              </li>
+            <?php endif; ?>
           </ul>
         </div>
       </div>
@@ -165,49 +198,49 @@
       <!-- Çift Sayfa Kitap Gövdesi (Left & Right Pages) -->
       <div class="book-spread" id="bookSpread">
         
-        <!-- SOL SAYFA (1. Sayfa / Sol Yuva) -->
+        <!-- SOL SAYFA (Sol Yuva) -->
         <div class="page-frame left-page" id="leftPageFrame">
           
           <!-- Sol Sayfa Üst Bilgisi -->
           <div class="page-header-bar">
-            <span class="book-name" id="currentBookAuthor">Ufka Yolculuk</span>
-            <span class="chapter-info" id="leftPageChapter">Bölüm 1</span>
+            <span class="book-name" id="currentBookAuthor"><?= esc($bAuthor) ?></span>
+            <span class="chapter-info" id="leftPageChapter">Sayfa <?= $leftPageNum ?></span>
           </div>
 
           <!-- Sol Sayfa İçerik Alanı -->
           <div class="page-content-body">
             <!-- Görsel Tarama -->
-            <img src="https://ufkayolculuk.com/uploads/2025-09/pdf_page_11_5.jpg" alt="Sol Sayfa" class="page-scan-img" id="leftPageScan">
+            <img src="<?= esc($leftScanUrl) ?>" alt="Sol Sayfa" class="page-scan-img" id="leftPageScan" onerror="this.src='<?= esc($bCoverImg) ?>'">
             <!-- Metin Modu İçeriği -->
-            <div class="page-text-container d-none" id="leftPageText"></div>
+            <div class="page-text-container d-none" id="leftPageText"><?= $leftBody ?: '<div class="p-4 text-center text-muted"><em>Bu sayfa görsel içerik içermektedir.</em></div>' ?></div>
           </div>
 
           <!-- Sol Sayfa Numarası -->
           <div class="page-footer-bar">
-            <span class="page-number-pill" id="leftPageNumber">5</span>
+            <span class="page-number-pill" id="leftPageNumber"><?= $leftPageNum ?></span>
           </div>
         </div>
 
-        <!-- SAĞ SAYFA (6. Sayfa / Sağ Yuva) -->
-        <div class="page-frame right-page" id="rightPageFrame">
+        <!-- SAĞ SAYFA (Sağ Yuva) -->
+        <div class="page-frame right-page" id="rightPageFrame" style="<?= $rightPageNum === null ? 'opacity: 0.4;' : '' ?>">
           
           <!-- Sağ Sayfa Üst Bilgisi -->
           <div class="page-header-bar">
-            <span class="chapter-info" id="rightPageChapter">1. Bölüm - Boş Damacana</span>
-            <span class="book-name" id="rightPageBookTitle">Tevhid Muhafızları</span>
+            <span class="chapter-info" id="rightPageChapter"><?= $rightPageNum !== null ? 'Sayfa ' . $rightPageNum : '' ?></span>
+            <span class="book-name" id="rightPageBookTitle"><?= esc($bTitle) ?></span>
           </div>
 
           <!-- Sağ Sayfa İçerik Alanı -->
           <div class="page-content-body">
             <!-- Görsel Tarama -->
-            <img src="https://ufkayolculuk.com/uploads/2025-09/pdf_page_11_6.jpg" alt="Sağ Sayfa" class="page-scan-img" id="rightPageScan">
+            <img src="<?= esc($rightScanUrl) ?>" alt="Sağ Sayfa" class="page-scan-img" id="rightPageScan" style="<?= $rightPageNum === null ? 'display:none;' : '' ?>">
             <!-- Metin Modu İçeriği -->
-            <div class="page-text-container d-none" id="rightPageText"></div>
+            <div class="page-text-container d-none" id="rightPageText"><?= $rightBody ?: ($rightPageNum !== null ? '<div class="p-4 text-center text-muted"><em>Bu sayfa görsel içerik içermektedir.</em></div>' : '<div class="p-5 text-center text-muted"><em>Kitap Sonu</em></div>') ?></div>
           </div>
 
           <!-- Sağ Sayfa Numarası -->
           <div class="page-footer-bar">
-            <span class="page-number-pill" id="rightPageNumber">6</span>
+            <span class="page-number-pill" id="rightPageNumber"><?= $rightPageNum !== null ? $rightPageNum : '' ?></span>
           </div>
         </div>
 
@@ -247,13 +280,13 @@
 
       <!-- Canlı Sayfa Göstergesi -->
       <div class="dock-page-display" id="dockPageDisplay">
-        <span class="cur-badge">Sayfa 5 - 6</span> / <span>186</span>
+        <span class="cur-badge">Sayfa <?= $leftPageNum ?><?= $rightPageNum ? ' - ' . $rightPageNum : '' ?></span> / <span><?= $bTotalPages ?></span>
       </div>
 
       <!-- Hızlı Sayfaya Git Inputu -->
       <div class="dock-quick-jump d-none d-sm-flex">
         <span class="text-white-50 fs-7 fw-semibold">Git:</span>
-        <input type="number" id="quickJumpInput" min="5" max="186" value="5" title="Sayfa numarası yazıp Enter'a basın">
+        <input type="number" id="quickJumpInput" min="<?= $bMinPage ?>" max="<?= $bTotalPages ?>" value="<?= $leftPageNum ?>" title="Sayfa numarası yazıp Enter'a basın">
       </div>
 
       <!-- Sonraki Sayfa Butonu -->
@@ -270,9 +303,9 @@
       
       <!-- Sol: Aktif Ses Bilgisi ve Kapak -->
       <div class="dock-audio-left">
-        <img src="assets/images/books/book-tevhid-muhafizlari.svg" alt="Kapak" class="dock-audio-cover" id="dockAudioCover">
+        <img src="<?= esc($bCoverImg) ?>" alt="Kapak" class="dock-audio-cover" id="dockAudioCover" onerror="this.src='assets/images/books/book-tevhid-muhafizlari.svg'">
         <div class="dock-audio-meta">
-          <span class="audio-title" id="dockAudioTitle">Tevhid Muhafızları - S. 5</span>
+          <span class="audio-title" id="dockAudioTitle"><?= esc($bTitle) ?> - S. <?= $leftPageNum ?></span>
           <span class="audio-status">Sesli Okuma Senkronize</span>
         </div>
       </div>
@@ -302,7 +335,7 @@
           </div>
           <div class="dock-time-row">
             <span id="dockAudioCurrentTime">00:00</span>
-            <span id="dockAudioDuration">34:20</span>
+            <span id="dockAudioDuration">--:--</span>
           </div>
         </div>
 
@@ -363,10 +396,23 @@
     </div>
   </div>
 
+  <?php
+    $lightActiveBook = $activeBook;
+    unset($lightActiveBook['pages']);
+  ?>
+  <!-- Dinamik CodeIgniter Veri Köprüsü -->
+  <script>
+    window.ACTIVE_BOOK = <?= json_encode($lightActiveBook, JSON_UNESCAPED_UNICODE) ?>;
+    window.ALL_BOOKS_LIST = <?= json_encode($allBooks ?? [], JSON_UNESCAPED_UNICODE) ?>;
+    window.START_PAGE = <?= (int)$bStartPage ?>;
+    window.TARGET_PAGE = <?= (int)$bCurPage ?>;
+    window.AUTO_AUDIO = <?= $autoAudio ? 'true' : 'false' ?>;
+  </script>
+
   <!-- Bootstrap 5.3 JS (Yerel) -->
   <script src="assets/js/bootstrap.bundle.min.js"></script>
 
   <!-- Okuyucu Motoru (reader.js) -->
-  <script src="assets/js/reader.js?v=3.5"></script>
+  <script src="assets/js/reader.js?v=4.0"></script>
 </body>
 </html>

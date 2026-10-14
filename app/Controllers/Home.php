@@ -14,11 +14,49 @@ class Home extends BaseController
     }
 
     /**
-     * Çift Sayfalı Kitap Okuyucu
+     * Çift Sayfalı Kitap Okuyucu (Dinamik API Entegrasyonlu)
      */
     public function kitapOku(): string
     {
-        return view('kitap_oku');
+        $bookParam = $this->request->getGet('book_id') 
+            ?? $this->request->getGet('book') 
+            ?? $this->request->getGet('id') 
+            ?? 11;
+
+        $slugMap = [
+            'kuslarin-cagrisi'      => 8,
+            'tevhid-muhafizlari'    => 11,
+            'gordugume-gormedigime' => 12,
+            'nasil-inanmali'        => 13,
+        ];
+
+        if (is_string($bookParam) && isset($slugMap[strtolower($bookParam)])) {
+            $bookId = $slugMap[strtolower($bookParam)];
+        } else {
+            $bookId = (int)$bookParam;
+        }
+
+        if ($bookId <= 0) {
+            $bookId = 11;
+        }
+
+        $activeBook = $this->apiService->getBook($bookId, true);
+        if (!$activeBook) {
+            $activeBook = $this->apiService->getBook(11, true);
+        }
+
+        $allBooks = $this->apiService->getBooks();
+
+        $pageParam = $this->request->getGet('page') ?? $this->request->getGet('start_page');
+        $startPage = $pageParam !== null ? max(1, (int)$pageParam) : ($activeBook['start_page'] ?? 1);
+        $autoAudio = (bool)($this->request->getGet('audio') ?? $this->request->getGet('play') ?? false);
+
+        return view('kitap_oku', [
+            'activeBook' => $activeBook,
+            'allBooks'   => $allBooks,
+            'startPage'  => $startPage,
+            'autoAudio'  => $autoAudio,
+        ]);
     }
 
     /**

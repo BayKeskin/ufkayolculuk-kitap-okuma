@@ -13,108 +13,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
 class BookReaderEngine {
   constructor() {
-    // Kitap Tanımları
-    this.books = {
-      'tevhid-muhafizlari': {
-        id: 'tevhid-muhafizlari',
-        apiId: 11,
-        title: 'Tevhid Muhafızları',
-        level: 'Ortaokul Düzeyi',
-        badgeColor: '#f59e0b',
-        startPage: 5,
-        totalPages: 185,
-        audioSrc: 'assets/audio/tevhid-muhafizlari.mp3?v=163mb_official',
-        coverImg: 'assets/images/books/book-tevhid-muhafizlari.svg',
-        author: 'Ufka Yolculuk Yayınları',
-        chapters: [
-          { title: '1. Bölüm - Boş Damacana', page: 5, time: 2.313 },
-          { title: '2. Bölüm - Açlık ve Emniyet', page: 10, time: 379.95 },
-          { title: '3. Bölüm - Tevekkül Notu', page: 20, time: 1228.72 },
-          { title: '4. Bölüm - Peygamber Sevgisi', page: 35, time: 2394.5 },
-          { title: '5. Bölüm - İmanın Tadı', page: 50, time: 3481.4 },
-          { title: '6. Bölüm - İmtihan ve Sabır', page: 70, time: 5047.7 },
-          { title: '7. Bölüm - Zorlukların Sonu', page: 90, time: 6856.4 },
-          { title: '8. Bölüm - Mahalle Maçı', page: 110, time: 8460.7 },
-          { title: '9. Bölüm - Şükür ve Sevinç', page: 130, time: 9953.1 },
-          { title: '10. Bölüm - Keskin Bakışlar', page: 150, time: 11617.9 },
-          { title: '11. Bölüm - Büyük Heyecan', page: 180, time: 13991.0 }
-        ]
-      },
-      'kuslarin-cagrisi': {
-        id: 'kuslarin-cagrisi',
-        apiId: 10,
-        title: 'Kuşların Çağrısı',
-        level: 'İlkokul Düzeyi',
-        badgeColor: '#10b981',
-        startPage: 1,
-        totalPages: 160,
-        audioSrc: 'assets/audio/kuslarin-cagrisi-bolum3.mp3?v=2.0',
-        coverImg: 'assets/images/books/book-kuslarin-cagrisi.svg',
-        author: 'Ufka Yolculuk Yayınları',
-        chapters: [
-          { title: 'Bölüm 1 - Ormanın Fısıltısı', page: 1, time: 10 },
-          { title: 'Bölüm 2 - Kanat Sesleri', page: 22, time: 640 },
-          { title: 'Bölüm 3 - Cesaretin Kaynağı', page: 45, time: 1200 },
-          { title: 'Bölüm 4 - Gökyüzü Yolcuları', page: 80, time: 1950 },
-          { title: 'Bölüm 5 - Dostluğun Gücü', page: 120, time: 2600 }
-        ]
-      },
-      'gordugume-gormedigime': {
-        id: 'gordugume-gormedigime',
-        apiId: 12,
-        title: 'Gördüğüme Görmediğime',
-        level: 'Lise Düzeyi',
-        badgeColor: '#6366f1',
-        startPage: 1,
-        totalPages: 190,
-        audioSrc: 'assets/audio/gordugume-gormedigime.mp3?v=2.0',
-        coverImg: 'assets/images/books/book-gordugume-gormedigime.svg',
-        author: 'Ufka Yolculuk Yayınları',
-        chapters: [
-          { title: 'Bölüm 1 - Aklın Sınırları', page: 1, time: 15 },
-          { title: 'Bölüm 2 - Buzdağının Görünmeyen Yüzü', page: 28, time: 720 },
-          { title: 'Bölüm 3 - Varlık ve Hakikat', page: 60, time: 1540 },
-          { title: 'Bölüm 4 - Şüphenin Ötesi', page: 105, time: 2450 },
-          { title: 'Bölüm 5 - Huzurlu Arayış', page: 150, time: 3300 }
-        ]
-      },
-      'nasil-inanmali': {
-        id: 'nasil-inanmali',
-        apiId: 13,
-        title: 'Nasıl İnanmalı?',
-        level: 'Yetişkin Düzeyi',
-        badgeColor: '#8b5cf6',
-        startPage: 1,
-        totalPages: 210,
-        audioSrc: 'assets/audio/nasil-inanmali.mp3?v=2.0',
-        coverImg: 'assets/images/books/book-nasil-inanmali.svg',
-        author: 'Ufka Yolculuk Yayınları',
-        chapters: [
-          { title: 'Bölüm 1 - İnanç ve Akıl Dengesi', page: 1, time: 20 },
-          { title: 'Bölüm 2 - Deliller ve İkna', page: 35, time: 820 },
-          { title: 'Bölüm 3 - Kalbin Tasdiki', page: 75, time: 1780 },
-          { title: 'Bölüm 4 - Modern Çağda İnanç', page: 120, time: 2750 },
-          { title: 'Bölüm 5 - Tevhidin Zirvesi', page: 170, time: 3800 }
-        ]
-      }
-    };
+    this.books = {};
+    this.pageCache = new Map();
 
-    // Aktif Durum
-    this.currentBookKey = 'tevhid-muhafizlari';
-    this.currentBook = this.books[this.currentBookKey];
-    this.currentPage = 5; // Kitap 5. sayfadan başlar
+    // 1. Tevhid Muhafızları statik önbelleği (SEED_CACHE) varsa başlat
+    if (typeof SEED_CACHE !== 'undefined' && SEED_CACHE) {
+      Object.keys(SEED_CACHE).forEach(p => {
+        this.pageCache.set(`11_${p}`, SEED_CACHE[p]);
+      });
+    }
+
+    // 2. Canlı API kitap havuzunu inşa et
+    this.buildBooksLibrary();
+
+    // 3. window.ACTIVE_BOOK sayfalarını önbelleğe ekle
+    if (window.ACTIVE_BOOK && Array.isArray(window.ACTIVE_BOOK.pages)) {
+      const aId = window.ACTIVE_BOOK.id;
+      window.ACTIVE_BOOK.pages.forEach(p => {
+        const pNo = parseInt(p.page_no, 10);
+        if (!isNaN(pNo)) {
+          this.pageCache.set(`${aId}_${pNo}`, {
+            image: p.image || `https://ufkayolculuk.com/uploads/2025-09/pdf_page_${aId}_${pNo}.jpg`,
+            body: p.body_html || p.body || '',
+            pageNo: pNo
+          });
+        }
+      });
+    }
+
+    // 4. Varsayılan aktif kitap
+    this.currentBookKey = window.ACTIVE_BOOK ? String(window.ACTIVE_BOOK.id) : '11';
+    this.currentBook = this.books[this.currentBookKey] || Object.values(this.books)[0];
+    this.currentPage = (window.TARGET_PAGE !== undefined && window.TARGET_PAGE !== null) 
+      ? parseInt(window.TARGET_PAGE, 10) 
+      : (this.currentBook.startPage || 1);
+
     this.isSliding = false;
     this.viewMode = 'visual'; // 'visual' veya 'text'
     this.theme = localStorage.getItem('ufka_reader_theme') || 'light';
     this.autoPageTurn = true;
     this.isZoomed = false;
     this.isFullscreen = false;
-
-    // Önbellek Başlatma (Pre-seeded 185 sayfa)
-    this.pageCache = new Map();
-    Object.keys(SEED_CACHE).forEach(p => {
-      this.pageCache.set(`11_${p}`, SEED_CACHE[p]);
-    });
 
     // Ses Oynatıcı Nesnesi
     this.audio = new Audio();
@@ -125,6 +64,125 @@ class BookReaderEngine {
 
     this.touchStartX = 0;
     this.touchStartY = 0;
+  }
+
+  buildBooksLibrary() {
+    const list = (window.ALL_BOOKS_LIST && Array.isArray(window.ALL_BOOKS_LIST) && window.ALL_BOOKS_LIST.length > 0)
+      ? window.ALL_BOOKS_LIST
+      : (window.ACTIVE_BOOK ? [window.ACTIVE_BOOK] : []);
+
+    list.forEach(b => {
+      const bId = String(b.id);
+      const bStart = b.start_page ? parseInt(b.start_page, 10) : 1;
+      const bTotal = b.total_pages ? parseInt(b.total_pages, 10) : (Array.isArray(b.pages) ? b.pages.length : 185);
+      const bSound = b.sound_file || '';
+      const bCover = b.cover_image || b.image || 'assets/images/books/book-tevhid-muhafizlari.svg';
+      const bLevel = b.level || 'Tüm Düzeyler';
+
+      let badgeColor = '#f59e0b';
+      if (b.category_slug === 'ilkokul' || bId === '8') badgeColor = '#10b981';
+      else if (b.category_slug === 'ortaokul' || bId === '11') badgeColor = '#f59e0b';
+      else if (b.category_slug === 'lise' || bId === '12') badgeColor = '#6366f1';
+      else if (b.category_slug === 'yetiskin' || bId === '13') badgeColor = '#8b5cf6';
+
+      const chapters = (Array.isArray(b.chapters) && b.chapters.length > 0) ? b.chapters : [
+        { title: `Bölüm 1 - ${b.name || b.title}`, page: bStart, time: 0 }
+      ];
+
+      const item = {
+        id: bId,
+        apiId: parseInt(b.id, 10),
+        title: b.name || b.title,
+        level: bLevel,
+        badgeColor: badgeColor,
+        startPage: bStart,
+        totalPages: bTotal,
+        audioSrc: bSound,
+        coverImg: bCover,
+        author: b.author || 'Ufka Yolculuk Yayınları',
+        chapters: chapters
+      };
+
+      this.books[bId] = item;
+      if (b.slug) this.books[b.slug] = item;
+    });
+
+    // Varsayılan slug eşlemeleri
+    const slugMap = {
+      'kuslarin-cagrisi': '8',
+      'tevhid-muhafizlari': '11',
+      'gordugume-gormedigime': '12',
+      'nasil-inanmali': '13'
+    };
+    Object.keys(slugMap).forEach(slug => {
+      const id = slugMap[slug];
+      if (this.books[id] && !this.books[slug]) {
+        this.books[slug] = this.books[id];
+      }
+    });
+
+    // Eğer liste boşsa varsayılan 4 kitabı doldur
+    if (Object.keys(this.books).length === 0) {
+      this.populateDefaultFallbackBooks();
+    }
+  }
+
+  populateDefaultFallbackBooks() {
+    this.books['11'] = {
+      id: '11',
+      apiId: 11,
+      title: 'Tevhid Muhafızları',
+      level: 'Ortaokul Düzeyi',
+      badgeColor: '#f59e0b',
+      startPage: 5,
+      totalPages: 185,
+      audioSrc: 'https://ufkayolculuk.com/uploads/2025-10/tevhid-muhafizlari.mp3',
+      coverImg: 'assets/images/books/book-tevhid-muhafizlari.svg',
+      author: 'Ufka Yolculuk Yayınları',
+      chapters: [
+        { title: '1. Bölüm - Boş Damacana', page: 5, time: 2.313 },
+        { title: '2. Bölüm - Açlık ve Emniyet', page: 10, time: 379.95 }
+      ]
+    };
+    this.books['8'] = {
+      id: '8',
+      apiId: 8,
+      title: 'Kuşların Çağrısı',
+      level: 'İlkokul Düzeyi',
+      badgeColor: '#10b981',
+      startPage: 1,
+      totalPages: 239,
+      audioSrc: 'https://ufkayolculuk.com/uploads/2025-10/ilkokul-kuslarin-cagrisi.mp3',
+      coverImg: 'assets/images/books/book-kuslarin-cagrisi.svg',
+      author: 'Ufka Yolculuk Yayınları',
+      chapters: [{ title: 'Bölüm 1 - Kuşların Çağrısı', page: 1, time: 0 }]
+    };
+    this.books['12'] = {
+      id: '12',
+      apiId: 12,
+      title: 'Gördüğüme Görmediğime',
+      level: 'Lise Düzeyi',
+      badgeColor: '#6366f1',
+      startPage: 1,
+      totalPages: 306,
+      audioSrc: 'https://ufkayolculuk.com/uploads/2025-10/lise-gordugume-gormedigime.mp3',
+      coverImg: 'assets/images/books/book-gordugume-gormedigime.svg',
+      author: 'Ufka Yolculuk Yayınları',
+      chapters: [{ title: 'Bölüm 1 - Gördüğüme Görmediğime', page: 1, time: 0 }]
+    };
+    this.books['13'] = {
+      id: '13',
+      apiId: 13,
+      title: 'Nasıl İnanmalı?',
+      level: 'Yetişkin Düzeyi',
+      badgeColor: '#8b5cf6',
+      startPage: 1,
+      totalPages: 361,
+      audioSrc: 'https://ufkayolculuk.com/uploads/2025-09/Nasil-inanmali-seslikitap_v2.mp3',
+      coverImg: 'assets/images/books/book-nasil-inanmali.svg',
+      author: 'Ufka Yolculuk Yayınları',
+      chapters: [{ title: 'Bölüm 1 - Nasıl İnanmalı?', page: 1, time: 0 }]
+    };
   }
 
   /**
@@ -139,7 +197,7 @@ class BookReaderEngine {
     this.renderChaptersDrawer();
     this.renderThumbnailsGrid();
     
-    // 5. Sayfayı Yükle
+    // İlk sayfayı yükle
     await this.renderSpread(this.currentPage, 'init');
     this.updateUI();
     this.preloadAdjacentPages();
@@ -155,30 +213,36 @@ class BookReaderEngine {
 
   parseUrlParams() {
     const params = new URLSearchParams(window.location.search);
-    let bookParam = params.get('book') || params.get('id');
-    const pageParam = parseInt(params.get('page'), 10);
-    this.autoAudio = params.get('audio') === '1' || params.get('play') === '1';
+    let bookParam = params.get('book_id') || params.get('book') || params.get('id');
+    const pageParam = parseInt(params.get('page') || params.get('start_page'), 10);
+    this.autoAudio = params.get('audio') === '1' || params.get('play') === '1' || (window.AUTO_AUDIO === true);
 
-    const idMap = {
-      '8': 'kuslarin-cagrisi',
-      '11': 'tevhid-muhafizlari',
-      '12': 'gordugume-gormedigime',
-      '13': 'nasil-inanmali'
+    const slugMap = {
+      'kuslarin-cagrisi': '8',
+      'tevhid-muhafizlari': '11',
+      'gordugume-gormedigime': '12',
+      'nasil-inanmali': '13'
     };
 
-    if (bookParam && idMap[bookParam]) {
-      bookParam = idMap[bookParam];
+    if (bookParam && slugMap[bookParam]) {
+      bookParam = slugMap[bookParam];
     }
 
     if (bookParam && this.books[bookParam]) {
       this.currentBookKey = bookParam;
+      this.currentBook = this.books[bookParam];
+    } else if (window.ACTIVE_BOOK && this.books[String(window.ACTIVE_BOOK.id)]) {
+      this.currentBookKey = String(window.ACTIVE_BOOK.id);
+      this.currentBook = this.books[this.currentBookKey];
     }
 
-    this.currentBook = this.books[this.currentBookKey];
     const minPage = this.currentBook.startPage || 1;
 
-    if (!isNaN(pageParam) && pageParam >= minPage && pageParam <= this.currentBook.totalPages) {
+    // URL'de sayfa varsa ona git, yoksa start_page (kapak sayfalarını atlayıp ilk metin sayfasına odaklan)
+    if (!isNaN(pageParam) && pageParam >= 1 && pageParam <= this.currentBook.totalPages) {
       this.currentPage = pageParam;
+    } else if (window.TARGET_PAGE && !isNaN(window.TARGET_PAGE) && window.TARGET_PAGE >= 1) {
+      this.currentPage = parseInt(window.TARGET_PAGE, 10);
     } else {
       this.currentPage = minPage;
     }
@@ -320,24 +384,34 @@ class BookReaderEngine {
       return this.pageCache.get(cacheKey);
     }
 
+    // 1. Yerel CodeIgniter API'den sayfaları çekmeyi dene
     try {
-      const response = await fetch(`https://ufkayolculuk.com/project_ufkayolculuk/getPage/${bookApiId}/${pageNum}`, {
-        cache: 'no-store'
+      const response = await fetch(`api/v1/books/${bookApiId}`, {
+        cache: 'default'
       });
       if (response.ok) {
-        const data = await response.json();
-        const result = {
-          image: data.image ? `https://ufkayolculuk.com/${data.image}` : `https://ufkayolculuk.com/uploads/2025-09/pdf_page_${bookApiId}_${pageNum}.jpg`,
-          body: data.body || '',
-          pageNo: pageNum
-        };
-        this.pageCache.set(cacheKey, result);
-        return result;
+        const json = await response.json();
+        if (json && json.data && Array.isArray(json.data.pages)) {
+          json.data.pages.forEach(p => {
+            const pNo = parseInt(p.page_no, 10);
+            if (!isNaN(pNo)) {
+              this.pageCache.set(`${bookApiId}_${pNo}`, {
+                image: p.image || `https://ufkayolculuk.com/uploads/2025-09/pdf_page_${bookApiId}_${pNo}.jpg`,
+                body: p.body_html || p.body || '',
+                pageNo: pNo
+              });
+            }
+          });
+          if (this.pageCache.has(cacheKey)) {
+            return this.pageCache.get(cacheKey);
+          }
+        }
       }
     } catch (e) {
-      console.warn(`Sayfa ${pageNum} yüklenemedi:`, e);
+      console.warn(`Sayfa ${pageNum} API önbelleği alınamadı:`, e);
     }
 
+    // 2. Doğrudan taranmış sayfa görseli fallback'i
     const fallback = {
       image: `https://ufkayolculuk.com/uploads/2025-09/pdf_page_${bookApiId}_${pageNum}.jpg`,
       body: '',
@@ -351,9 +425,11 @@ class BookReaderEngine {
     if (this.isSliding) return;
     this.isSliding = true;
 
-    const minPage = this.currentBook.startPage || 1;
-    const leftNum = Math.max(minPage, leftPageNum);
-    const rightNum = leftNum + 1 <= this.currentBook.totalPages ? leftNum + 1 : null;
+    const minPage = 1;
+    const totalPages = this.currentBook.totalPages;
+    const leftNum = Math.max(minPage, Math.min(totalPages, leftPageNum));
+    const isSinglePage = window.innerWidth <= 1080;
+    const rightNum = (!isSinglePage && leftNum + 1 <= totalPages) ? leftNum + 1 : null;
 
     const [leftData, rightData] = await Promise.all([
       this.getPageData(this.currentBook.apiId, leftNum),
@@ -362,44 +438,54 @@ class BookReaderEngine {
 
     if (direction === 'next' && direction !== 'init') {
       this.leftPageFrame.classList.add('slide-shift-left');
-      this.rightPageFrame.classList.add('slide-incoming-right');
+      if (this.rightPageFrame) this.rightPageFrame.classList.add('slide-incoming-right');
     } else if (direction === 'prev') {
       this.leftPageFrame.classList.add('slide-incoming-left');
-      this.rightPageFrame.classList.add('slide-shift-right');
+      if (this.rightPageFrame) this.rightPageFrame.classList.add('slide-shift-right');
     }
 
     // Sol Sayfa
     this.leftPageNumber.textContent = `Sayfa ${leftNum}`;
     this.leftPageScan.src = leftData.image;
     this.leftPageScan.alt = `Sayfa ${leftNum}`;
+    this.leftPageScan.onerror = () => {
+      this.leftPageScan.src = this.currentBook.coverImg;
+    };
     this.leftPageText.innerHTML = leftData.body || `<div class="p-4 text-center text-muted"><em>Bu sayfa görsel içerik içermektedir.</em></div>`;
     this.leftPageChapter.textContent = this.findChapterTitle(leftNum);
-    if (this.bookAuthorEl) this.bookAuthorEl.textContent = this.currentBook.title;
+    if (this.bookAuthorEl) this.bookAuthorEl.textContent = this.currentBook.author;
 
-    // Sağ Sayfa
+    // Sağ Sayfa (Masaüstünde çift sayfa, mobilde gizli)
     const rightBookTitleEl = document.getElementById('rightPageBookTitle');
-    if (rightData) {
+    if (rightData && !isSinglePage) {
       this.rightPageNumber.textContent = `Sayfa ${rightNum}`;
       this.rightPageScan.src = rightData.image;
       this.rightPageScan.alt = `Sayfa ${rightNum}`;
+      this.rightPageScan.style.display = '';
+      this.rightPageScan.onerror = () => {
+        this.rightPageScan.src = this.currentBook.coverImg;
+      };
       this.rightPageText.innerHTML = rightData.body || `<div class="p-4 text-center text-muted"><em>Bu sayfa görsel içerik içermektedir.</em></div>`;
       this.rightPageChapter.textContent = this.findChapterTitle(rightNum);
-      if (rightBookTitleEl) rightBookTitleEl.textContent = `Sayfa ${rightNum}`;
+      if (rightBookTitleEl) rightBookTitleEl.textContent = this.currentBook.title;
       this.rightPageFrame.style.opacity = '1';
     } else {
-      this.rightPageNumber.textContent = '';
-      this.rightPageScan.src = '';
-      this.rightPageText.innerHTML = `<div class="p-5 text-center text-muted"><em>Kitap Sonu</em></div>`;
-      this.rightPageChapter.textContent = '';
+      if (this.rightPageNumber) this.rightPageNumber.textContent = '';
+      if (this.rightPageScan) {
+        this.rightPageScan.src = '';
+        this.rightPageScan.style.display = 'none';
+      }
+      if (this.rightPageText) this.rightPageText.innerHTML = isSinglePage ? '' : `<div class="p-5 text-center text-muted"><em>Kitap Sonu</em></div>`;
+      if (this.rightPageChapter) this.rightPageChapter.textContent = '';
       if (rightBookTitleEl) rightBookTitleEl.textContent = '';
-      this.rightPageFrame.style.opacity = '0.4';
+      if (this.rightPageFrame) this.rightPageFrame.style.opacity = isSinglePage ? '1' : '0.4';
     }
 
     this.applyViewMode();
 
     setTimeout(() => {
       this.leftPageFrame.classList.remove('slide-shift-left', 'slide-incoming-left');
-      this.rightPageFrame.classList.remove('slide-incoming-right', 'slide-shift-right');
+      if (this.rightPageFrame) this.rightPageFrame.classList.remove('slide-incoming-right', 'slide-shift-right');
       this.isSliding = false;
     }, 450);
 
@@ -411,11 +497,14 @@ class BookReaderEngine {
 
   async turnPage(direction, syncAudio = true) {
     if (this.isSliding) return;
-    const minPage = this.currentBook.startPage || 1;
+    const minPage = 1;
+    const totalPages = this.currentBook.totalPages;
+    const isSinglePage = window.innerWidth <= 1080;
+    const step = isSinglePage ? 1 : 2;
 
     if (direction === 'next') {
-      if (this.currentPage + 1 > this.currentBook.totalPages) return;
-      const targetPage = this.currentPage + 1;
+      if (this.currentPage >= totalPages) return;
+      const targetPage = Math.min(totalPages, this.currentPage + step);
       await this.renderSpread(targetPage, 'next');
 
       if (syncAudio) {
@@ -423,7 +512,7 @@ class BookReaderEngine {
       }
     } else if (direction === 'prev') {
       if (this.currentPage <= minPage) return;
-      const targetPage = this.currentPage - 1;
+      const targetPage = Math.max(minPage, this.currentPage - step);
       await this.renderSpread(targetPage, 'prev');
 
       if (syncAudio) {
@@ -433,7 +522,7 @@ class BookReaderEngine {
   }
 
   async goToPage(pageNum, syncAudio = true) {
-    const minPage = this.currentBook.startPage || 1;
+    const minPage = 1;
     let targetPage = parseInt(pageNum, 10);
     if (isNaN(targetPage) || targetPage < minPage) {
       targetPage = minPage;
@@ -505,7 +594,8 @@ class BookReaderEngine {
     const total = this.currentBook.totalPages;
     const minPage = this.currentBook.startPage || 1;
     const leftP = this.currentPage;
-    const rightP = Math.min(leftP + 1, total);
+    const isSinglePage = window.innerWidth <= 1080;
+    const rightP = (!isSinglePage && leftP + 1 <= total) ? leftP + 1 : null;
 
     if (this.bookTitleEl) this.bookTitleEl.textContent = this.currentBook.title;
     if (this.bookBadgeEl) {
@@ -517,15 +607,19 @@ class BookReaderEngine {
     if (this.dockAudioCover) this.dockAudioCover.src = this.currentBook.coverImg;
 
     if (this.dockPageDisplay) {
-      this.dockPageDisplay.innerHTML = `<span class="cur-badge">Sayfa ${leftP}${rightP > leftP ? ' - ' + rightP : ''}</span> / <span>${total}</span>`;
+      if (isSinglePage || rightP === null) {
+        this.dockPageDisplay.innerHTML = `<span class="cur-badge">Sayfa ${leftP}</span> / <span>${total}</span>`;
+      } else {
+        this.dockPageDisplay.innerHTML = `<span class="cur-badge">Sayfa ${leftP} - ${rightP}</span> / <span>${total}</span>`;
+      }
     }
     if (this.quickJumpInput) {
       this.quickJumpInput.value = leftP;
-      this.quickJumpInput.min = minPage;
+      this.quickJumpInput.min = 1;
       this.quickJumpInput.max = total;
     }
 
-    const progressPercent = ((leftP - minPage) / (total - minPage)) * 100;
+    const progressPercent = ((leftP - minPage) / Math.max(1, total - minPage)) * 100;
     if (this.topProgressBar) {
       this.topProgressBar.style.width = `${Math.max(2, progressPercent)}%`;
     }
@@ -536,7 +630,7 @@ class BookReaderEngine {
       this.sliderThumb.style.left = `${Math.max(0, Math.min(100, progressPercent))}%`;
     }
 
-    const isFirst = leftP <= minPage;
+    const isFirst = leftP <= 1;
     const isLast = leftP >= total;
 
     if (this.btnPrev) this.btnPrev.disabled = isFirst;
@@ -544,10 +638,9 @@ class BookReaderEngine {
     if (this.btnNext) this.btnNext.disabled = isLast;
     if (this.edgeNextBtn) this.edgeNextBtn.disabled = isLast;
 
-    const newUrl = `${window.location.pathname}?book=${this.currentBookKey}&page=${leftP}`;
-    window.history.replaceState({ page: leftP, book: this.currentBookKey }, '', newUrl);
+    const newUrl = `${window.location.pathname}?book=${this.currentBook.id}&page=${leftP}`;
+    window.history.replaceState({ page: leftP, book: this.currentBook.id }, '', newUrl);
 
-    this.updateActiveChapterInDrawer();
   }
 
   async preloadAdjacentPages() {
@@ -610,17 +703,28 @@ class BookReaderEngine {
     return `${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
   }
 
-  async changeBook(bookKey) {
-    if (!this.books[bookKey]) return;
+  async changeBook(bookKey, startPage = null) {
+    if (!this.books[bookKey]) {
+      window.location.href = `kitap-oku.html?book_id=${bookKey}${startPage ? '&start_page=' + startPage : ''}`;
+      return;
+    }
     this.currentBookKey = bookKey;
     this.currentBook = this.books[bookKey];
-    this.currentPage = this.currentBook.startPage || 1;
+    this.currentPage = (startPage && !isNaN(startPage)) ? parseInt(startPage, 10) : (this.currentBook.startPage || 1);
 
     this.audio.pause();
-    this.audio.src = this.currentBook.audioSrc;
-    this.audio.load();
+    this.audio.src = this.currentBook.audioSrc || '';
+    if (this.currentBook.audioSrc) {
+      this.audio.load();
+    }
     this.isPlaying = false;
     this.updatePlayButtonUI();
+
+    // Dropdown aktif öğesini güncelle
+    document.querySelectorAll('[data-switch-book]').forEach(item => {
+      const isAct = item.getAttribute('data-switch-book') == this.currentBook.id || item.getAttribute('data-switch-book') == this.currentBookKey;
+      item.classList.toggle('active', isAct);
+    });
 
     this.renderChaptersDrawer();
     this.renderThumbnailsGrid();
@@ -832,8 +936,17 @@ class BookReaderEngine {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const bookKey = link.getAttribute('data-switch-book');
-        this.changeBook(bookKey);
+        const href = link.getAttribute('href') || '';
+        let startP = null;
+        if (href.includes('start_page=')) {
+          startP = (new URLSearchParams(href.split('?')[1])).get('start_page');
+        }
+        this.changeBook(bookKey, startP ? parseInt(startP, 10) : null);
       });
+    });
+
+    window.addEventListener('resize', () => {
+      this.updateUI();
     });
 
     const btnFullscreen = document.getElementById('btnFullscreen');
