@@ -22,15 +22,12 @@ Under NO circumstances shall the user ever encounter:
 
 ---
 
-## 2. CONTINUOUS AUTONOMOUS QUEUE EXECUTION ("NO INTERMEDIATE CHAT UNTIL QUEUE IS EMPTY")
+## 2. SINGLE ACTIVE TASK FOCUS & USER DIRECTIVE SUPREMACY
 
-> ### 🛑 STRICTEST OPERATIONAL CONSTRAINT:
-> **Whenever there is an active ('in_progress') or queued task in the database, the agent is FORBIDDEN from stopping to write intermediate reports or ending the chat turn!**
-> 
-> - When the agent submits a task (`Helper::submitTaskDirectly`), and a subsequent task is dispatched or pending in queue, the agent **MUST NOT STOP** and **MUST NOT WRITE CHAT MESSAGES TO THE USER**.
-> - The agent must immediately proceed to write code, migrate/update databases, run automated live browser tests, and submit the next task.
-> - **Only when all tasks in the queue are 100% finished and zero tasks remain in progress shall the agent deliver the final response to the user.**
-> - Stopping prematurely breaks the autonomous execution pipeline and locks the queue! Continuous chained execution is mandatory.
+> ### 🛑 RED LINE RULE: NEVER JUMP TO OLD TASKS OR IGNORE USER PROMPTS
+> 1. **User Prompt Supremacy:** When the user types an instruction, question, or request directly in the chat, the user's immediate message TAKES ABSOLUTE PRECEDENCE over any background tasks or database queues. The agent MUST NOT ignore the user's message to go execute an older database task.
+> 2. **Single Active Task Isolation:** The agent works EXCLUSIVELY on the current active task explicitly assigned to it (`in_progress`). The agent is STRICTLY FORBIDDEN from proactively querying the database to find older uncompleted tasks, jumping backwards 3-5 tasks, or auto-resuming past backlog items without explicit instruction from the user.
+> 3. **Controlled Delivery & User Turn:** When the active task is completed and submitted via `Helper::submitTaskDirectly()`, the agent MUST deliver the Definition of Done (DoD) report to the user in the chat and conclude its turn, allowing the user to review. The agent shall NOT autonomously jump into another task unless explicitly instructed by the user or running under an intentional batch automation command.
 
 ---
 
