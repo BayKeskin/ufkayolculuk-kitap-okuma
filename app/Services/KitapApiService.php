@@ -375,11 +375,86 @@ class KitapApiService
         }
 
         $book['id']          = (int)($book['id'] ?? 0);
-        $book['start_page']  = isset($book['start_page']) ? max(1, (int)$book['start_page']) : 1;
         $book['total_pages'] = isset($book['total_pages']) ? (int)$book['total_pages'] : 0;
         $book['author']      = !empty($book['author']) ? $book['author'] : 'Ufka Yolculuk Yayınları';
         $book['level']       = !empty($book['level']) ? $book['level'] : 'Tüm Düzeyler';
-        $book['chapters']    = is_array($book['chapters'] ?? null) ? $book['chapters'] : [];
+
+        // Ses dosyası doğrulaması (Boş veya eksikse standart ses dosyasını bağla)
+        if (empty($book['sound_file'])) {
+            $book['sound_file'] = match ($book['id']) {
+                8       => 'https://ufkayolculuk.com/uploads/2025-10/ilkokul-kuslarin-cagrisi.mp3',
+                11      => 'https://ufkayolculuk.com/uploads/2025-10/tevhid-muhafizlari.mp3',
+                12      => 'https://ufkayolculuk.com/uploads/2025-10/lise-gordugume-gormedigime.mp3',
+                13      => 'https://ufkayolculuk.com/uploads/2025-09/Nasil-inanmali-seslikitap_v2.mp3',
+                default => ''
+            };
+        }
+
+        // Metin ve sesin fiilen başladığı doğru başlangıç sayfası
+        $defaultStartPage = match ($book['id']) {
+            8       => 4,
+            11      => 5,
+            12      => 4,
+            13      => 12,
+            default => 1
+        };
+        $book['start_page'] = (!empty($book['start_page']) && (int)$book['start_page'] > 1) 
+            ? (int)$book['start_page'] 
+            : $defaultStartPage;
+
+        // Bölüm ve içindekiler haritası (Boşsa tam zaman damgalı bölümler oluştur)
+        if (empty($book['chapters']) || !is_array($book['chapters'])) {
+            $book['chapters'] = match ($book['id']) {
+                8 => [
+                    ['id' => 1, 'title' => '1. Bölüm - Süleyman Kuş Dili Bilir', 'page' => 4, 'time' => 0.001, 'order_no' => 1],
+                    ['id' => 2, 'title' => '2. Bölüm - Tık Tık Tık', 'page' => 5, 'time' => 22.902, 'order_no' => 2],
+                    ['id' => 3, 'title' => '3. Bölüm - Kuru Olanı Seçmek', 'page' => 10, 'time' => 273.639, 'order_no' => 3],
+                    ['id' => 4, 'title' => '4. Bölüm - İspinoz Bizim Rehberimiz', 'page' => 30, 'time' => 1201.394, 'order_no' => 4],
+                    ['id' => 5, 'title' => '5. Bölüm - Mekke Halkı ve İman', 'page' => 50, 'time' => 2268.448, 'order_no' => 5],
+                    ['id' => 6, 'title' => '6. Bölüm - Doğru Yolda Olmak', 'page' => 60, 'time' => 2738.137, 'order_no' => 6],
+                    ['id' => 7, 'title' => '7. Bölüm - Ya Muhyi', 'page' => 80, 'time' => 3811.117, 'order_no' => 7],
+                    ['id' => 8, 'title' => '8. Bölüm - Şuraya Bakın', 'page' => 100, 'time' => 4817.711, 'order_no' => 8],
+                ],
+                11 => [
+                    ['id' => 1, 'title' => '1. Bölüm - Boş Damacana', 'page' => 5, 'time' => 2.313, 'order_no' => 1],
+                    ['id' => 2, 'title' => '2. Bölüm - Zorunlu Sözleşme', 'page' => 27, 'time' => 1794.223, 'order_no' => 2],
+                    ['id' => 3, 'title' => '3. Bölüm - Melek Gibi Karakter', 'page' => 47, 'time' => 3252.505, 'order_no' => 3],
+                    ['id' => 4, 'title' => '4. Bölüm - Bir Avuç İman', 'page' => 69, 'time' => 5122.901, 'order_no' => 4],
+                    ['id' => 5, 'title' => '5. Bölüm - Kaşıntılı Meraklar', 'page' => 91, 'time' => 6940.573, 'order_no' => 5],
+                    ['id' => 6, 'title' => '6. Bölüm - Doğru-Yanlış Ayrımı', 'page' => 101, 'time' => 7725.088, 'order_no' => 6],
+                    ['id' => 7, 'title' => '7. Bölüm - Mutluluk Neydi?', 'page' => 123, 'time' => 9379.102, 'order_no' => 7],
+                    ['id' => 8, 'title' => '8. Bölüm - Pes Etmeye Bir Kala', 'page' => 139, 'time' => 10609.462, 'order_no' => 8],
+                    ['id' => 9, 'title' => '9. Bölüm - Derbiye Geri Sayım', 'page' => 153, 'time' => 11803.844, 'order_no' => 9],
+                    ['id' => 10, 'title' => '10. Bölüm - Derbi Zamanı', 'page' => 167, 'time' => 12903.47, 'order_no' => 10],
+                    ['id' => 11, 'title' => '11. Bölüm - İsrafil, Cebrail, Azrail, Mikail', 'page' => 185, 'time' => 14237.028, 'order_no' => 11],
+                ],
+                12 => [
+                    ['id' => 1, 'title' => '1. Bölüm - Başlangıç', 'page' => 4, 'time' => 1.212, 'order_no' => 1],
+                    ['id' => 2, 'title' => '2. Bölüm - İlk Adım', 'page' => 9, 'time' => 6.999, 'order_no' => 2],
+                    ['id' => 3, 'title' => '3. Bölüm - Felsefi Arayış', 'page' => 43, 'time' => 3714.842, 'order_no' => 3],
+                    ['id' => 4, 'title' => '4. Bölüm - Kur\'an\'ın Zengin Muhtevası', 'page' => 72, 'time' => 6553.808, 'order_no' => 4],
+                    ['id' => 5, 'title' => '5. Bölüm - İnanç ve Hayat', 'page' => 99, 'time' => 9223.851, 'order_no' => 5],
+                    ['id' => 6, 'title' => '6. Bölüm - Bir Avuç Umut', 'page' => 139, 'time' => 13042.131, 'order_no' => 6],
+                    ['id' => 7, 'title' => '7. Bölüm - Hayatın İçinden', 'page' => 172, 'time' => 16442.525, 'order_no' => 7],
+                    ['id' => 8, 'title' => '8. Bölüm - İnanma İhtiyacı', 'page' => 217, 'time' => 20631.466, 'order_no' => 8],
+                    ['id' => 9, 'title' => '9. Bölüm - Dağların Arasında', 'page' => 242, 'time' => 23241.366, 'order_no' => 9],
+                    ['id' => 10, 'title' => '10. Bölüm - Son Sözler ve Notlar', 'page' => 281, 'time' => 26686.612, 'order_no' => 10],
+                ],
+                13 => [
+                    ['id' => 1, 'title' => '1. Bölüm - Giriş ve Temel Akaid', 'page' => 12, 'time' => 0.019, 'order_no' => 1],
+                    ['id' => 2, 'title' => '2. Bölüm - Eserler ve Akaid Meseleleri', 'page' => 14, 'time' => 266.689, 'order_no' => 2],
+                    ['id' => 3, 'title' => '3. Bölüm - İman Esasları ve Mümin Olmak', 'page' => 49, 'time' => 4778.148, 'order_no' => 3],
+                    ['id' => 4, 'title' => '4. Bölüm - Allah\'a İman ve Tevhid', 'page' => 67, 'time' => 7134.966, 'order_no' => 4],
+                    ['id' => 5, 'title' => '5. Bölüm - İsim ve Sıfatlar', 'page' => 142, 'time' => 17088.111, 'order_no' => 5],
+                    ['id' => 6, 'title' => '6. Bölüm - Kur\'an\'ın Mesajı ve Deliller', 'page' => 235, 'time' => 29591.081, 'order_no' => 6],
+                    ['id' => 7, 'title' => '7. Bölüm - Peygamberlere İman', 'page' => 256, 'time' => 32557.896, 'order_no' => 7],
+                    ['id' => 8, 'title' => '8. Bölüm - Hz. Muhammed\'in Peygamberliği', 'page' => 276, 'time' => 35392.633, 'order_no' => 8],
+                    ['id' => 9, 'title' => '9. Bölüm - Ahiret Günü ve Diriliş', 'page' => 306, 'time' => 39467.533, 'order_no' => 9],
+                    ['id' => 10, 'title' => '10. Bölüm - Kader, Kaza ve Tevekkül', 'page' => 338, 'time' => 43828.759, 'order_no' => 10],
+                ],
+                default => []
+            };
+        }
 
         if (empty($book['category_name']) && !empty($book['categories']) && is_array($book['categories'])) {
             $catNames = [];
@@ -964,7 +1039,7 @@ class KitapApiService
                 'name'          => 'Kuşların Çağrısı',
                 'level'         => 'İlkokul Düzeyi',
                 'author'        => 'Ufka Yolculuk Yayınları',
-                'start_page'    => 1,
+                'start_page'    => 4,
                 'total_pages'   => 239,
                 'cover_image'   => 'https://ufkayolculuk.com/uploads/2025-12/ilkokul_68d9a1038bdcb_693e4d5885287.webp',
                 'image'         => 'https://ufkayolculuk.com/uploads/2025-12/ilkokul_68d9a1038bdcb_693e4d5885287.webp',
@@ -981,7 +1056,7 @@ class KitapApiService
                 'total_pages'   => 185,
                 'cover_image'   => 'https://ufkayolculuk.com/uploads/2025-12/ortaokul_68d9a10f00f07_693e4d673895e.webp',
                 'image'         => 'https://ufkayolculuk.com/uploads/2025-12/ortaokul_68d9a10f00f07_693e4d673895e.webp',
-                'sound_file'    => 'https://ufkayolculuk.com/uploads/2025-10/ortaokul-tevhid-muhafizlari.mp3',
+                'sound_file'    => 'https://ufkayolculuk.com/uploads/2025-10/tevhid-muhafizlari.mp3',
                 'chapters'      => [
                     ['id' => 1, 'title' => '1. Bölüm - Boş Damacana', 'page' => 5, 'time' => 2.313, 'order_no' => 1],
                     ['id' => 2, 'title' => '2. Bölüm - Zorunlu Sözleşme', 'page' => 27, 'time' => 1794.223, 'order_no' => 2],
@@ -1002,7 +1077,7 @@ class KitapApiService
                 'name'          => 'Gördüğüme Görmediğime',
                 'level'         => 'Lise Düzeyi',
                 'author'        => 'Ufka Yolculuk Yayınları',
-                'start_page'    => 1,
+                'start_page'    => 4,
                 'total_pages'   => 306,
                 'cover_image'   => 'https://ufkayolculuk.com/uploads/2025-12/lise_68d9a116d8120_693e4d7585337.webp',
                 'image'         => 'https://ufkayolculuk.com/uploads/2025-12/lise_68d9a116d8120_693e4d7585337.webp',
@@ -1015,7 +1090,7 @@ class KitapApiService
                 'name'          => 'Nasıl İnanmalı?',
                 'level'         => 'Yetişkin Düzeyi',
                 'author'        => 'Ufka Yolculuk Yayınları',
-                'start_page'    => 1,
+                'start_page'    => 12,
                 'total_pages'   => 361,
                 'cover_image'   => 'https://ufkayolculuk.com/uploads/2026-02/nasilinanmali-removebg-preview_69825015406e6.webp',
                 'image'         => 'https://ufkayolculuk.com/uploads/2026-02/nasilinanmali-removebg-preview_69825015406e6.webp',

@@ -622,7 +622,7 @@ class BookReaderEngine {
    */
   getPageAudioStartTime(pageNum) {
     const p = parseInt(pageNum, 10);
-    if (isNaN(p) || p < 1) return null;
+    if (isNaN(p) || p < 1) return 0;
 
     // 1. pageTimestamps haritasında tam eşleşme
     if (this.pageTimestamps && this.pageTimestamps[p]) {
@@ -643,8 +643,15 @@ class BookReaderEngine {
       }
     }
 
-    // 3. Eğer sayfa metinsizse (illüstrasyon/resim), bir önceki geçerli sayfanın zamanını al
+    // 3. Bölüm bilgisi varsa ve sayfa tam eşleşiyorsa
+    const chap = this.findChapterForPage(p);
+    if (chap && chap.page === p && chap.time >= 0) {
+      return chap.time;
+    }
+
+    // 4. Eğer sayfa metinsizse (kapak, illüstrasyon, vb.):
     if (this.pageTimestamps && Object.keys(this.pageTimestamps).length > 0) {
+      // a) Önceki sayfalarda ses ara
       for (let prevP = p - 1; prevP >= 1; prevP--) {
         if (this.pageTimestamps[prevP]) {
           const stamp = this.pageTimestamps[prevP];
@@ -654,15 +661,18 @@ class BookReaderEngine {
           }
         }
       }
+
+      // b) Eğer p henüz ilk sesli sayfadan küçükse (kapak/önsöz), ilk ses zamanını (0) dön
+      const audioPages = Object.keys(this.pageTimestamps).map(Number);
+      const firstAudioP = Math.min(...audioPages);
+      if (p <= firstAudioP) {
+        const firstStamp = this.pageTimestamps[firstAudioP];
+        const val = typeof firstStamp === 'object' ? firstStamp.start : firstStamp;
+        return parseFloat(val || 0);
+      }
     }
 
-    // 4. Bölüm bilgisi varsa ve sayfa tam eşleşiyorsa (yalnızca zaman > 0 ise!)
-    const chap = this.findChapterForPage(p);
-    if (chap && chap.page === p && chap.time > 0) {
-      return chap.time;
-    }
-
-    return null;
+    return 0;
   }
 
   extractFirstDataTime(htmlString) {
@@ -888,12 +898,12 @@ class BookReaderEngine {
     this.renderThumbnailsGrid();
     await this.renderSpread(this.currentPage, 'init');
 
-    if (this.currentPage > 1) {
-      const pTime = this.getPageAudioStartTime(this.currentPage);
-      if (pTime !== null && pTime > 0) {
-        this.audio.currentTime = pTime;
-      }
+    const pTime = this.getPageAudioStartTime(this.currentPage);
+    if (pTime !== null && pTime >= 0) {
+      this.audio.currentTime = pTime;
     }
+
+    this.updateUI();
   }
 
   renderChaptersDrawer() {
