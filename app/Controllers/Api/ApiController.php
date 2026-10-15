@@ -109,7 +109,8 @@ class ApiController extends BaseController
             'book_id'         => (int)$id,
             'sound_file'      => $sync['sound_file'],
             'total_sentences' => $sync['total_sentences'],
-            'sentences'       => $sync['sentences']
+            'sentences'       => $sync['sentences'],
+            'page_timestamps' => $sync['page_timestamps'] ?? (object)[]
         ]);
     }
 

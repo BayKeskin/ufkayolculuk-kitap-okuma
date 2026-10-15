@@ -25,9 +25,13 @@ class Home extends BaseController
 
         $slugMap = [
             'kuslarin-cagrisi'      => 8,
+            'ilkokul'               => 8,
             'tevhid-muhafizlari'    => 11,
+            'ortaokul'              => 11,
             'gordugume-gormedigime' => 12,
+            'lise'                  => 12,
             'nasil-inanmali'        => 13,
+            'yetiskin'              => 13,
         ];
 
         if (is_string($bookParam) && isset($slugMap[strtolower($bookParam)])) {

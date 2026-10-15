@@ -10,7 +10,7 @@ $bCurPage = (int)($startPage ?? $bMinPage);
 if ($bCurPage < 1) $bCurPage = $bMinPage;
 if ($bCurPage > $bTotalPages && $bTotalPages > 0) $bCurPage = $bTotalPages;
 
-$bCoverImg = !empty($activeBook['cover_image']) ? $activeBook['cover_image'] : ($activeBook['image'] ?? 'assets/images/books/book-tevhid-muhafizlari.svg');
+$bCoverImg = !empty($activeBook['cover_image']) ? $activeBook['cover_image'] : (!empty($activeBook['image']) ? $activeBook['image'] : base_url('assets/images/books/book-tevhid-muhafizlari.svg'));
 $bSoundFile = !empty($activeBook['sound_file']) ? $activeBook['sound_file'] : '';
 
 // İlk Çift Sayfa Hesaplaması
@@ -32,8 +32,8 @@ if (!empty($activeBook['pages']) && is_array($activeBook['pages'])) {
     }
 }
 
-$leftScanUrl = $leftPageData['image'] ?? base_url("assets/images/books/book-kuslarin-cagrisi.svg");
-$rightScanUrl = $rightPageData ? ($rightPageData['image'] ?? base_url("assets/images/books/book-kuslarin-cagrisi.svg")) : '';
+$leftScanUrl = $leftPageData['image'] ?? $bCoverImg;
+$rightScanUrl = $rightPageData ? ($rightPageData['image'] ?? $bCoverImg) : '';
 $leftBody = $leftPageData['body_html'] ?? $leftPageData['body'] ?? '';
 $rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['body'] ?? '') : '';
 ?>
@@ -51,13 +51,13 @@ $rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['bo
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
 
   <!-- Bootstrap 5.3 CSS (Yerel) -->
-  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>">
 
   <!-- Font Awesome 6 (Yerel) -->
-  <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="<?= base_url('assets/vendor/fontawesome/css/all.min.css') ?>">
 
   <!-- Okuyucu Özel CSS -->
-  <link rel="stylesheet" href="assets/css/reader.css?v=3.6">
+  <link rel="stylesheet" href="<?= base_url('assets/css/reader.css?v=4.1') ?>">
 </head>
 <body class="reader-body" data-theme="light">
 
@@ -103,7 +103,7 @@ $rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['bo
                 ?>
                 <li>
                   <a class="dropdown-item <?= $isActive ? 'active' : '' ?>" href="<?= base_url('kitap-oku?book_id=' . $bkId . '&start_page=' . $bkStartPage) ?>" data-switch-book="<?= $bkId ?>">
-                    <img src="<?= esc($bkCover) ?>" class="book-thumb-mini" alt="<?= esc($bk['name']) ?>" onerror="this.src='assets/images/books/book-kuslarin-cagrisi.svg'">
+                    <img src="<?= esc($bkCover) ?>" class="book-thumb-mini" alt="<?= esc($bk['name']) ?>" onerror="this.src='<?= base_url('assets/images/books/book-kuslarin-cagrisi.svg') ?>'">
                     <div>
                       <div class="fw-bold"><?= esc($bk['name']) ?></div>
                       <small class="text-muted"><?= esc($bkLevel) ?></small>
@@ -114,7 +114,7 @@ $rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['bo
             <?php else: ?>
               <li>
                 <a class="dropdown-item active" href="<?= base_url('kitap-oku?book_id=11&start_page=5') ?>" data-switch-book="11">
-                  <img src="assets/images/books/book-tevhid-muhafizlari.svg" class="book-thumb-mini" alt="Tevhid Muhafızları">
+                  <img src="<?= base_url('assets/images/books/book-tevhid-muhafizlari.svg') ?>" class="book-thumb-mini" alt="Tevhid Muhafızları">
                   <div>
                     <div class="fw-bold">Tevhid Muhafızları</div>
                     <small class="text-muted">Ortaokul Düzeyi</small>
@@ -407,9 +407,9 @@ $rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['bo
   </script>
 
   <!-- Bootstrap 5.3 JS (Yerel) -->
-  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
 
   <!-- Okuyucu Motoru (reader.js) -->
-  <script src="assets/js/reader.js?v=4.0"></script>
+  <script src="<?= base_url('assets/js/reader.js?v=4.1') ?>"></script>
 </body>
 </html>

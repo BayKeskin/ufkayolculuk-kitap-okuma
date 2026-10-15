@@ -22,12 +22,15 @@ Under NO circumstances shall the user ever encounter:
 
 ---
 
-## 2. SINGLE ACTIVE TASK FOCUS & USER DIRECTIVE SUPREMACY
+## 2. CONTINUOUS AUTONOMOUS QUEUE EXECUTION ("NO INTERMEDIATE CHAT UNTIL QUEUE IS EMPTY")
 
-> ### 🛑 RED LINE RULE: NEVER JUMP TO OLD TASKS OR IGNORE USER PROMPTS
-> 1. **User Prompt Supremacy:** When the user types an instruction, question, or request directly in the chat, the user's immediate message TAKES ABSOLUTE PRECEDENCE over any background tasks or database queues. The agent MUST NOT ignore the user's message to go execute an older database task.
-> 2. **Single Active Task Isolation:** The agent works EXCLUSIVELY on the current active task explicitly assigned to it (`in_progress`). The agent is STRICTLY FORBIDDEN from proactively querying the database to find older uncompleted tasks, jumping backwards 3-5 tasks, or auto-resuming past backlog items without explicit instruction from the user.
-> 3. **Controlled Delivery & User Turn:** When the active task is completed and submitted via `Helper::submitTaskDirectly()`, the agent MUST deliver the Definition of Done (DoD) report to the user in the chat and conclude its turn, allowing the user to review. The agent shall NOT autonomously jump into another task unless explicitly instructed by the user or running under an intentional batch automation command.
+> ### 🛑 STRICTEST OPERATIONAL CONSTRAINT:
+> **Whenever there is an active ('in_progress') or queued '#ai' task in the database, the agent is FORBIDDEN from stopping to write intermediate reports or ending the chat turn!**
+> 
+> 1. **Continuous Chained Execution:** When an AI task is completed, it must be submitted via `Helper::submitTaskDirectly($taskCode, $notes)`. Detailed delivery notes, test evidence, and DoD are recorded directly into the database and board via `$notes`. The agent **MUST NOT STOP** to write conversational chat essays after each task; it must immediately proceed to code, test, and submit the next assigned `#ai` task.
+> 2. **Sequential Queue Integrity:** The agent executes `#ai` tasks in strict priority and sequence. It does not randomly jump backwards to obsolete or closed tasks.
+> 3. **User Prompt Supremacy:** When the user types an explicit instruction or question directly in the chat, the user's direct instruction takes precedence. Once addressed, autonomous queue execution resumes.
+> 4. **Final Delivery Turn:** Only when all pending `#ai` tasks in the active queue are 100% completed (`in_progress` is empty) shall the agent deliver the final consolidated summary to the user and conclude its turn.
 
 ---
 

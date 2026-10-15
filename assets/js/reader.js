@@ -179,9 +179,13 @@ class BookReaderEngine {
 
     const slugMap = {
       'kuslarin-cagrisi': '8',
+      'ilkokul': '8',
       'tevhid-muhafizlari': '11',
+      'ortaokul': '11',
       'gordugume-gormedigime': '12',
-      'nasil-inanmali': '13'
+      'lise': '12',
+      'nasil-inanmali': '13',
+      'yetiskin': '13'
     };
 
     if (bookParam && slugMap[bookParam]) {
@@ -601,14 +605,14 @@ class BookReaderEngine {
     }
   }
 
-  async syncAudioToPage(pageNum) {
+  async syncAudioToPage(pageNum, forcePlay = false) {
     const targetTime = this.getPageAudioStartTime(pageNum);
 
     if (targetTime !== null && targetTime !== undefined && !isNaN(targetTime)) {
       this.audio.currentTime = targetTime;
-      if (this.isPlaying) {
-        this.audio.play().catch(e => console.log('Oynatma kısıtlaması:', e));
-      }
+    }
+    if (forcePlay || this.isPlaying) {
+      this.audio.play().catch(e => console.log('Oynatma kısıtlaması:', e));
     }
     // DİKKAT: targetTime bulunamazsa asla currentTime = 0 yapılmaz! Mevcut ses korunur!
   }
@@ -926,8 +930,17 @@ class BookReaderEngine {
       const card = document.createElement('div');
       card.className = 'thumb-card-item';
       if (i === this.currentPage) card.classList.add('active');
+
+      const cacheKey = `${this.currentBook.apiId}_${i}`;
+      let imgSrc = this.currentBook.coverImg;
+      if (this.pageCache.has(cacheKey) && this.pageCache.get(cacheKey).image) {
+        imgSrc = this.pageCache.get(cacheKey).image;
+      } else {
+        imgSrc = `https://ufkayolculuk.com/uploads/2025-09/pdf_page_${this.currentBook.apiId}_${i}.jpg`;
+      }
+
       card.innerHTML = `
-        <img src="https://ufkayolculuk.com/uploads/2025-09/pdf_page_${this.currentBook.apiId}_${i}.jpg" 
+        <img src="${imgSrc}" 
              alt="Sayfa ${i}" 
              loading="lazy" 
              onerror="this.src='${this.currentBook.coverImg}'">
@@ -957,7 +970,7 @@ class BookReaderEngine {
           this.audio.pause();
         } else {
           if (this.audio.currentTime === 0) {
-            this.syncAudioToPage(this.currentPage);
+            this.syncAudioToPage(this.currentPage, true);
           } else {
             this.audio.play().catch(e => console.log('Oynatma hatası:', e));
           }
@@ -1094,6 +1107,16 @@ class BookReaderEngine {
 
     window.addEventListener('resize', () => {
       this.updateUI();
+    });
+
+    window.addEventListener('popstate', (e) => {
+      if (e.state && e.state.page) {
+        if (e.state.book && String(e.state.book) !== String(this.currentBook.id)) {
+          this.changeBook(String(e.state.book), e.state.page);
+        } else {
+          this.goToPage(e.state.page, false);
+        }
+      }
     });
 
     const btnFullscreen = document.getElementById('btnFullscreen');

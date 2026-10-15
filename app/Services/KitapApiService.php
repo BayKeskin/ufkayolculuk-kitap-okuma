@@ -193,7 +193,7 @@ class KitapApiService
     {
         $raw = $this->request('getBooks', [], 'POST', $useCache);
         if (!is_array($raw) || empty($raw)) {
-            return $this->getBooksFallback();
+            return array_map([$this, 'formatBookItem'], $this->getBooksFallback());
         }
 
         $books = [];
@@ -203,7 +203,7 @@ class KitapApiService
             }
         }
 
-        return !empty($books) ? $books : $this->getBooksFallback();
+        return !empty($books) ? $books : array_map([$this, 'formatBookItem'], $this->getBooksFallback());
     }
 
     /**
@@ -414,6 +414,17 @@ class KitapApiService
             $book['level'] = $levelTitle;
         }
         $book['category_slug'] = $catSlug;
+
+        // Temiz URL slug üretimi (ID ve başlık bazlı)
+        if (empty($book['slug'])) {
+            $book['slug'] = match ((int)$book['id']) {
+                8       => 'kuslarin-cagrisi',
+                11      => 'tevhid-muhafizlari',
+                12      => 'gordugume-gormedigime',
+                13      => 'nasil-inanmali',
+                default => mb_strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $book['name'] ?? 'book-' . $book['id']), '-'))
+            };
+        }
 
         return $book;
     }
@@ -1023,6 +1034,7 @@ class KitapApiService
         $books = $this->getBooksFallback();
         foreach ($books as $b) {
             if ($b['id'] == $bookId) {
+                $b = $this->formatBookItem($b);
                 $b['pages'] = $this->generateFallbackPages($bookId, $b['total_pages']);
                 return $b;
             }
