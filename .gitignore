@@ -30,3 +30,5 @@ public/assets/audio/tevhid-muhafizlari.mp3
 !/writable/debugbar/index.html
 
 php_errors.log
+build/
+.phpunit.result.cache
