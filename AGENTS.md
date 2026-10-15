@@ -112,12 +112,6 @@ Database (Result Rows) ➔ Model (Domain Entity / Clean Data) ➔ Controller (Da
 
 ### [TKMDEV-02] Ufka Yolculuk Kitap Okuma ve Sınav Portalı Kuralları
 - **Teknoloji Yığını:** CodeIgniter 4, PHP 8.2+, MySQL, Bootstrap / Vanilla CSS.
-- **DİNAMİK CODEIGNITER 4 MİMARİSİ (STATİK HTML YASAKTIR):**
-  - Kök dizindeki `.html` dosyaları projenin ilk tasarım aşamasındaki statik front-end prototipleridir.
-  - Asla statik `.html` dosyaları üzerinde "anlık işlem" yapılmayacaktır!
-  - Bütün sayfalar, arayüz bileşenleri ve veri akışları CodeIgniter 4 MVC çatısı altında (`app/Controllers`, `app/Models`, `app/Services`, `app/Views`) canlı API (`KitapApiService`) entegrasyonuyla dinamik çalışmalıdır.
-  - API'den gelen veriler güncellenebilir olduğundan, tüm view şablonları (`app/Views/*.php`) dinamik değişkenleri ve veri modellerini işlemelidir.
-  - Kök `.htaccess`, `.html` uzantılı istekler dahil tüm sayfa isteklerini doğrudan CodeIgniter front controller'ına (`public/index.php`) yönlendirir; asla statik HTML bypass'ı yapılamaz.
 - **Çalışma Modülü:** Kitap okuma takibi, deneme/gerçek sınav modülleri, soru bankası ve puanlama algoritmaları.
 - **Git Senkronizasyonu:** Göreve başlamadan önce `git pull`, tamamlandığında `git push` çalıştırılmalıdır.
 - **QA Doktrini:** Kullanıcı test elemanı değildir; sınav akışı, sayaçlar, şık seçimi ve sonuç hesaplamaları otonom test edilmelidir.
