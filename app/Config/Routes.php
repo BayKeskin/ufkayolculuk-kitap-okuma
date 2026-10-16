@@ -41,10 +41,13 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('deneme-sinavlari.html', 'Home::denemeSinavlari');
 });
 
-// Oturum Test & Simülasyon Rotaları (Localhost geliştirme için)
-$routes->get('auth/me', 'Api\ApiController::me');
+// Oturum Kimlik Doğrulama Rotaları (Canlı API & Simülasyon)
+$routes->post('auth/login', 'Auth::login');
+$routes->get('auth/logout', 'Auth::logout');
+$routes->post('auth/logout', 'Auth::logout');
+$routes->get('logout', 'Auth::logout');
+$routes->get('auth/me', 'Auth::me');
 $routes->get('auth/simulate-login', 'Api\ApiController::simulateLogin');
-$routes->get('auth/logout', 'Api\ApiController::logout');
 
 // API V1 Rotaları
 $routes->group('api/v1', static function ($routes) {

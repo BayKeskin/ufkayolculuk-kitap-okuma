@@ -10,25 +10,39 @@ use Config\Services;
 class AuthFilter implements FilterInterface
 {
     /**
-     * Gelen istek öncesi oturum kontrolü
+     * Gelen istek öncesi oturum kontrolü - Korumalı sayfalara izinsiz erişimi engeller
      */
     public function before(RequestInterface $request, $arguments = null)
     {
         $session = Services::session();
 
-        // 1. Oturum kontrolü ve yerel oturum garantisi (ufkayolculuk.com bağımlılığı tamamen kaldırıldı)
+        // 1. Oturum kontrolü
         if (!$session->has('ufka_user')) {
-            // Portali bağımsız ve kesintisiz çalıştırmak için yerel katılımcı oturumu tanımla
-            $defaultUser = [
-                'id'        => 1,
-                'name'      => 'Ahmet Yılmaz',
-                'email'     => 'ahmet.yilmaz@okuma.tkmdev.com',
-                'role'      => 'student',
-                'grade'     => 'ortaokul',
-                'school'    => 'Gazi Ortaokulu',
-                'city'      => 'İstanbul',
-            ];
-            $session->set('ufka_user', $defaultUser);
+            // İsteğin yapıldığı URL'i kaydet (giriş sonrası geri yönlendirme için)
+            $currentUri = (string)current_url(true);
+            $session->set('redirect_after_login', $currentUri);
+
+            // AJAX veya API isteği ise JSON 401 dön
+            $isAjax = $request->isAJAX() 
+                || str_contains($request->getHeaderLine('Accept'), 'application/json')
+                || str_starts_with(trim($request->getUri()->getPath(), '/'), 'api/');
+
+            if ($isAjax) {
+                return Services::response()
+                    ->setStatusCode(401)
+                    ->setJSON([
+                        'status'         => 'error',
+                        'success'        => false,
+                        'message'        => 'Bu sayfayı veya işlemi görüntülemek için giriş yapmanız gerekmektedir.',
+                        'login_required' => true,
+                        'login_url'      => base_url('/?auth_required=1')
+                    ]);
+            }
+
+            // Normal web sayfası isteği ise anasayfaya yönlendir
+            return redirect()
+                ->to(base_url('/?auth_required=1'))
+                ->with('error', 'Bu korumalı sayfaya erişebilmek için lütfen giriş yapınız.');
         }
 
         // 2. Oturum varsa kullanıcı bilgilerini tüm View katmanına otomatik aktar
@@ -49,6 +63,6 @@ class AuthFilter implements FilterInterface
      */
     public static function getLoginUrl(): string
     {
-        return base_url('/');
+        return base_url('/?auth_required=1');
     }
 }

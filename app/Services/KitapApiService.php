@@ -650,6 +650,60 @@ class KitapApiService
         ] : [];
     }
 
+    /**
+     * Yarışmacı telefon ve doğum tarihi ile canlı API'den kullanıcı doğrular
+     */
+    public function verifyUser(string $phone, string $birthDate): ?array
+    {
+        // Telefon numarasını temizle (sadece rakamlar, başında 90 veya 0 varsa sadeleştir)
+        $cleanPhone = preg_replace('/[^\d]/', '', $phone);
+        if (str_starts_with($cleanPhone, '90') && strlen($cleanPhone) === 12) {
+            $cleanPhone = substr($cleanPhone, 2);
+        }
+        if (str_starts_with($cleanPhone, '0') && strlen($cleanPhone) === 11) {
+            $cleanPhone = substr($cleanPhone, 1);
+        }
+
+        // Doğum tarihi formatı: YYYY-MM-DD
+        $formattedDate = date('Y-m-d', strtotime($birthDate));
+
+        // Canlı API isteği (getUfkaYolculukUser)
+        $response = $this->request('getUfkaYolculukUser', [
+            'mobile'    => $cleanPhone,
+            'birthdate' => $formattedDate,
+        ], 'POST', false);
+
+        if (!empty($response) && is_array($response)) {
+            $userData = $response['data'] ?? ($response['user'] ?? $response);
+            if (is_array($userData) && (!empty($userData['id']) || !empty($userData['name']) || !empty($userData['mobile']))) {
+                $fullName = trim(($userData['name'] ?? '') . ' ' . ($userData['surname'] ?? ''));
+                if (empty($fullName)) {
+                    $fullName = trim(($userData['first_name'] ?? '') . ' ' . ($userData['last_name'] ?? ''));
+                }
+                return [
+                    'id'             => (int)($userData['id'] ?? 1001),
+                    'uniq_id'        => $userData['uniq_id'] ?? null,
+                    'name'           => $fullName ?: 'Yarışmacı',
+                    'first_name'     => $userData['name'] ?? '',
+                    'last_name'      => $userData['surname'] ?? '',
+                    'mobile'         => $cleanPhone,
+                    'birthdate'      => $formattedDate,
+                    'category_title' => $userData['category_title'] ?? ($userData['category'] ?? 'Yetişkin'),
+                    'city'           => $userData['city_name'] ?? ($userData['city'] ?? ''),
+                    'county'         => $userData['county_name'] ?? ($userData['county'] ?? ''),
+                    'school'         => $userData['school_name'] ?? ($userData['school'] ?? ''),
+                    'is_leader'      => $userData['is_leader'] ?? 0,
+                    'is_consultant'  => $userData['is_consultant'] ?? 0,
+                    'consultant_code'=> $userData['consultant_code'] ?? null,
+                    'inviter_code'   => $userData['inviter_code'] ?? null,
+                    'raw'            => $userData,
+                ];
+            }
+        }
+
+        return null;
+    }
+
     protected function getBookTotalPages(int $bookId): int
     {
         $book = $this->getBook($bookId, false);

@@ -40,6 +40,9 @@
   <!-- Sayfaya Özel Modallar -->
   <?= $this->renderSection('modals') ?>
 
+  <!-- Ortak Yarışmacı Giriş Modalı -->
+  <?= $this->include('partials/login_modal') ?>
+
   <!-- Ortak JavaScript Kütüphaneleri -->
   <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
   <script src="<?= base_url('assets/js/header-search.js?v=4.0') ?>"></script>

@@ -2,6 +2,30 @@
 $request = service('request');
 $uri = service('uri');
 $currentPath = trim($uri->getPath(), '/');
+
+$currentUser = $currentUser ?? session('ufka_user');
+$isLoggedIn = !empty($currentUser);
+
+$userInitials = 'UY';
+$userName = 'Kullanıcı';
+$userCategory = 'Katılımcı';
+$userCity = '';
+
+if ($isLoggedIn) {
+    $userName = esc($currentUser['name'] ?? 'Kullanıcı');
+    $userCategory = esc($currentUser['category_title'] ?? 'Katılımcı');
+    $userCity = esc($currentUser['city_name'] ?? '');
+
+    $cleanName = preg_replace('/[^a-zA-ZçğıöşüÇĞİÖŞÜ\s]/u', ' ', $userName);
+    $parts = preg_split('/\s+/', trim($cleanName));
+    if (count($parts) >= 2) {
+        $first = mb_substr($parts[0], 0, 1, 'UTF-8');
+        $last = mb_substr($parts[count($parts) - 1], 0, 1, 'UTF-8');
+        $userInitials = mb_strtoupper($first . $last, 'UTF-8');
+    } elseif (!empty($parts[0])) {
+        $userInitials = mb_strtoupper(mb_substr($parts[0], 0, 2, 'UTF-8'), 'UTF-8');
+    }
+}
 ?>
   <!-- =========================================================================
        Üst Navigasyon Menüsü (Header / Navbar)
@@ -142,13 +166,14 @@ $currentPath = trim($uri->getPath(), '/');
             </div>
           </div>
 
+          <?php if ($isLoggedIn): ?>
           <!-- 2. Kullanıcı Profil Açılır Menüsü (Dropdown) -->
           <div class="nav-dropdown-wrapper" id="userProfileDropdownWrap">
             <button type="button" class="user-nav-dropdown cursor-pointer" id="userNavDropdownBtn" title="Kullanıcı Menüsü" aria-expanded="false">
-              <div class="user-initial-avatar" title="Ahmet Yılmaz">AY</div>
+              <div class="user-initial-avatar" title="<?= $userName ?>"><?= $userInitials ?></div>
               <div class="user-nav-text d-none d-sm-block">
                 <span class="user-nav-greeting">Merhaba,</span>
-                <span class="user-nav-name">Ahmet Yılmaz</span>
+                <span class="user-nav-name"><?= $userName ?></span>
               </div>
               <i class="fa-solid fa-chevron-down user-nav-chevron ms-1 d-none d-sm-inline-block"></i>
             </button>
@@ -156,11 +181,15 @@ $currentPath = trim($uri->getPath(), '/');
             <!-- Profil Açılır Kartı -->
             <div class="portal-popover-menu profile-popover-menu" id="userProfileDropdownMenu">
               <div class="profile-popover-header">
-                <div class="user-avatar-large user-initial-avatar" style="width: 44px; height: 44px; min-width: 44px; font-size: 1rem; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);">AY</div>
+                <div class="user-avatar-large user-initial-avatar" style="width: 44px; height: 44px; min-width: 44px; font-size: 1rem; background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);"><?= $userInitials ?></div>
                 <div class="profile-popover-user-info">
-                  <div class="profile-popover-name">Ahmet Yılmaz</div>
-                  <div class="profile-popover-email">ahmet.yilmaz@okuma.tkmdev.com</div>
-                  <span class="badge bg-primary-subtle text-primary rounded-pill mt-1" style="font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.55rem;">Katılımcı (2025)</span>
+                  <div class="profile-popover-name"><?= $userName ?></div>
+                  <?php if (!empty($userCity)): ?>
+                    <div class="profile-popover-email"><i class="fa-solid fa-location-dot me-1"></i><?= $userCity ?></div>
+                  <?php else: ?>
+                    <div class="profile-popover-email"><?= esc($currentUser['phone'] ?? '') ?></div>
+                  <?php endif; ?>
+                  <span class="badge bg-primary-subtle text-primary rounded-pill mt-1" style="font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.55rem;"><?= $userCategory ?> (<?= esc($currentUser['registration_year'] ?? '2025') ?>)</span>
                 </div>
               </div>
 
@@ -192,12 +221,19 @@ $currentPath = trim($uri->getPath(), '/');
 
               <div class="popover-divider"></div>
 
-              <a href="<?= base_url('auth/logout') ?>" class="profile-menu-item logout-item text-danger">
+              <a href="<?= base_url('auth/logout') ?>" id="navLogoutBtn" class="profile-menu-item logout-item text-danger">
                 <i class="fa-solid fa-arrow-right-from-bracket menu-icon text-danger"></i>
                 <span>Çıkış Yap</span>
               </a>
             </div>
           </div>
+          <?php else: ?>
+          <!-- Giriş Yap Butonu (Giriş Yapılmamışsa) -->
+          <button type="button" class="btn btn-primary d-inline-flex align-items-center gap-2 px-3 py-2 fw-semibold rounded-pill shadow-sm" id="navLoginBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            <span>Giriş Yap</span>
+          </button>
+          <?php endif; ?>
 
           <!-- Mobil Menü Butonu -->
           <button type="button" class="icon-action-btn d-lg-none" id="mobileMenuToggle" title="Menü">
