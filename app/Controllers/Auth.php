@@ -47,7 +47,10 @@ class Auth extends BaseController
 
         if ($user && !empty($user['id'])) {
             // Oturumu başlat
-            session()->set('ufka_user', $user);
+            session()->set([
+                'isLoggedIn' => true,
+                'ufka_user'  => $user,
+            ]);
             
             // Çerez desteği (Cross-tab ve okuyucu için)
             setcookie('uy_user_id', (string)$user['id'], time() + (86400 * 30), '/');
@@ -76,7 +79,7 @@ class Auth extends BaseController
      */
     public function logout()
     {
-        session()->remove('ufka_user');
+        session()->remove(['isLoggedIn', 'ufka_user', 'redirect_after_login']);
         session()->destroy();
 
         if (isset($_COOKIE['uy_user_id'])) {

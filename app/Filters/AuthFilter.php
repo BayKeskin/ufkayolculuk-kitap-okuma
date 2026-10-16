@@ -17,7 +17,9 @@ class AuthFilter implements FilterInterface
         $session = Services::session();
 
         // 1. Oturum kontrolü
-        if (!$session->has('ufka_user')) {
+        $isLoggedIn = (bool)($session->get('isLoggedIn') || $session->has('ufka_user'));
+
+        if (!$isLoggedIn) {
             // İsteğin yapıldığı URL'i kaydet (giriş sonrası geri yönlendirme için)
             $currentUri = (string)current_url(true);
             $session->set('redirect_after_login', $currentUri);

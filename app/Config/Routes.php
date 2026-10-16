@@ -23,22 +23,28 @@ $routes->get('yonerge', 'Home::sayfa/yonerge');
 $routes->get('sss', 'Home::sayfa/sss');
 $routes->get('kvkk', 'Home::sayfa/uy-kvkk-aydinlatma-metni');
 
-// Kitap Okuma Sayfaları (Herkese Açık - kitap-oku, kitapoku, kitap_oku ve .html varyasyonları)
-$routes->get('kitap-oku', 'Home::kitapOku');
-$routes->get('kitap-oku.html', 'Home::kitapOku');
-$routes->get('kitapoku', 'Home::kitapOku');
-$routes->get('kitapoku.html', 'Home::kitapOku');
-$routes->get('kitap_oku', 'Home::kitapOku');
-$routes->get('kitap_oku.html', 'Home::kitapOku');
-
-// Oturum Gerektiren Korumalı Sayfalar (Cross-Subdomain AuthFilter)
+// Oturum Gerektiren Korumalı Sayfalar (Profil, Kitap Okuma ve Sınav Modülleri)
 $routes->group('', ['filter' => 'auth'], static function ($routes) {
-    $routes->get('sinav-ekrani', 'Home::sinavEkrani');
-    $routes->get('sinav-ekrani.html', 'Home::sinavEkrani');
+    // 1. Profil & Dashboard Modülü
     $routes->get('dashboard', 'Home::dashboard');
     $routes->get('dashboard.html', 'Home::dashboard');
+    $routes->get('profil', 'Home::dashboard');
+    $routes->get('profil.html', 'Home::dashboard');
+    $routes->get('profile', 'Home::dashboard');
+
+    // 2. Sınav Modülü
+    $routes->get('sinav-ekrani', 'Home::sinavEkrani');
+    $routes->get('sinav-ekrani.html', 'Home::sinavEkrani');
     $routes->get('deneme-sinavlari', 'Home::denemeSinavlari');
     $routes->get('deneme-sinavlari.html', 'Home::denemeSinavlari');
+
+    // 3. Kitap Okuma Modülü
+    $routes->get('kitap-oku', 'Home::kitapOku');
+    $routes->get('kitap-oku.html', 'Home::kitapOku');
+    $routes->get('kitapoku', 'Home::kitapOku');
+    $routes->get('kitapoku.html', 'Home::kitapOku');
+    $routes->get('kitap_oku', 'Home::kitapOku');
+    $routes->get('kitap_oku.html', 'Home::kitapOku');
 });
 
 // Oturum Kimlik Doğrulama Rotaları (Canlı API & Simülasyon)
