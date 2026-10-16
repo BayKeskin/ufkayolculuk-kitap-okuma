@@ -54,12 +54,17 @@ class Home extends BaseController
         $pageParam = $this->request->getGet('page') ?? $this->request->getGet('start_page');
         $startPage = $pageParam !== null ? max(1, (int)$pageParam) : ($activeBook['start_page'] ?? 1);
         $autoAudio = (bool)($this->request->getGet('audio') ?? $this->request->getGet('play') ?? false);
+        $sessionUser = session()->get('ufka_user');
+        $userId = (int)($sessionUser['id'] ?? (isset($_COOKIE['uy_user_id']) ? $_COOKIE['uy_user_id'] : 1001));
+        $userProgress = $this->apiService->getUserProgress($userId, $bookId);
 
         return view('kitap_oku', [
-            'activeBook' => $activeBook,
-            'allBooks'   => $allBooks,
-            'startPage'  => $startPage,
-            'autoAudio'  => $autoAudio,
+            'activeBook'   => $activeBook,
+            'allBooks'     => $allBooks,
+            'startPage'    => $startPage,
+            'autoAudio'    => $autoAudio,
+            'userProgress' => $userProgress,
+            'userId'       => $userId,
         ]);
     }
 

@@ -1374,3 +1374,102 @@ body.zoom-mode .page-scan-img {
   }
 }
 
+/* ==========================================================================
+   İlerleme & Kaldığı Yeri Hatırlama Modalları ve Toast Stilleri
+   ========================================================================== */
+.resume-modal-content {
+  background: #ffffff;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35);
+}
+.resume-modal-banner {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+}
+.resume-icon-circle {
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  color: #ffffff;
+}
+.resume-info-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+.resume-stat-icon {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.completed-modal-banner {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+.completed-trophy-circle {
+  width: 72px;
+  height: 72px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #fef08a;
+}
+
+.reader-autosave-toast {
+  position: fixed;
+  bottom: 85px;
+  right: 25px;
+  z-index: 1060;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(8px);
+  color: #f8fafc;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.reader-autosave-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-theme="dark"] .resume-modal-content,
+[data-theme="dark"] .completed-modal-content {
+  background: #111827;
+  color: #f1f5f9;
+}
+[data-theme="dark"] .resume-info-card {
+  background: #1e293b;
+  border-color: #334155;
+}
+[data-theme="dark"] .resume-stat-icon.bg-primary-subtle {
+  background: rgba(2, 132, 199, 0.2) !important;
+}
+[data-theme="dark"] .resume-stat-icon.bg-info-subtle {
+  background: rgba(14, 165, 233, 0.2) !important;
+}
+[data-theme="dark"] .resume-modal-content .modal-body,
+[data-theme="dark"] .completed-modal-content .modal-body {
+  background: #111827 !important;
+}
+[data-theme="dark"] .resume-info-card strong {
+  color: #f8fafc !important;
+}

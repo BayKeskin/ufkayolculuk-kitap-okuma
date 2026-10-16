@@ -65,6 +65,17 @@ class BookReaderEngine {
     this.isPlaying = false;
     this.playbackSpeeds = [1.0, 1.25, 1.5, 1.75, 2.0];
     this.speedIndex = 0;
+
+    // Okuma İlerlemesi & Kaldığı Yeri Hatırlama Durum Değişkenleri
+    this.userId = window.USER_ID || parseInt(localStorage.getItem('uy_user_id') || '1001', 10);
+    try { localStorage.setItem('uy_user_id', this.userId); } catch (e) {}
+    this.readSeconds = 0;
+    this.hasShownCompletionModal = false;
+    this.hasShownResumeModal = false;
+    this.lastSavedProgress = null;
+    this.lastSavedTime = 0;
+    this.toastTimeout = null;
+    this.pendingResume = null;
   }
 
   getBaseUrl() {
@@ -162,6 +173,9 @@ class BookReaderEngine {
       }
     }
 
+    // Kullanıcının kayıtlı ilerlemesini kontrol et ve devam et modalını göster
+    this.checkUserProgressOnLoad();
+
     if (this.autoAudio) {
       setTimeout(() => {
         if (this.btnPlayMaster && !this.isPlaying) {
@@ -254,6 +268,19 @@ class BookReaderEngine {
     this.drawerToc = document.getElementById('drawerToc');
     this.drawerOverlay = document.getElementById('drawerOverlay');
     this.modalThumbnails = document.getElementById('modalThumbnails');
+
+    // Kaldığı Yeri Hatırlama ve Tebrik Modalı Elementleri
+    this.modalResumeProgress = document.getElementById('modalResumeProgress');
+    this.btnResumeContinue = document.getElementById('btnResumeContinue');
+    this.btnResumeRestart = document.getElementById('btnResumeRestart');
+    this.resumePageNumber = document.getElementById('resumePageNumber');
+    this.resumeAudioTime = document.getElementById('resumeAudioTime');
+    this.resumeProgressBar = document.getElementById('resumeProgressBar');
+    this.resumeProgressPercent = document.getElementById('resumeProgressPercent');
+
+    this.modalBookCompleted = document.getElementById('modalBookCompleted');
+    this.btnCompletedRestart = document.getElementById('btnCompletedRestart');
+    this.readerAutosaveToast = document.getElementById('readerAutosaveToast');
   }
 
   initAudioPlayer() {
@@ -278,6 +305,7 @@ class BookReaderEngine {
     this.audio.addEventListener('pause', () => {
       this.isPlaying = false;
       this.updatePlayButtonUI();
+      this.saveProgress(false);
     });
 
     this.audio.addEventListener('ended', () => {
@@ -554,6 +582,20 @@ class BookReaderEngine {
     this.updateUI();
     this.preloadAdjacentPages();
     localStorage.setItem(`ufka_last_page_${this.currentBookKey}`, this.currentPage);
+
+    // Sayfa değiştiğinde otomatik kaydet
+    if (direction !== 'init') {
+      this.saveProgress(false);
+    }
+
+    // Kitabın son sayfasına ulaşıldıysa is_completed = 1 kaydet ve tebrik modalını göster
+    if (leftNum >= totalPages || (rightNum && rightNum >= totalPages)) {
+      this.saveProgress(true);
+      if (!this.hasShownCompletionModal) {
+        this.hasShownCompletionModal = true;
+        this.showCelebrationModal();
+      }
+    }
   }
 
   /**
@@ -1210,6 +1252,215 @@ class BookReaderEngine {
         }
       }, { passive: true });
     }
+
+    // Kaldığı Yerden Devam Et ve Yeniden Başla Buton Dinleyicileri
+    if (this.btnResumeContinue) {
+      this.btnResumeContinue.addEventListener('click', () => this.resumeFromProgress());
+    }
+    if (this.btnResumeRestart) {
+      this.btnResumeRestart.addEventListener('click', () => this.restartFromBeginning());
+    }
+    if (this.btnCompletedRestart) {
+      this.btnCompletedRestart.addEventListener('click', () => this.restartFromBeginning());
+    }
+
+    // 1 saniyelik okuma süresi sayacı (Aktif okuma/dinleme süresi)
+    setInterval(() => {
+      if (document.visibilityState === 'visible' || this.isPlaying) {
+        this.readSeconds++;
+      }
+    }, 1000);
+
+    // 15 saniyede bir periyodik debounced otomatik kayıt (saveUserProgress)
+    setInterval(() => {
+      if (this.readSeconds > 0 || this.isPlaying) {
+        this.saveProgress(false);
+      }
+    }, 15000);
+  }
+
+  /**
+   * Kullanıcının okuma ilerlemesini API'ye kaydeder (saveUserProgress)
+   */
+  async saveProgress(isCompleted = false) {
+    const bookId = this.currentBook.apiId || parseInt(this.currentBook.id, 10);
+    const curPage = this.currentPage || 1;
+    const curAudio = this.audio ? Math.round(this.audio.currentTime * 10) / 10 : 0;
+    const readSec = this.readSeconds || 0;
+    const comp = (isCompleted || curPage >= this.currentBook.totalPages) ? 1 : 0;
+
+    // Debounce: 2 saniye içinde aynı sayfa/ses verisi için mükerrer istek atma
+    const now = Date.now();
+    if (this.lastSavedProgress &&
+        this.lastSavedProgress.page === curPage &&
+        Math.abs(this.lastSavedProgress.audio_time - curAudio) < 1.0 &&
+        this.lastSavedProgress.is_completed === comp &&
+        (now - this.lastSavedTime) < 2000) {
+      return;
+    }
+
+    const payload = {
+      user_id: this.userId,
+      book_id: bookId,
+      page: curPage,
+      audio_time: curAudio,
+      read_seconds: readSec,
+      is_completed: comp
+    };
+
+    this.lastSavedProgress = payload;
+    this.lastSavedTime = now;
+
+    try {
+      localStorage.setItem(`ufka_progress_${this.userId}_${bookId}`, JSON.stringify(payload));
+      localStorage.setItem(`ufka_last_page_${bookId}`, curPage);
+
+      const url = `${this.getBaseUrl()}api/v1/progress/sync`;
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (resp.ok) {
+        this.showAutoSaveToast();
+      }
+    } catch (e) {
+      console.warn('İlerleme senkronizasyonu hatası:', e);
+    }
+  }
+
+  /**
+   * Otomatik kayıt görsel toast bildirimi
+   */
+  showAutoSaveToast() {
+    if (!this.readerAutosaveToast) return;
+    this.readerAutosaveToast.classList.add('show');
+    clearTimeout(this.toastTimeout);
+    this.toastTimeout = setTimeout(() => {
+      if (this.readerAutosaveToast) {
+        this.readerAutosaveToast.classList.remove('show');
+      }
+    }, 1800);
+  }
+
+  /**
+   * Sayfa açılışında kayıtlı ilerlemeyi kontrol eder ve Resume modalını açar
+   */
+  async checkUserProgressOnLoad() {
+    const bookId = this.currentBook.apiId || parseInt(this.currentBook.id, 10);
+    let prog = window.USER_PROGRESS;
+
+    // Eğer window nesnesinde gelmediyse API'den çek
+    if (!prog || !prog.page) {
+      try {
+        const res = await fetch(`${this.getBaseUrl()}api/v1/progress/${this.userId}/${bookId}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.progress) {
+            prog = data.progress;
+          }
+        }
+      } catch (e) {
+        const local = localStorage.getItem(`ufka_progress_${this.userId}_${bookId}`);
+        if (local) {
+          try { prog = JSON.parse(local); } catch(err) {}
+        }
+      }
+    }
+
+    if (!prog) return;
+
+    const savedPage = parseInt(prog.last_page || prog.page || 1, 10);
+    const savedAudioTime = parseFloat(prog.audio_time || 0);
+    const startPage = this.currentBook.startPage || 1;
+
+    // URL'de özel bir "?page=X" sorgusu varsa ve kullanıcı özellikle oraya geldiyse açma
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasExplicitPageParam = urlParams.has('page') || urlParams.has('start_page');
+
+    if (!hasExplicitPageParam && (savedPage > startPage || savedPage > 1 || savedAudioTime > 5)) {
+      this.pendingResume = {
+        page: savedPage,
+        audioTime: savedAudioTime
+      };
+
+      const totalPages = this.currentBook.totalPages || 185;
+      const pct = Math.min(100, Math.max(1, Math.round((savedPage / totalPages) * 100)));
+
+      if (this.resumePageNumber) this.resumePageNumber.textContent = `Sayfa ${savedPage}`;
+      if (this.resumeAudioTime) this.resumeAudioTime.textContent = this.formatTime(savedAudioTime);
+      if (this.resumeProgressBar) this.resumeProgressBar.style.width = `${pct}%`;
+      if (this.resumeProgressPercent) this.resumeProgressPercent.textContent = `%${pct}`;
+
+      if (this.modalResumeProgress && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        const bsModal = new bootstrap.Modal(this.modalResumeProgress);
+        bsModal.show();
+        this.hasShownResumeModal = true;
+      }
+    }
+  }
+
+  /**
+   * Kaldığı yerden devam et butonuna basıldığında tetiklenir
+   */
+  async resumeFromProgress() {
+    if (!this.pendingResume) return;
+    const { page, audioTime } = this.pendingResume;
+
+    // Hedef sayfayı aç
+    await this.goToPage(page, false);
+
+    // Ses çaları o saniyeye konumlandır
+    if (this.audio) {
+      if (audioTime > 0) {
+        this.audio.currentTime = audioTime;
+      }
+      if (this.autoAudio) {
+        this.audio.play().catch(e => console.log('Oynatma kısıtlaması:', e));
+      }
+    }
+
+    // Modalı kapat
+    if (this.modalResumeProgress && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      const inst = bootstrap.Modal.getInstance(this.modalResumeProgress);
+      if (inst) inst.hide();
+    }
+  }
+
+  /**
+   * Baştan başla butonuna basıldığında tetiklenir
+   */
+  async restartFromBeginning() {
+    this.hasShownCompletionModal = false;
+    const startP = this.currentBook.startPage || 1;
+    await this.goToPage(startP, false);
+    if (this.audio) {
+      this.audio.currentTime = 0;
+      this.audio.pause();
+    }
+    if (this.modalResumeProgress && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      const inst = bootstrap.Modal.getInstance(this.modalResumeProgress);
+      if (inst) inst.hide();
+    }
+    if (this.modalBookCompleted && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      const inst = bootstrap.Modal.getInstance(this.modalBookCompleted);
+      if (inst) inst.hide();
+    }
+    this.saveProgress(false);
+  }
+
+  /**
+   * Kitap tamamlandığında tebrik modalını gösterir
+   */
+  showCelebrationModal() {
+    if (this.modalBookCompleted && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      const bsModal = new bootstrap.Modal(this.modalBookCompleted);
+      bsModal.show();
+    }
   }
 
   openDrawer() {
@@ -1249,3 +1500,4 @@ class BookReaderEngine {
     document.body.classList.toggle('zoom-mode', this.isZoomed);
   }
 }
+

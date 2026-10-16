@@ -60,6 +60,9 @@ $routes->group('api/v1', static function ($routes) {
     $routes->get('leaderboard', 'Api\ApiController::leaderboard');
     $routes->get('stats', 'Api\ApiController::stats');
     $routes->get('progress/(:num)/(:num)', 'Api\ApiController::getProgress/$1/$2');
+    $routes->get('progress/(:num)', 'Api\ApiController::getProgress/$1');
+    $routes->post('progress/sync', 'Api\ApiController::saveProgress');
+    $routes->post('saveUserProgress', 'Api\ApiController::saveProgress');
 
     // Sayfalar & İçerikler REST API
     $routes->get('pages', 'Api\ApiController::pages');
@@ -69,6 +72,12 @@ $routes->group('api/v1', static function ($routes) {
     // Oturum Korumalı API Rotaları
     $routes->group('', ['filter' => 'auth'], static function ($routes) {
         $routes->get('user/profile', 'Api\ApiController::me');
-        $routes->post('progress/sync', 'Api\ApiController::saveProgress');
     });
 });
+
+// Root Düzeyinde İlerleme Senkronizasyon Kısayolları
+$routes->post('progress/sync', 'Api\ApiController::saveProgress');
+$routes->post('saveUserProgress', 'Api\ApiController::saveProgress');
+$routes->get('progress/(:num)/(:num)', 'Api\ApiController::getProgress/$1/$2');
+$routes->get('progress/(:num)', 'Api\ApiController::getProgress/$1');
+

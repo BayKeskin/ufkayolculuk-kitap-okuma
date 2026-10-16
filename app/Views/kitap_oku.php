@@ -396,6 +396,101 @@ $rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['bo
     </div>
   </div>
 
+  <!-- =========================================================================
+       Kaldığınız Yerden Devam Edin Modalı (Resume Progress Modal)
+       ========================================================================= -->
+  <div class="modal fade" id="modalResumeProgress" tabindex="-1" aria-labelledby="modalResumeLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content resume-modal-content rounded-4 border-0 shadow-lg overflow-hidden">
+        <div class="resume-modal-banner p-4 text-white text-center position-relative">
+          <div class="resume-icon-circle mx-auto mb-3 shadow">
+            <i class="fa-solid fa-bookmark"></i>
+          </div>
+          <h4 class="modal-title fw-bold" id="modalResumeLabel">Kaldığınız Yerden Devam Edin</h4>
+          <p class="mb-0 text-white-50 fs-6" id="resumeBookTitle"><?= esc($bTitle) ?></p>
+        </div>
+        <div class="modal-body p-4 bg-white">
+          <div class="resume-info-card p-3 rounded-3 mb-4 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+              <div class="resume-stat-icon text-primary bg-primary-subtle rounded-circle p-3">
+                <i class="fa-solid fa-book-open fa-lg"></i>
+              </div>
+              <div>
+                <span class="text-muted d-block small">Kayıtlı Sayfa</span>
+                <strong class="fs-5 text-dark" id="resumePageNumber">Sayfa <?= (int)($userProgress['last_page'] ?? $userProgress['page'] ?? 1) ?></strong>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+              <div class="resume-stat-icon text-info bg-info-subtle rounded-circle p-3">
+                <i class="fa-solid fa-clock fa-lg"></i>
+              </div>
+              <div>
+                <span class="text-muted d-block small">Ses Konumu</span>
+                <strong class="fs-5 text-dark" id="resumeAudioTime">00:00</strong>
+              </div>
+            </div>
+          </div>
+          <div class="progress mb-2" style="height: 8px; border-radius: 4px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" id="resumeProgressBar" role="progressbar" style="width: 0%"></div>
+          </div>
+          <div class="d-flex justify-content-between text-muted small mb-4">
+            <span>Tamamlanma Oranı</span>
+            <span class="fw-bold text-primary" id="resumeProgressPercent">%0</span>
+          </div>
+          <div class="d-grid gap-2">
+            <button type="button" class="btn btn-primary btn-lg rounded-pill py-3 fw-bold shadow-sm" id="btnResumeContinue">
+              <i class="fa-solid fa-play me-2"></i> Kaldığım Yerden Devam Et
+            </button>
+            <button type="button" class="btn btn-outline-secondary rounded-pill py-2" id="btnResumeRestart" data-bs-dismiss="modal">
+              <i class="fa-solid fa-rotate-left me-2"></i> Baştan Başla
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       Kitap Tamamlama Tebrik Modalı (Book Completed Celebration Modal)
+       ========================================================================= -->
+  <div class="modal fade" id="modalBookCompleted" tabindex="-1" aria-labelledby="modalCompletedLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content completed-modal-content rounded-4 border-0 shadow-lg overflow-hidden text-center">
+        <div class="completed-modal-banner p-4 text-white position-relative">
+          <div class="completed-trophy-circle mx-auto mb-3 shadow">
+            <i class="fa-solid fa-trophy"></i>
+          </div>
+          <h3 class="modal-title fw-bold" id="modalCompletedLabel">Tebrikler! 🎉</h3>
+          <p class="mb-0 text-white-50">Kitabı Başarıyla Tamamladınız!</p>
+        </div>
+        <div class="modal-body p-4 bg-white">
+          <p class="text-muted mb-4 fs-6">
+            <strong><?= esc($bTitle) ?></strong> kitabının tüm sayfalarını başarıyla okudunuz. Şimdi online deneme sınavlarına girerek bilgilerinizi test edebilir ve kürsüde yerinizi alabilirsiniz!
+          </p>
+          <div class="d-grid gap-3">
+            <a href="<?= base_url('deneme-sinavlari') ?>" class="btn btn-warning btn-lg rounded-pill py-3 fw-bold shadow text-dark">
+              <i class="fa-solid fa-file-signature me-2"></i> Online Deneme Sınavına Gir
+            </a>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-outline-secondary flex-grow-1 rounded-pill" id="btnCompletedRestart">
+                <i class="fa-solid fa-arrow-rotate-left me-1"></i> Başa Dön
+              </button>
+              <button type="button" class="btn btn-light flex-grow-1 rounded-pill" data-bs-dismiss="modal">
+                Kapat
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Otomatik Kayıt Toast Bildirimi -->
+  <div class="reader-autosave-toast shadow" id="readerAutosaveToast">
+    <i class="fa-solid fa-cloud-arrow-up text-success me-2"></i>
+    <span>İlerlemeniz kaydedildi</span>
+  </div>
+
   <!-- Dinamik CodeIgniter Veri Köprüsü -->
   <script>
     window.BASE_URL = '<?= rtrim(base_url(), '/') . '/' ?>';
@@ -404,12 +499,14 @@ $rightBody = $rightPageData ? ($rightPageData['body_html'] ?? $rightPageData['bo
     window.START_PAGE = <?= (int)$bStartPage ?>;
     window.TARGET_PAGE = <?= (int)$bCurPage ?>;
     window.AUTO_AUDIO = <?= $autoAudio ? 'true' : 'false' ?>;
+    window.USER_ID = <?= (int)($userId ?? 1001) ?>;
+    window.USER_PROGRESS = <?= json_encode($userProgress ?? null, JSON_UNESCAPED_UNICODE) ?>;
   </script>
 
   <!-- Bootstrap 5.3 JS (Yerel) -->
   <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
 
   <!-- Okuyucu Motoru (reader.js) -->
-  <script src="<?= base_url('assets/js/reader.js?v=4.1') ?>"></script>
+  <script src="<?= base_url('assets/js/reader.js?v=4.3') ?>"></script>
 </body>
 </html>

@@ -139,10 +139,31 @@ class ApiController extends BaseController
      */
     public function saveProgress()
     {
-        $json = $this->request->getJSON(true) ?? $this->request->getPost();
+        $json = null;
+        try {
+            $json = $this->request->getJSON(true);
+        } catch (\Throwable $e) {
+            $json = null;
+        }
+        if (empty($json) || !is_array($json)) {
+            $json = $this->request->getPost();
+        }
+        if (empty($json) || !is_array($json)) {
+            $raw = $this->request->getBody();
+            if (!empty($raw)) {
+                $decoded = json_decode($raw, true);
+                if (is_array($decoded)) {
+                    $json = $decoded;
+                }
+            }
+        }
+        if (!is_array($json)) {
+            $json = [];
+        }
+
         $sessionUser = session()->get('ufka_user');
 
-        $userId      = (int)($json['user_id'] ?? $sessionUser['id'] ?? 1001);
+        $userId      = (int)($json['user_id'] ?? $sessionUser['id'] ?? (isset($_COOKIE['uy_user_id']) ? $_COOKIE['uy_user_id'] : 1001));
         $bookId      = (int)($json['book_id'] ?? 0);
         $page        = (int)($json['page'] ?? 1);
         $audioTime   = (float)($json['audio_time'] ?? 0.0);
