@@ -209,6 +209,10 @@ if ($isLoggedIn) {
                   <i class="fa-solid fa-bookmark menu-icon text-primary"></i>
                   <span>Yarışma Kitapları</span>
                 </a>
+                <a href="<?= base_url('deneme-sinavlari') ?>" class="profile-menu-item <?= str_starts_with($currentPath, 'deneme-sinavlari') ? 'active' : '' ?>">
+                  <i class="fa-solid fa-laptop-code menu-icon text-info"></i>
+                  <span>Deneme Sınavları</span>
+                </a>
                 <a href="<?= base_url('siralamalar') ?>" class="profile-menu-item <?= str_starts_with($currentPath, 'siralamalar') ? 'active' : '' ?>">
                   <i class="fa-solid fa-trophy menu-icon text-warning"></i>
                   <span>Başarı Sıralamaları</span>
