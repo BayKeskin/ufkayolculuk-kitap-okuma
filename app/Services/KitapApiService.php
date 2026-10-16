@@ -558,7 +558,9 @@ class KitapApiService
         // 1. Yerel Oturum ve Önbellek Kaydı (Offline Resiliency)
         $sessionKey = "user_progress_{$userId}_{$bookId}";
         try {
-            session()->set($sessionKey, $postData);
+            if (!is_cli()) {
+                session()->set($sessionKey, $postData);
+            }
             cache()->save('kitap_' . $sessionKey, $postData, 86400 * 30);
         } catch (\Throwable $e) {}
 
@@ -590,13 +592,17 @@ class KitapApiService
         // 1. Önce yerel oturum / cache kontrolü
         if ($bookId !== null) {
             $sessionKey = "user_progress_{$userId}_{$bookId}";
-            $local = session()->get($sessionKey);
-            if (!empty($local) && is_array($local)) {
-                if (!isset($local['last_page']) && isset($local['page'])) {
-                    $local['last_page'] = $local['page'];
+            try {
+                if (!is_cli()) {
+                    $local = session()->get($sessionKey);
+                    if (!empty($local) && is_array($local)) {
+                        if (!isset($local['last_page']) && isset($local['page'])) {
+                            $local['last_page'] = $local['page'];
+                        }
+                        return $local;
+                    }
                 }
-                return $local;
-            }
+            } catch (\Throwable $e) {}
             try {
                 $cached = cache('kitap_' . $sessionKey);
                 if (!empty($cached) && is_array($cached)) {
@@ -1022,6 +1028,163 @@ class KitapApiService
                 'answer'   => 'Deneme sınavlarına sınav süresi içerisinde dilediğiniz kadar katılabilir, yanlışlarınızı görerek eksik konularınızı pekiştirebilirsiniz.',
             ],
         ];
+    }
+
+    // =========================================================================
+    // CANLI REST API ENTEGRASYONLARI (SINAVLAR, KULLANICI, PROFİL, BOT VE CMS)
+    // =========================================================================
+
+    /**
+     * Aktif olan sınav kategorilerini sıralı olarak döner (İlkokul, Ortaokul, Lise, Yetişkin vb.)
+     */
+    public function getExamCategories(bool $useCache = true): array
+    {
+        $res = $this->request('getExamCategories', [], 'GET', $useCache);
+        return is_array($res) ? $res : [];
+    }
+
+    /**
+     * Web sitesindeki aktif kategorileri, alt kategorileri ve içerik sayılarıyla döner
+     */
+    public function getWebCategories(?int $parentId = null, ?string $slug = null, int $tree = 1, bool $useCache = true): array
+    {
+        $endpoint = ($parentId !== null && $parentId !== '')
+            ? 'getWebCategories/' . $parentId
+            : 'getWebCategories';
+
+        $params = ['tree' => $tree];
+        if (!empty($slug)) {
+            $params['slug'] = $slug;
+        }
+
+        $res = $this->request($endpoint, $params, 'GET', $useCache);
+        return is_array($res) ? $res : [];
+    }
+
+    /**
+     * Kullanıcı ve sınav ID değerleriyle yeni bir question_forms oturum kaydı oluşturur
+     */
+    public function createQuestionForm(int $userId, int $examId): ?array
+    {
+        return $this->request('createQuestionForm', [
+            'user_id' => $userId,
+            'exam_id' => $examId,
+        ], 'POST', false);
+    }
+
+    /**
+     * Kullanıcının tek bir soruya verdiği yanıtı sunucuya kaydeder
+     */
+    public function postAnswer(int $userId, int $formId, int $questionId, string $answer, ?int $isCorrect = null): ?array
+    {
+        $params = [
+            'user_id'     => $userId,
+            'form_id'     => $formId,
+            'question_id' => $questionId,
+            'answer'      => $answer,
+        ];
+        if ($isCorrect !== null) {
+            $params['is_correct'] = $isCorrect;
+        }
+
+        return $this->request('postAnswer', $params, 'POST', false);
+    }
+
+    /**
+     * Telefon numarası ve doğum tarihi ile kayıtlı yarışmacı profilini sorgular
+     */
+    public function getUfkaYolculukUser(string $mobile, string $birthdate): ?array
+    {
+        $params = [
+            'mobile'    => $mobile,
+            'birthdate' => $birthdate,
+        ];
+        return $this->request('getUfkaYolculukUser', $params, 'POST', false);
+    }
+
+    /**
+     * Kullanıcının girdiği sınavları, puanlarını ve derecelerini döner
+     */
+    public function getUserExams(int $userId, bool $useCache = false): ?array
+    {
+        return $this->request('getUserExams/' . $userId, [], 'GET', $useCache);
+    }
+
+    /**
+     * Sınav oturumundaki tüm soruları, şıkları, kullanıcının cevabını ve doğru cevabı döner
+     */
+    public function getUserExamDetail(int $formId, ?int $userId = null, bool $useCache = false): ?array
+    {
+        $params = [];
+        if ($userId !== null) {
+            $params['user_id'] = $userId;
+        }
+        return $this->request('getUserExamDetail/' . $formId, $params, 'GET', $useCache);
+    }
+
+    /**
+     * Liderlik durumu, davet linki, puanlar ve çekiliş haklarını döner
+     */
+    public function getUserLeaderData(int $userId, bool $useCache = true): ?array
+    {
+        return $this->request('getUserLeaderData/' . $userId, [], 'GET', $useCache);
+    }
+
+    /**
+     * Yarışmacının kendi davet linkiyle sisteme kaydettiği kullanıcıları listeler
+     */
+    public function getInvitedUsers(int $userId, int $limit = 20, int $offset = 0, ?int $categoryId = null, bool $useCache = true): ?array
+    {
+        $params = [
+            'limit'  => $limit,
+            'offset' => $offset,
+        ];
+        if ($categoryId !== null) {
+            $params['category_id'] = $categoryId;
+        }
+        return $this->request('getInvitedUsers/' . $userId, $params, 'GET', $useCache);
+    }
+
+    /**
+     * Profil, sertifika sayısı, sınav sayısı, son sınav sonucu ve liderlik özetini tek bir çağrıda döner
+     */
+    public function getUserDashboard(int $userId, bool $useCache = false): ?array
+    {
+        return $this->request('getUserDashboard/' . $userId, [], 'GET', $useCache);
+    }
+
+    /**
+     * Kullanıcının giriş durumuna göre özelleştirilmiş profil menü bağlantılarını döner
+     */
+    public function getProfileMenu(?int $userId = null, bool $useCache = true): array
+    {
+        $endpoint = $userId !== null ? 'getProfileMenu/' . $userId : 'getProfileMenu';
+        $res = $this->request($endpoint, [], 'GET', $useCache);
+        return is_array($res) ? $res : [];
+    }
+
+    /**
+     * CMS Statik Sayfa Detayını döner (Şartname, Yönerge vb.)
+     */
+    public function getPage(int|string $pageId, bool $useCache = true): ?array
+    {
+        return $this->request('getPage/' . $pageId, [], 'GET', $useCache);
+    }
+
+    /**
+     * Bot ayarları, hızlı soru çipleri ve tüm eğitim kurallarını döner
+     */
+    public function getBotKnowledge(bool $useCache = true): ?array
+    {
+        return $this->request('getBotKnowledge', [], 'GET', $useCache);
+    }
+
+    /**
+     * Kullanıcının sorusuna akıllı yanıt üretir
+     */
+    public function askBot(string $question): ?array
+    {
+        return $this->request('askBot', ['question' => $question], 'POST', false);
     }
 
     // =========================================================================
