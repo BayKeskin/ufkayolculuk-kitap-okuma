@@ -163,7 +163,16 @@ class ApiController extends BaseController
 
         $sessionUser = session()->get('ufka_user');
 
-        $userId      = (int)($json['user_id'] ?? $sessionUser['id'] ?? (isset($_COOKIE['uy_user_id']) ? $_COOKIE['uy_user_id'] : 1001));
+        if (!empty($sessionUser['id'])) {
+            $userId = (int)$sessionUser['id'];
+        } elseif (!empty($json['user_id'])) {
+            $userId = (int)$json['user_id'];
+        } elseif (!empty($_COOKIE['uy_user_id'])) {
+            $userId = (int)$_COOKIE['uy_user_id'];
+        } else {
+            $userId = 1001;
+        }
+
         $bookId      = (int)($json['book_id'] ?? 0);
         $page        = (int)($json['page'] ?? 1);
         $audioTime   = (float)($json['audio_time'] ?? 0.0);
@@ -189,7 +198,10 @@ class ApiController extends BaseController
     public function getProgress($userId = null, $bookId = null)
     {
         $sessionUser = session()->get('ufka_user');
-        $targetUserId = (int)($userId ?? $sessionUser['id'] ?? 1001);
+        $targetUserId = !empty($sessionUser['id']) 
+            ? (int)$sessionUser['id'] 
+            : (int)($userId ?? (isset($_COOKIE['uy_user_id']) ? $_COOKIE['uy_user_id'] : 1001));
+            
         $targetBookId = $bookId !== null ? (int)$bookId : null;
 
         $progress = $this->apiService->getUserProgress($targetUserId, $targetBookId);
